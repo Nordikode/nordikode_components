@@ -68,7 +68,13 @@ const handleSelect = (key: 'edit-profile' | 'logout'): void => {
   <v-menu location="bottom end" offset="8">
     <template #activator="{ props: activatorProps }">
       <button :class="['user-menu-trigger', { 'user-menu-trigger--compact': compact }]" type="button" v-bind="activatorProps">
-        <IdentityAvatar :image-url="avatarUrl" :name="userName" color="primary" :size="34" />
+        <IdentityAvatar
+          :image-url="avatarUrl"
+          :name="userName"
+          class="user-avatar"
+          color="primary"
+          :size="34"
+        />
         <span v-if="!compact" class="user-meta">
           <span class="user-name">{{ userName }}</span>
           <span v-if="userEmail" class="user-email">{{ userEmail }}</span>
@@ -85,10 +91,12 @@ const handleSelect = (key: 'edit-profile' | 'logout'): void => {
 
 <style scoped>
 .user-menu-trigger {
+  appearance: none;
   align-items: center;
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(84, 109, 121, 0.18);
+  background: color-mix(in srgb, rgb(var(--v-theme-surface)) 90%, white 10%);
+  border: 1px solid color-mix(in srgb, rgb(var(--v-theme-primary)) 16%, white 84%);
   border-radius: 999px;
+  box-shadow: 0 6px 18px color-mix(in srgb, rgb(var(--v-theme-primary)) 12%, transparent);
   cursor: pointer;
   display: inline-flex;
   gap: 10px;
@@ -97,7 +105,7 @@ const handleSelect = (key: 'edit-profile' | 'logout'): void => {
 }
 
 .user-menu-trigger:hover {
-  border-color: rgba(42, 96, 114, 0.34);
+  border-color: color-mix(in srgb, rgb(var(--v-theme-primary)) 28%, white 72%);
 }
 
 .user-meta {
@@ -108,25 +116,44 @@ const handleSelect = (key: 'edit-profile' | 'logout'): void => {
 }
 
 .user-name {
-  color: var(--nk-text-primary, #19323f);
+  color: rgb(var(--v-theme-on-surface));
   font-size: 0.86rem;
   font-weight: 600;
 }
 
 .user-email {
-  color: var(--nk-text-secondary, #617680);
+  color: color-mix(in srgb, rgb(var(--v-theme-on-surface)) 64%, white 36%);
   font-size: 0.74rem;
 }
 
 .user-menu-list {
-  border: 1px solid rgba(84, 109, 121, 0.18);
+  border: 1px solid color-mix(in srgb, rgb(var(--v-theme-primary)) 16%, white 84%);
   border-radius: 14px;
 }
 
 .user-menu-trigger--compact {
-  border-radius: 999px;
-  min-height: 40px;
-  padding: 2px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: auto;
+  padding: 0;
+}
+
+.user-menu-trigger--compact .user-avatar {
+  border: 0;
+  box-shadow: none;
+  outline: 0;
+}
+
+.user-menu-trigger--compact:hover {
+  border-color: transparent;
+}
+
+.user-menu-trigger--compact:focus,
+.user-menu-trigger--compact:focus-visible,
+.user-menu-trigger--compact:active {
+  outline: 0;
 }
 
 @media (max-width: 1024px) {
