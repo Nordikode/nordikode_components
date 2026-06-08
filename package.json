@@ -1,6 +1,6 @@
 {
   "name": "@nordikode/components",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "repository": {
     "type": "git",
@@ -9,15 +9,15 @@
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "types": "./src/index.d.ts",
+  "types": "./index.d.ts",
   "files": [
     "dist",
-    "src",
+    "index.d.ts",
     "style.css"
   ],
   "exports": {
     ".": {
-      "types": "./src/index.d.ts",
+      "types": "./index.d.ts",
       "import": "./dist/index.js"
     },
     "./style.css": "./style.css"
