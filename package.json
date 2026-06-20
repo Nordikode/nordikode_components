@@ -25,6 +25,9 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
+  "dependencies": {
+    "libphonenumber-js": "^1.13.6"
+  },
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
