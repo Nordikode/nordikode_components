@@ -14,10 +14,14 @@ Start small, keep APIs stable, and grow the library component by component inste
 
 ## Local development
 
-Install from sibling repos with:
+For immediate local changes without committing a `file:` dependency into app repos, use `npm link`:
 
 ```bash
-npm install ../nordikode_components
+cd frontend/nordikode_components
+npm link
+
+cd ../sign-web
+npm link @nordikode/components
 ```
 
 Import styles once in the consuming app:
