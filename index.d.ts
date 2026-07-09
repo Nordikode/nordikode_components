@@ -13,6 +13,15 @@ export interface AppBreadcrumbItem {
   to?: unknown
 }
 
+export interface AppSidebarRailItem {
+  active?: boolean
+  disabled?: boolean
+  icon: string
+  key: string
+  label: string
+}
+
+export const AppSidebarRail: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AppTopHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AppBreadcrumbs: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const IdentityAvatar: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
