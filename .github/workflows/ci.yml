@@ -1,0 +1,65 @@
+# Managed centrally from scripts/ci-templates/components-ci.yml in the
+# Nordikode dev orchestrator repo (nordikode_dev). Do not edit the copy in
+# nordikode_components directly — update the template and re-copy it.
+#
+# Build runs on every push/PR. Publish runs only on v* tags and pushes
+# @nordikode/components to GitHub Packages (npm.pkg.github.com), matching the
+# package's publishConfig. The built-in GITHUB_TOKEN with packages: write is
+# enough to publish to the repo's own org scope — no extra secret needed.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+  publish:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@nordikode'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish to GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm publish
