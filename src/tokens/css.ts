@@ -1,0 +1,73 @@
+import { nkFontFamily, nkRadius, nkSpaceUnit } from './base'
+import type { NkProductTheme, NkScheme } from './types'
+
+// Kanoniske CSS-variabelnavn.
+//
+// NB — navneendring fra appenes gamle style.css (fase 1-beslutning):
+// gamle `--nk-bg-base` betydde kortflate i sign/time men sidebakgrunn i
+// portal/backoffice. De utvetydige avløserne er:
+//   --nk-surface  (kort/flate; gamle --nk-bg-base i sign/time)
+//   --nk-page     (sidebakgrunn; gamle --nk-bg-page i sign/time og
+//                  gamle --nk-bg-base i portal/backoffice)
+// Ingen legacy-alias genereres — appene bytter navn ved adopsjon (fase 3/5).
+
+/** CSS-variabler for ett scheme (uten radius/spacing, som er modus-uavhengige). */
+export function cssVariables(scheme: NkScheme): Record<string, string> {
+  return {
+    '--nk-page': scheme.page,
+    '--nk-surface': scheme.surface,
+    '--nk-surface-soft': scheme.surfaceSoft,
+    '--nk-surface-soft-accent': scheme.surfaceSoftAccent,
+    '--nk-surface-rail': scheme.surfaceRail,
+    '--nk-rail-start': scheme.railStart,
+    '--nk-rail-end': scheme.railEnd,
+    '--nk-rail-icon': scheme.railIcon,
+    '--nk-rail-icon-strong': scheme.railIconStrong,
+    '--nk-surface-border': scheme.surfaceBorder,
+    '--nk-surface-glass': scheme.surfaceGlass,
+    '--nk-surface-subtle': scheme.surfaceSubtle,
+    '--nk-text-primary': scheme.textPrimary,
+    '--nk-text-secondary': scheme.textSecondary,
+    '--nk-action-primary': scheme.primary,
+    '--nk-action-primary-hover': scheme.primaryHover,
+    '--nk-on-action-primary': scheme.onPrimary,
+    '--nk-attention': scheme.attention,
+    '--nk-success': scheme.success,
+    '--nk-warning': scheme.warning,
+    '--nk-error': scheme.error,
+    '--nk-shadow-soft': scheme.shadowSoft,
+    '--nk-shadow-strong': scheme.shadowStrong,
+  }
+}
+
+/** Modus-uavhengige variabler (radius, spacing, font). */
+export function cssStaticVariables(): Record<string, string> {
+  return {
+    '--nk-radius-sm': nkRadius.sm,
+    '--nk-radius-md': nkRadius.md,
+    '--nk-radius-lg': nkRadius.lg,
+    '--nk-radius-pill': nkRadius.pill,
+    '--nk-space-unit': nkSpaceUnit,
+    '--nk-font-family': nkFontFamily,
+  }
+}
+
+function block(selector: string, vars: Record<string, string>): string {
+  const lines = Object.entries(vars).map(([name, value]) => `  ${name}: ${value};`)
+  return `${selector} {\n${lines.join('\n')}\n}`
+}
+
+/**
+ * Genererer hele CSS-blokken en app trenger i sin style.css:
+ * `:root` med light + statiske tokens, og `:root.nk-dark` med mørke
+ * motstykker (klassen settes av themePreference i app-core).
+ */
+export function productCss(theme: NkProductTheme): string {
+  const light = { ...cssStaticVariables(), ...cssVariables(theme.light) }
+  const dark = cssVariables(theme.dark)
+  return [
+    `/* Generert fra @nordikode/components tokens — produkt: ${theme.product}. Ikke rediger for hånd. */`,
+    block(':root', light),
+    block(':root.nk-dark', dark),
+  ].join('\n\n')
+}

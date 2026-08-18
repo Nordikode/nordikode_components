@@ -13,12 +13,17 @@
   "files": [
     "dist",
     "index.d.ts",
+    "tokens.d.ts",
     "style.css"
   ],
   "exports": {
     ".": {
       "types": "./index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./tokens": {
+      "types": "./tokens.d.ts",
+      "import": "./dist/tokens.js"
     },
     "./style.css": "./style.css"
   },

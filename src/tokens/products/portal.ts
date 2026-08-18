@@ -1,0 +1,73 @@
+import { nkOpacity, nkStatusDark, nkStatusLight } from '../base'
+import type { NkProductTheme } from '../types'
+
+// Verdier hentet fra portal (plugins/vuetify.ts + style.css) 2026-08-18.
+//
+// To bevisste avvik fra dagens app (fase 1-beslutninger):
+// - textPrimary: appens CSS-token sa #102a36 mens Vuetify-temaet sa #19323f
+//   for samme rolle. Samlet på Vuetify-verdien.
+// - success/warning/error (light): flyttet til felles Nordikode-statuspalett;
+//   portal hadde #2f7d5d/#b07a2f/#b54a4a.
+//
+// Portalens admin-tema (NordikodeAdmin, teal) er IKKE tokenisert ennå — det
+// mangler for mange kildeverdier til å avlede uten designvurdering.
+export const portalTheme: NkProductTheme = {
+  product: 'portal',
+  vuetifyThemeName: 'Nordikode',
+  light: {
+    page: '#f6f8f9',
+    surface: '#ffffff',
+    surfaceSoft: '#dfecef',
+    surfaceSoftAccent: '#dfeaf0',
+    surfaceRail: '#dfecef', // avledet: = surfaceSoft (portal hadde ingen rail-flate)
+    railStart: '#dfecef', // avledet
+    railEnd: '#dfeaf0', // avledet
+    railIcon: '#6f8591', // avledet: = secondary
+    railIconStrong: '#19323f', // avledet: = textPrimary
+    surfaceBorder: 'rgba(84, 109, 121, 0.18)',
+    surfaceGlass: 'rgba(255, 255, 255, 0.72)',
+    surfaceSubtle: 'rgba(255, 255, 255, 0.62)',
+    textPrimary: '#19323f',
+    textSecondary: '#4d6570',
+    primary: '#2a6072',
+    primaryHover: '#1f4f60',
+    onPrimary: '#ffffff',
+    secondary: '#6f8591',
+    info: '#46606b',
+    attention: '#c99a2e', // avledet: = felles warning (portal hadde ingen attention)
+    ...nkStatusLight,
+    shadowSoft: 'rgba(25, 50, 63, 0.14)',
+    shadowStrong: 'rgba(25, 50, 63, 0.2)',
+    borderColor: '#19323f', // avledet (portal hadde ingen variables-blokk)
+    borderOpacity: nkOpacity.borderLight,
+    mediumEmphasisOpacity: nkOpacity.mediumEmphasisLight,
+  },
+  dark: {
+    page: '#101b20',
+    surface: '#18262d',
+    surfaceSoft: '#16262c',
+    surfaceSoftAccent: '#152730',
+    surfaceRail: '#16262c', // avledet
+    railStart: '#16262c', // avledet
+    railEnd: '#152730', // avledet
+    railIcon: '#8fa5ae', // avledet: = secondary
+    railIconStrong: '#dfeaef', // avledet: = textPrimary
+    surfaceBorder: 'rgba(194, 214, 222, 0.16)',
+    surfaceGlass: 'rgba(24, 38, 45, 0.72)',
+    surfaceSubtle: 'rgba(24, 38, 45, 0.62)',
+    textPrimary: '#dfeaef',
+    textSecondary: '#9db3bc',
+    primary: '#6db3c7',
+    primaryHover: '#86c3d4',
+    onPrimary: '#0e2229',
+    secondary: '#8fa5ae',
+    info: '#7fa8b8',
+    attention: '#d9ad55', // avledet: = felles warning (dark)
+    ...nkStatusDark, // portal dark hadde #55a884/#cf9c53/#d17c7c — samlet på felles
+    shadowSoft: 'rgba(0, 0, 0, 0.35)',
+    shadowStrong: 'rgba(0, 0, 0, 0.5)',
+    borderColor: '#dfeaef', // avledet
+    borderOpacity: nkOpacity.borderDark,
+    mediumEmphasisOpacity: nkOpacity.mediumEmphasisDark,
+  },
+}

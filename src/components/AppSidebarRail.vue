@@ -56,9 +56,9 @@ const emit = defineEmits<{
 const translations: Record<SharedLocale, { settings: string; toggleNavigation: string }> = {
   en: { settings: 'Settings', toggleNavigation: 'Toggle navigation' },
   no: { settings: 'Innstillinger', toggleNavigation: 'Veksle navigasjon' },
-  sv: { settings: 'Installningar', toggleNavigation: 'Visa eller dlj navigering' },
-  fr: { settings: 'Parametres', toggleNavigation: 'Basculer la navigation' },
-  pl: { settings: 'Ustawienia', toggleNavigation: 'Przelacz nawigacje' },
+  sv: { settings: 'Inställningar', toggleNavigation: 'Visa eller dölj navigering' },
+  fr: { settings: 'Paramètres', toggleNavigation: 'Basculer la navigation' },
+  pl: { settings: 'Ustawienia', toggleNavigation: 'Przełącz nawigację' },
 }
 
 const resolvedLocale = computed<SharedLocale>(() => {
