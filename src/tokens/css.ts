@@ -40,15 +40,31 @@ export function cssVariables(scheme: NkScheme): Record<string, string> {
   }
 }
 
-/** Modus-uavhengige variabler (radius, spacing, font). */
-export function cssStaticVariables(): Record<string, string> {
+/** Modus-uavhengige base-tokens (radius, spacing, font) — felles for alle produkter. */
+export interface NkStaticTokens {
+  radius: { sm: string; md: string; lg: string; pill: string }
+  spaceUnit: string
+  fontFamily: string
+}
+
+/** Dagens base-verdier som redigerbart objekt (f.eks. for theme lab). */
+export function defaultStaticTokens(): NkStaticTokens {
   return {
-    '--nk-radius-sm': nkRadius.sm,
-    '--nk-radius-md': nkRadius.md,
-    '--nk-radius-lg': nkRadius.lg,
-    '--nk-radius-pill': nkRadius.pill,
-    '--nk-space-unit': nkSpaceUnit,
-    '--nk-font-family': nkFontFamily,
+    radius: { ...nkRadius },
+    spaceUnit: nkSpaceUnit,
+    fontFamily: nkFontFamily,
+  }
+}
+
+/** Modus-uavhengige variabler (radius, spacing, font). */
+export function cssStaticVariables(statics: NkStaticTokens = defaultStaticTokens()): Record<string, string> {
+  return {
+    '--nk-radius-sm': statics.radius.sm,
+    '--nk-radius-md': statics.radius.md,
+    '--nk-radius-lg': statics.radius.lg,
+    '--nk-radius-pill': statics.radius.pill,
+    '--nk-space-unit': statics.spaceUnit,
+    '--nk-font-family': statics.fontFamily,
   }
 }
 
@@ -62,8 +78,8 @@ function block(selector: string, vars: Record<string, string>): string {
  * `:root` med light + statiske tokens, og `:root.nk-dark` med mørke
  * motstykker (klassen settes av themePreference i app-core).
  */
-export function productCss(theme: NkProductTheme): string {
-  const light = { ...cssStaticVariables(), ...cssVariables(theme.light) }
+export function productCss(theme: NkProductTheme, statics: NkStaticTokens = defaultStaticTokens()): string {
+  const light = { ...cssStaticVariables(statics), ...cssVariables(theme.light) }
   const dark = cssVariables(theme.dark)
   return [
     `/* Generert fra @nordikode/components tokens — produkt: ${theme.product}. Ikke rediger for hånd. */`,

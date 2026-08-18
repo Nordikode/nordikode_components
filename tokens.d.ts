@@ -56,8 +56,14 @@ export declare const nkOpacity: {
 export declare function toVuetifyTheme(scheme: NkScheme, dark: boolean): ThemeDefinition
 export declare function buildVuetifyThemes(theme: NkProductTheme): Record<string, ThemeDefinition>
 export declare function cssVariables(scheme: NkScheme): Record<string, string>
-export declare function cssStaticVariables(): Record<string, string>
-export declare function productCss(theme: NkProductTheme): string
+export interface NkStaticTokens {
+  radius: { sm: string; md: string; lg: string; pill: string }
+  spaceUnit: string
+  fontFamily: string
+}
+export declare function defaultStaticTokens(): NkStaticTokens
+export declare function cssStaticVariables(statics?: NkStaticTokens): Record<string, string>
+export declare function productCss(theme: NkProductTheme, statics?: NkStaticTokens): string
 
 export declare const signTheme: NkProductTheme
 export declare const timeTheme: NkProductTheme
