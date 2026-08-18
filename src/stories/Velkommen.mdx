@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Design system/Velkommen" />
+
+# Nordikode design system
+
+Én kilde til sannhet for farger, typografi, komponenter og språk på tvers av
+Nordikode-produktene — **Sign**, **Time**, **Portal** og **Backoffice**.
+
+Bruk **Produkt**- og **Modus**-velgerne i toolbaren øverst for å se alt i
+riktig produkttema, i light og dark.
+
+## Slik henger det sammen
+
+- **Tokens** (`@nordikode/components/tokens`) definerer alle farger, radius,
+  spacing og typografi per produkt. Appene *importerer* temaet sitt herfra i
+  stedet for å definere det selv.
+- **Komponenter** er de delte Vue-komponentene i `@nordikode/components`.
+- **Språk** samler terminologi og tone of voice (fylles ut i fase 4).
+
+## Grunnprinsipper
+
+1. Ett felles fundament (spacing, radius, statusfarger, typografi) — hvert
+   produkt er et *tema* som bare overstyrer merkefargene.
+2. `--nk-page` er sidebakgrunnen, `--nk-surface` er kortflaten. (Det gamle
+   `--nk-bg-base` betydde begge deler, avhengig av app, og er utfaset.)
+3. Ingen hardkodede hexverdier i appene — alt går via tokens eller
+   Vuetify-temaets semantiske farger.
+
+Grunnlag: design-audit 2026-08-18 (`DESIGN_SYSTEM_AUDIT_2026-08-18.md` i
+nordikode_dev), jira SIGN-7 (tokens) og SIGN-8 (denne Storybooken).
