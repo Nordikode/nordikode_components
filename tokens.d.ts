@@ -21,11 +21,17 @@ export interface NkScheme {
   primaryHover: string
   onPrimary: string
   secondary: string
+  onSecondary: string
   info: string
+  onInfo: string
   attention: string
+  onAttention: string
   success: string
+  onSuccess: string
   warning: string
+  onWarning: string
   error: string
+  onError: string
   shadowSoft: string
   shadowStrong: string
   borderColor: string

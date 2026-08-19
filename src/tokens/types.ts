@@ -29,13 +29,19 @@ export interface NkScheme {
   primaryHover: string
   onPrimary: string
   secondary: string
+  onSecondary: string
   info: string
+  onInfo: string
   /** Gul oppmerksomhetsfarge (badge/varsling), ikke det samme som warning. */
   attention: string
+  onAttention: string
 
   success: string
+  onSuccess: string
   warning: string
+  onWarning: string
   error: string
+  onError: string
 
   shadowSoft: string
   shadowStrong: string

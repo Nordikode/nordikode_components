@@ -28,15 +28,21 @@ export const nkFontHref =
 /** Felles statusfarger — light. */
 export const nkStatusLight = {
   success: '#1f8a55',
+  onSuccess: '#ffffff',
   warning: '#c99a2e',
+  onWarning: '#ffffff',
   error: '#c0504d',
+  onError: '#ffffff',
 } as const
 
 /** Felles statusfarger — dark (var allerede identiske i alle fire apper). */
 export const nkStatusDark = {
   success: '#4cb583',
+  onSuccess: '#ffffff',
   warning: '#d9ad55',
+  onWarning: '#000000',
   error: '#d97b78',
+  onError: '#ffffff',
 } as const
 
 /** Felles Vuetify-variabler. */
