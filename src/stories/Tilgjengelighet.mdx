@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Design system/Tilgjengelighet" />
+
+# Tilgjengelighet
+
+Nordikode-produktene skal være brukbare for alle — også med nedsatt syn,
+motorikk eller kognisjon, og med skjermleser eller bare tastatur. Målet er
+**WCAG 2.1 nivå AA** (som også er lovkravet i Norge via uu-tilsynet for
+løsninger rettet mot allmennheten).
+
+## Krav som gjelder alt vi bygger
+
+| Område | Krav |
+| --- | --- |
+| Tekstkontrast | ≥ 4,5:1 mot bakgrunnen (≥ 3:1 for stor tekst ≥ 18,66px fet / 24px) |
+| UI-komponenter og ikoner | ≥ 3:1 mot tilstøtende farger |
+| Farge alene | Farge skal aldri være eneste bærer av mening — status trenger også tekst/ikon |
+| Tastatur | Alt interaktivt kan nås og betjenes med tastatur; synlig fokusmarkering |
+| Skjermleser | Interaktive elementer har navn (aria-label der tekst mangler); bilder har alt |
+| Bevegelse | Respekter `prefers-reduced-motion` |
+| Mål-størrelse | Klikk-/trykkflater minst 24×24px (helst 44×44) |
+
+## Verktøy
+
+- **Theme lab i Sign** (`/theme-lab`, dev) viser WCAG-kontrast live for alle
+  viktige fargepar mens du justerer paletten — ingen palett skal vedtas med
+  røde kontrastmerker.
+- Tokens har eksplisitte tekstfarger (`onSuccess`, `onWarning`, …) slik at
+  kontrast er en designbeslutning, ikke en tilfeldighet fra automatikk.
+
+## Kjente hull (fra design-auditen 2026-08-18)
+
+- Fokusmarkering er ikke gjennomgått systematisk i noen av appene.
+- `AppSidebarRail` har hardkodede hover-fallbacks som ikke tilpasser seg dark mode.
+- Ikonknapper i rails/toppheadere må verifiseres for aria-labels.
+- Full a11y-gjennomgang (axe) av appene er ikke gjort ennå — egen task når
+  design systemet ruller ut.
