@@ -1,4 +1,4 @@
-import { nkFontFamily, nkRadius, nkSpaceUnit, nkSpacing } from './base'
+import { nkFontFamily, nkRadius, nkSpaceUnit, nkSpacing, nkTypography } from './base'
 import type { NkProductTheme, NkScheme } from './types'
 
 // Kanoniske CSS-variabelnavn.
@@ -51,6 +51,7 @@ export interface NkStaticTokens {
   radius: { sm: string; md: string; lg: string; pill: string }
   spaceUnit: string
   spacing: { cardPadding: string; sectionGap: string; inlineGap: string }
+  typography: { rootSize: string; heading: string; body: string; label: string; button: string }
   fontFamily: string
 }
 
@@ -60,6 +61,7 @@ export function defaultStaticTokens(): NkStaticTokens {
     radius: { ...nkRadius },
     spaceUnit: nkSpaceUnit,
     spacing: { ...nkSpacing },
+    typography: { ...nkTypography },
     fontFamily: nkFontFamily,
   }
 }
@@ -75,6 +77,11 @@ export function cssStaticVariables(statics: NkStaticTokens = defaultStaticTokens
     '--nk-pad-card': statics.spacing.cardPadding,
     '--nk-gap-section': statics.spacing.sectionGap,
     '--nk-gap-inline': statics.spacing.inlineGap,
+    '--nk-font-root': statics.typography.rootSize,
+    '--nk-text-heading': statics.typography.heading,
+    '--nk-text-body': statics.typography.body,
+    '--nk-text-label': statics.typography.label,
+    '--nk-text-button': statics.typography.button,
     '--nk-font-family': statics.fontFamily,
   }
 }
@@ -96,5 +103,10 @@ export function productCss(theme: NkProductTheme, statics: NkStaticTokens = defa
     `/* Generert fra @nordikode/components tokens — produkt: ${theme.product}. Ikke rediger for hånd. */`,
     block(':root', light),
     block(':root.nk-dark', dark),
+    // Global tekstskala: html-rot + default-knapper. Standardverdiene er
+    // identiske med nettleser-/Vuetify-defaults, så blokkene er no-op til
+    // noen faktisk endrer typografi-tokens.
+    block('html', { 'font-size': 'var(--nk-font-root)' }),
+    block('.v-btn--size-default', { 'font-size': 'var(--nk-text-button)' }),
   ].join('\n\n')
 }

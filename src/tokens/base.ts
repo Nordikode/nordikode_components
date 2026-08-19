@@ -31,6 +31,19 @@ export const nkSpacing = {
 
 export const nkFontFamily = "'Inter', 'Segoe UI', sans-serif"
 
+/**
+ * Typografi-skala. rootSize er den globale bryteren (html font-size) — alle
+ * rem-baserte størrelser (inkl. Vuetify-klassene) skalerer med den. Rollene
+ * er i rem og matcher dagens de facto-bruk i appene.
+ */
+export const nkTypography = {
+  rootSize: '16px',
+  heading: '1.5rem',
+  body: '1rem',
+  label: '0.78rem',
+  button: '0.875rem',
+} as const
+
 /** Lastes i appens index.html; alle apper skal bruke samme href. */
 export const nkFontHref =
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
