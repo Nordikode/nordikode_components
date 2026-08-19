@@ -32,6 +32,14 @@ export interface NkScheme {
   onWarning: string
   error: string
   onError: string
+  primarySoft: string
+  onPrimarySoft: string
+  successSoft: string
+  onSuccessSoft: string
+  warningSoft: string
+  onWarningSoft: string
+  errorSoft: string
+  onErrorSoft: string
   shadowSoft: string
   shadowStrong: string
   borderColor: string

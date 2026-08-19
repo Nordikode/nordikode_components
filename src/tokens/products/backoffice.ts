@@ -35,6 +35,16 @@ export const backofficeTheme: NkProductTheme = {
     attention: '#c99a2e', // avledet: = felles warning
     onAttention: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusLight,
+    // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
+    // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
+    primarySoft: '#f3e6e7',
+    onPrimarySoft: '#9f2f3b',
+    successSoft: '#e4f1eb',
+    onSuccessSoft: '#1f8a55',
+    warningSoft: '#f9f3e6',
+    onWarningSoft: '#c99a2e',
+    errorSoft: '#f7eaea',
+    onErrorSoft: '#c0504d',
     shadowSoft: 'rgba(53, 23, 27, 0.14)',
     shadowStrong: 'rgba(53, 23, 27, 0.2)',
     borderColor: '#35171b', // avledet (ingen variables-blokk i appen)
@@ -66,6 +76,16 @@ export const backofficeTheme: NkProductTheme = {
     attention: '#d9ad55', // avledet: = felles warning (dark)
     onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusDark,
+    // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
+    // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
+    primarySoft: '#3c2429',
+    onPrimarySoft: '#d4707b',
+    successSoft: '#2b2d2a',
+    onSuccessSoft: '#4cb583',
+    warningSoft: '#3c2c25',
+    onWarningSoft: '#d9ad55',
+    errorSoft: '#3c2629',
+    onErrorSoft: '#d97b78',
     shadowSoft: 'rgba(0, 0, 0, 0.45)',
     shadowStrong: 'rgba(0, 0, 0, 0.6)',
     borderColor: '#f2e4e6', // avledet

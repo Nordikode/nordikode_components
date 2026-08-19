@@ -43,6 +43,16 @@ export interface NkScheme {
   error: string
   onError: string
 
+  /** Myke flater (tonal-chips o.l.): bakgrunn + tekst per rolle. */
+  primarySoft: string
+  onPrimarySoft: string
+  successSoft: string
+  onSuccessSoft: string
+  warningSoft: string
+  onWarningSoft: string
+  errorSoft: string
+  onErrorSoft: string
+
   shadowSoft: string
   shadowStrong: string
 
