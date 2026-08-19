@@ -1,4 +1,4 @@
-import { nkFontFamily, nkRadius, nkSpaceUnit } from './base'
+import { nkFontFamily, nkRadius, nkSpaceUnit, nkSpacing } from './base'
 import type { NkProductTheme, NkScheme } from './types'
 
 // Kanoniske CSS-variabelnavn.
@@ -50,6 +50,7 @@ export function cssVariables(scheme: NkScheme): Record<string, string> {
 export interface NkStaticTokens {
   radius: { sm: string; md: string; lg: string; pill: string }
   spaceUnit: string
+  spacing: { cardPadding: string; sectionGap: string; inlineGap: string }
   fontFamily: string
 }
 
@@ -58,6 +59,7 @@ export function defaultStaticTokens(): NkStaticTokens {
   return {
     radius: { ...nkRadius },
     spaceUnit: nkSpaceUnit,
+    spacing: { ...nkSpacing },
     fontFamily: nkFontFamily,
   }
 }
@@ -70,6 +72,9 @@ export function cssStaticVariables(statics: NkStaticTokens = defaultStaticTokens
     '--nk-radius-lg': statics.radius.lg,
     '--nk-radius-pill': statics.radius.pill,
     '--nk-space-unit': statics.spaceUnit,
+    '--nk-pad-card': statics.spacing.cardPadding,
+    '--nk-gap-section': statics.spacing.sectionGap,
+    '--nk-gap-inline': statics.spacing.inlineGap,
     '--nk-font-family': statics.fontFamily,
   }
 }

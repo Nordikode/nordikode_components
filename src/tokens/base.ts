@@ -19,6 +19,16 @@ export const nkRadius = {
 
 export const nkSpaceUnit = '8px'
 
+/** Semantisk spacing — dagens de facto-verdier i appene (pa-6, ga-3 …). */
+export const nkSpacing = {
+  /** Innvendig polstring i kort/paneler. */
+  cardPadding: '24px',
+  /** Vertikal avstand mellom kort/seksjoner. */
+  sectionGap: '24px',
+  /** Avstand mellom elementer på rad (knapper, chips). */
+  inlineGap: '12px',
+} as const
+
 export const nkFontFamily = "'Inter', 'Segoe UI', sans-serif"
 
 /** Lastes i appens index.html; alle apper skal bruke samme href. */
