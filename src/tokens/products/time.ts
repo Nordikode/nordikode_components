@@ -31,6 +31,16 @@ export const timeTheme: NkProductTheme = {
     attention: '#d9a62e',
     onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusLight,
+    // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
+    // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
+    primarySoft: '#f6eae1',
+    onPrimarySoft: '#b45309',
+    successSoft: '#e4f1eb',
+    onSuccessSoft: '#1f8a55',
+    warningSoft: '#f9f3e6',
+    onWarningSoft: '#c99a2e',
+    errorSoft: '#f7eaea',
+    onErrorSoft: '#c0504d',
     shadowSoft: 'rgba(44, 36, 24, 0.14)', // avledet
     shadowStrong: 'rgba(44, 36, 24, 0.2)', // avledet
     borderColor: '#2c2418',
@@ -62,6 +72,16 @@ export const timeTheme: NkProductTheme = {
     attention: '#d9ad55',
     onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusDark,
+    // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
+    // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
+    primarySoft: '#3a2b1b',
+    onPrimarySoft: '#e0913c',
+    successSoft: '#282f23',
+    onSuccessSoft: '#4cb583',
+    warningSoft: '#392e1e',
+    onWarningSoft: '#d9ad55',
+    errorSoft: '#392822',
+    onErrorSoft: '#d97b78',
     shadowSoft: 'rgba(0, 0, 0, 0.35)', // avledet
     shadowStrong: 'rgba(0, 0, 0, 0.5)', // avledet
     borderColor: '#f1e9dd',

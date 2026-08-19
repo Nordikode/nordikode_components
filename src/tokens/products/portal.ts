@@ -39,6 +39,16 @@ export const portalTheme: NkProductTheme = {
     attention: '#c99a2e', // avledet: = felles warning (portal hadde ingen attention)
     onAttention: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusLight,
+    // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
+    // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
+    primarySoft: '#e5ecee',
+    onPrimarySoft: '#2a6072',
+    successSoft: '#e4f1eb',
+    onSuccessSoft: '#1f8a55',
+    warningSoft: '#f9f3e6',
+    onWarningSoft: '#c99a2e',
+    errorSoft: '#f7eaea',
+    onErrorSoft: '#c0504d',
     shadowSoft: 'rgba(25, 50, 63, 0.14)',
     shadowStrong: 'rgba(25, 50, 63, 0.2)',
     borderColor: '#19323f', // avledet (portal hadde ingen variables-blokk)
@@ -69,7 +79,17 @@ export const portalTheme: NkProductTheme = {
     onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#d9ad55', // avledet: = felles warning (dark)
     onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
-    ...nkStatusDark, // portal dark hadde #55a884/#cf9c53/#d17c7c — samlet på felles
+    ...nkStatusDark,
+    // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
+    // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
+    primarySoft: '#22373f',
+    onPrimarySoft: '#6db3c7',
+    successSoft: '#1e3737',
+    onSuccessSoft: '#4cb583',
+    warningSoft: '#2f3632',
+    onWarningSoft: '#d9ad55',
+    errorSoft: '#2f3036',
+    onErrorSoft: '#d97b78', // portal dark hadde #55a884/#cf9c53/#d17c7c — samlet på felles
     shadowSoft: 'rgba(0, 0, 0, 0.35)',
     shadowStrong: 'rgba(0, 0, 0, 0.5)',
     borderColor: '#dfeaef', // avledet

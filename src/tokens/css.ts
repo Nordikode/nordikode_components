@@ -41,6 +41,14 @@ export function cssVariables(scheme: NkScheme): Record<string, string> {
     '--nk-on-warning': scheme.onWarning,
     '--nk-error': scheme.error,
     '--nk-on-error': scheme.onError,
+    '--nk-action-primary-soft': scheme.primarySoft,
+    '--nk-on-action-primary-soft': scheme.onPrimarySoft,
+    '--nk-success-soft': scheme.successSoft,
+    '--nk-on-success-soft': scheme.onSuccessSoft,
+    '--nk-warning-soft': scheme.warningSoft,
+    '--nk-on-warning-soft': scheme.onWarningSoft,
+    '--nk-error-soft': scheme.errorSoft,
+    '--nk-on-error-soft': scheme.onErrorSoft,
     '--nk-shadow-soft': scheme.shadowSoft,
     '--nk-shadow-strong': scheme.shadowStrong,
   }
@@ -108,5 +116,16 @@ export function productCss(theme: NkProductTheme, statics: NkStaticTokens = defa
     // noen faktisk endrer typografi-tokens.
     block('html', { 'font-size': 'var(--nk-font-root)' }),
     block('.v-btn--size-default', { 'font-size': 'var(--nk-text-button)' }),
+    // Tonal-chips styres av soft-tokens i stedet for Vuetifys faste 12 %-
+    // avledning; defaults er blend-ekvivalenter, så dette er no-op til
+    // noen redigerer tokens.
+    block('.v-chip--variant-tonal.text-primary', { color: 'var(--nk-on-action-primary-soft)' }),
+    block('.v-chip--variant-tonal.text-primary .v-chip__underlay', { 'background-color': 'var(--nk-action-primary-soft)', opacity: '1' }),
+    block('.v-chip--variant-tonal.text-success', { color: 'var(--nk-on-success-soft)' }),
+    block('.v-chip--variant-tonal.text-success .v-chip__underlay', { 'background-color': 'var(--nk-success-soft)', opacity: '1' }),
+    block('.v-chip--variant-tonal.text-warning', { color: 'var(--nk-on-warning-soft)' }),
+    block('.v-chip--variant-tonal.text-warning .v-chip__underlay', { 'background-color': 'var(--nk-warning-soft)', opacity: '1' }),
+    block('.v-chip--variant-tonal.text-error', { color: 'var(--nk-on-error-soft)' }),
+    block('.v-chip--variant-tonal.text-error .v-chip__underlay', { 'background-color': 'var(--nk-error-soft)', opacity: '1' }),
   ].join('\n\n')
 }
