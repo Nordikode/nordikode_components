@@ -1,5 +1,7 @@
 import type { DefineComponent } from 'vue'
 
+export * from './tokens'
+
 export type SharedLocale = 'en' | 'no' | 'sv' | 'fr' | 'pl'
 
 export interface HeaderTenantOption {

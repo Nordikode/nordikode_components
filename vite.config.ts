@@ -8,12 +8,20 @@ export default defineConfig({
   build: {
     emptyOutDir: false,
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: {
+        index: resolve(__dirname, 'src/index.ts'),
+        tokens: resolve(__dirname, 'src/tokens/index.ts'),
+      },
       formats: ['es'],
-      fileName: 'index',
+      fileName: (_format, entryName) => `${entryName}.js`,
+      cssFileName: 'index',
     },
     rollupOptions: {
-      external: ['vue', 'vuetify'],
+      // NB: regexen må med — `'vuetify'` alene matcher ikke subpaths som
+      // `vuetify/components` og `vuetify/lib/**/*.css`, og da bundles hele
+      // Vuetify (JS + kompilert CSS med default-settings) inn i pakka.
+      // Appene eier Vuetify-oppsettet (inkl. vuetify-settings.scss).
+      external: ['vue', 'vuetify', /^vuetify\//, /^libphonenumber-js/],
       output: {
         globals: {
           vue: 'Vue',

@@ -10,3 +10,5 @@ export type { AppSidebarRailItem } from './types/AppSidebarRailItem'
 export type { AppBreadcrumbItem } from './types/AppBreadcrumbItem'
 export type { HeaderTenantOption } from './types/HeaderTenantOption'
 export type { SharedLocale } from './types/SharedLocale'
+
+export * from './tokens'
