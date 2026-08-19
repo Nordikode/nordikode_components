@@ -26,8 +26,11 @@ export const signTheme: NkProductTheme = {
     primaryHover: '#4c3c73',
     onPrimary: '#ffffff',
     secondary: '#8a7ab8',
+    onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     info: '#5e4b8b',
+    onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#d9a62e',
+    onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusLight,
     shadowSoft: 'rgba(33, 29, 53, 0.14)', // avledet
     shadowStrong: 'rgba(33, 29, 53, 0.2)', // avledet
@@ -56,8 +59,11 @@ export const signTheme: NkProductTheme = {
     // NB: samme som light — eneste farge Sign delte mellom moduser; trolig en
     // glipp i appen, men beholdt uendret til det er designvurdert.
     secondary: '#8a7ab8',
+    onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     info: '#a992dd',
+    onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#d9ad55',
+    onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusDark,
     shadowSoft: 'rgba(0, 0, 0, 0.35)', // avledet
     shadowStrong: 'rgba(0, 0, 0, 0.5)', // avledet

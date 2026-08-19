@@ -33,8 +33,11 @@ export const portalTheme: NkProductTheme = {
     primaryHover: '#1f4f60',
     onPrimary: '#ffffff',
     secondary: '#6f8591',
+    onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     info: '#46606b',
+    onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#c99a2e', // avledet: = felles warning (portal hadde ingen attention)
+    onAttention: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusLight,
     shadowSoft: 'rgba(25, 50, 63, 0.14)',
     shadowStrong: 'rgba(25, 50, 63, 0.2)',
@@ -61,8 +64,11 @@ export const portalTheme: NkProductTheme = {
     primaryHover: '#86c3d4',
     onPrimary: '#0e2229',
     secondary: '#8fa5ae',
+    onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     info: '#7fa8b8',
+    onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#d9ad55', // avledet: = felles warning (dark)
+    onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusDark, // portal dark hadde #55a884/#cf9c53/#d17c7c — samlet på felles
     shadowSoft: 'rgba(0, 0, 0, 0.35)',
     shadowStrong: 'rgba(0, 0, 0, 0.5)',

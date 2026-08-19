@@ -25,8 +25,11 @@ export const timeTheme: NkProductTheme = {
     primaryHover: '#92400e',
     onPrimary: '#ffffff',
     secondary: '#c98f57',
+    onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     info: '#b45309',
+    onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#d9a62e',
+    onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusLight,
     shadowSoft: 'rgba(44, 36, 24, 0.14)', // avledet
     shadowStrong: 'rgba(44, 36, 24, 0.2)', // avledet
@@ -53,8 +56,11 @@ export const timeTheme: NkProductTheme = {
     primaryHover: '#eaa55c',
     onPrimary: '#2c2418',
     secondary: '#d9b189',
+    onSecondary: '#000000', // avledet: Vuetifys tidligere auto-verdi
     info: '#e0913c',
+    onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#d9ad55',
+    onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusDark,
     shadowSoft: 'rgba(0, 0, 0, 0.35)', // avledet
     shadowStrong: 'rgba(0, 0, 0, 0.5)', // avledet

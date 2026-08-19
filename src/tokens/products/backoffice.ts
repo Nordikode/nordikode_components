@@ -29,8 +29,11 @@ export const backofficeTheme: NkProductTheme = {
     primaryHover: '#7d2431',
     onPrimary: '#fff9fa',
     secondary: '#d86a76',
+    onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     info: '#7d2431',
+    onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#c99a2e', // avledet: = felles warning
+    onAttention: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusLight,
     shadowSoft: 'rgba(53, 23, 27, 0.14)',
     shadowStrong: 'rgba(53, 23, 27, 0.2)',
@@ -57,8 +60,11 @@ export const backofficeTheme: NkProductTheme = {
     primaryHover: '#df8a94',
     onPrimary: '#35171b',
     secondary: '#e08f99',
+    onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     info: '#df8a94',
+    onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#d9ad55', // avledet: = felles warning (dark)
+    onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     ...nkStatusDark,
     shadowSoft: 'rgba(0, 0, 0, 0.45)',
     shadowStrong: 'rgba(0, 0, 0, 0.6)',
