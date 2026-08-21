@@ -119,6 +119,10 @@ export function productCss(theme: NkProductTheme, statics: NkStaticTokens = defa
     // Tonal-chips styres av soft-tokens i stedet for Vuetifys faste 12 %-
     // avledning; defaults er blend-ekvivalenter, så dette er no-op til
     // noen redigerer tokens.
+    // Underlay-en er absolutt-posisjonert; med solid bakgrunn og opacity 1
+    // maler den over statisk posisjonert innhold. Relativ posisjonering
+    // løfter innholdet over underlay-en uansett fargevariant.
+    block('.v-chip--variant-tonal .v-chip__content', { position: 'relative' }),
     block('.v-chip--variant-tonal.text-primary', { color: 'var(--nk-on-action-primary-soft)' }),
     block('.v-chip--variant-tonal.text-primary .v-chip__underlay', { 'background-color': 'var(--nk-action-primary-soft)', opacity: '1' }),
     block('.v-chip--variant-tonal.text-success', { color: 'var(--nk-on-success-soft)' }),
