@@ -1,6 +1,6 @@
 import { h } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { nkFontFamily, nkRadius, nkSpaceUnit } from '../../tokens'
+import { nkFontFamily, nkRadius, nkSpaceUnit, nkSpacing, nkTypography } from '../../tokens'
 
 const meta: Meta = {
   title: 'Design system/Tokens/Grunnlag',
@@ -24,29 +24,57 @@ export const Radius: Story = {
     ),
 }
 
+const SPACING_LABELS: Record<keyof typeof nkSpacing, string> = {
+  cardPadding: 'Innvendig polstring i kort/paneler',
+  sectionGap: 'Vertikal avstand mellom kort/seksjoner',
+  inlineGap: 'Avstand mellom elementer på rad',
+}
+
 export const Spacing: Story = {
   render: () =>
-    h('div', { style: 'display:flex;flex-direction:column;gap:10px;' },
-      [1, 2, 3, 4, 6, 8].map((n) =>
-        h('div', { key: n, style: 'display:flex;align-items:center;gap:12px;' }, [
-          h('code', { style: 'width:120px;font-size:0.75rem;' }, `${n} × ${nkSpaceUnit}`),
-          h('div', {
-            style: `height:16px;width:calc(${n} * ${nkSpaceUnit});background:var(--nk-action-primary);border-radius:3px;`,
-          }),
-        ]),
-      ),
-    ),
+    h('div', { style: 'display:flex;flex-direction:column;gap:28px;' }, [
+      h('section', [
+        h('h3', { style: 'margin:0 0 10px;font-size:0.95rem;' }, 'Semantiske tokens (nkSpacing)'),
+        h('div', { style: 'display:flex;flex-direction:column;gap:10px;' },
+          (Object.keys(nkSpacing) as Array<keyof typeof nkSpacing>).map((name) =>
+            h('div', { key: name, style: 'display:flex;align-items:center;gap:12px;' }, [
+              h('code', { style: 'width:180px;font-size:0.75rem;' }, `${name} · ${nkSpacing[name]}`),
+              h('div', {
+                style: `height:16px;width:${nkSpacing[name]};background:var(--nk-action-primary);border-radius:3px;`,
+              }),
+              h('div', { style: 'font-size:0.78rem;opacity:0.7;' }, SPACING_LABELS[name]),
+            ]),
+          ),
+        ),
+      ]),
+      h('section', [
+        h('h3', { style: 'margin:0 0 10px;font-size:0.95rem;' }, `Basisskala (${nkSpaceUnit}-enhet)`),
+        h('div', { style: 'display:flex;flex-direction:column;gap:10px;' },
+          [1, 2, 3, 4, 6, 8].map((n) =>
+            h('div', { key: n, style: 'display:flex;align-items:center;gap:12px;' }, [
+              h('code', { style: 'width:180px;font-size:0.75rem;' }, `${n} × ${nkSpaceUnit}`),
+              h('div', {
+                style: `height:16px;width:calc(${n} * ${nkSpaceUnit});background:var(--nk-action-primary);border-radius:3px;`,
+              }),
+            ]),
+          ),
+        ),
+      ]),
+    ]),
 }
 
 export const Typografi: Story = {
   render: () =>
     h('div', { style: `font-family:${nkFontFamily};display:flex;flex-direction:column;gap:12px;` }, [
-      h('div', { style: 'font-size:0.75rem;opacity:0.7;' }, `Fontstack: ${nkFontFamily} — Inter lastes i appens index.html`),
-      h('div', { style: 'font-size:2rem;font-weight:750;letter-spacing:-0.02em;' }, 'Overskrift 750'),
-      h('div', { style: 'font-size:1.25rem;font-weight:650;' }, 'Mellomtittel 650'),
-      h('div', { style: 'font-size:1rem;font-weight:400;max-width:60ch;' },
-        'Brødtekst 400 — Sign sender tilbudet til kunden når alle linjene er klare, og varsler deg så snart det er signert.'),
-      h('div', { style: 'font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;opacity:0.7;' },
-        'Etikett 600'),
+      h('div', { style: 'font-size:0.75rem;opacity:0.7;' },
+        `Fontstack: ${nkFontFamily} — Inter lastes i appens index.html. rootSize ${nkTypography.rootSize} er den globale bryteren (html font-size); rollene under er i rem og skalerer med den.`),
+      h('div', { style: `font-size:${nkTypography.heading};font-weight:750;letter-spacing:-0.02em;` },
+        `Overskrift 750 · heading ${nkTypography.heading}`),
+      h('div', { style: `font-size:${nkTypography.body};font-weight:400;max-width:60ch;` },
+        `Brødtekst 400 · body ${nkTypography.body} — Sign sender tilbudet til kunden når alle linjene er klare, og varsler deg så snart det er signert.`),
+      h('div', { style: `font-size:${nkTypography.label};font-weight:600;text-transform:uppercase;letter-spacing:0.08em;opacity:0.7;` },
+        `Etikett 600 · label ${nkTypography.label}`),
+      h('div', { style: `font-size:${nkTypography.button};font-weight:600;` },
+        `Knappetekst 600 · button ${nkTypography.button}`),
     ]),
 }
