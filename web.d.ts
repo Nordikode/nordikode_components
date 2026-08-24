@@ -34,6 +34,19 @@ export const webAppIcons: Record<WebAppIconName, string[]>
 export const webAppFallbackIcon: string[]
 export function webAppIconFor(key: string): string[]
 
+export type TenantSwitcherOption = {
+  id: string
+  name: string
+  logoUrl?: string | null
+}
+
+export type TenantSwitcherLabels = {
+  menu: string
+  current: string
+  companies: string
+}
+
 export const AppLauncherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AccountIdentityMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const TenantSwitcherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const BrandWordmark: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
