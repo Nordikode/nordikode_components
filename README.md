@@ -21,6 +21,23 @@ Start small, keep APIs stable, and grow the library component by component inste
 and `libphonenumber-js` are externalized — the consuming app owns the Vuetify setup,
 including `vuetify-settings.scss`.
 
+### `@nordikode/components/web` (Vuetify-free)
+
+Separate entry for the web surfaces (nordikode.com, account.nordikode.com) —
+no Vuetify anywhere in its import graph, styled with plain scoped CSS against
+the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
+`--color-line`, `--radius-*`) plus the accent contract `--nk-chrome-accent` /
+`--nk-chrome-accent-ink`, which the host app sets from its own theme.
+
+- `AppLauncherMenu` — the Google-style app grid menu
+- `AccountIdentityMenu` — the avatar/account menu with service list
+- `BrandWordmark` — the Nordikode logo (`lockup` or `mark`), light/dark assets
+  shipped in the package
+- `webAppIcons` / `webAppIconFor` — the canonical per-app icon registry
+
+Import styles once (`@nordikode/components/style.css`) — it carries the scoped
+CSS for these components too.
+
 ## Package consumption
 
 Applications should consume `@nordikode/components` as a published package from GitHub Packages.
