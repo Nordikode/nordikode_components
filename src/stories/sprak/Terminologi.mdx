@@ -5,8 +5,9 @@ import { Meta } from '@storybook/addon-docs/blocks'
 # Terminologi
 
 > **Status: utkast.** Beslutningene under er *forslag* fra design-auditen
-> 2026-08-18 og skal vedtas i fase 4. Når et begrep vedtas, flyttes det til
-> «Vedtatt»-tabellen og håndheves i i18n-katalogene.
+> 2026-08-18 og skal vedtas i fase 4 (SIGN-23). Beslutningsgrunnlaget med
+> målte forekomster per app ligger lenger ned. Når et begrep vedtas, flyttes
+> det til «Vedtatt»-tabellen og håndheves i i18n-katalogene.
 
 ## Vedtatt
 
@@ -26,6 +27,119 @@ import { Meta } from '@storybook/addon-docs/blocks'
 | Lisensplass | plass · antall brukere | én av dem, i hele checkout-flyten |
 | Underleverandør | underleverandør · partner · leverandør | «underleverandør» i UI; rydd nøkkelnavn ved anledning |
 | Person | bruker · ansatt · medlem | tre ulike entiteter — definér når hver brukes |
+
+## Beslutningsgrunnlag (SIGN-23, målt 24.08.2026)
+
+Forekomster i de norske i18n-katalogene (`no.ts`) og engelske (`en.ts`) per app.
+Tallene er ord-forekomster i brukertekst — grunnlaget for å se hvor et vedtak
+faktisk treffer, og hvor stor jobben blir.
+
+### 1. Sak / prosjekt / jobb / oppdrag
+
+| Variant | sign-web | time-web | portal |
+| --- | --- | --- | --- |
+| sak | 84 | 22 | 1 |
+| prosjekt | 27 | 0 | 11 |
+| jobb | 16 | 1 | 3 |
+| oppdrag | 2 | 0 | 0 |
+
+**Berørte flater:** hele saksflyten i Sign (liste, detalj, tilbud), Time-godkjenning, portalens kundedashboard (SIGN-17) og intake-/kundeflatene.
+**Anbefaling:** «sak» internt hos bedriften (sign-web/time-web), «prosjekt» mot sluttkunden (intake, kundeflater, portalens kundevisning) — dagens de facto-skille, men skriv regelen ned.
+**Konsekvens ved bytte:** ~40 nøkler må omformuleres i kundeflatene hvis alt skal hete «sak»; motsatt vei er ~100 interne forekomster. To-begreps-regelen er billigst og mest presis.
+
+### 2. Produkt / vare
+
+| Variant | sign-web | backoffice |
+| --- | --- | --- |
+| produkt | 30 | 0 |
+| vare | 8 | 2 |
+
+**Berørte flater:** produktregisteret i Sign (dialoger, import, tilbudslinjer), backoffice-priser.
+**Anbefaling:** «produkt»/«produktregister» overalt; «vare» fases ut ved neste berøring (nøkkelnavn kan bli stående).
+**Konsekvens:** ~10 tekster; ingen strukturendringer.
+
+### 3. Selskap / firma / bedrift
+
+| Variant | sign-web | portal | backoffice |
+| --- | --- | --- | --- |
+| selskap | 0 | 26 | 23 |
+| firma | 5 | 8 | 0 |
+| bedrift | 21 | 6 | 0 |
+
+**Berørte flater:** onboarding-wizard, bedriftsinnstillinger, backoffice-tenantvisningen, intake-tekster i Sign.
+**Anbefaling:** «selskap» i portal/backoffice (allerede konsekvent der); i Sign-kundeflatene kan «bedriften» beholdes der det peker på håndverkerbedriften i naturlig språk — vedtak må si hvilket ord som brukes hvor.
+**Konsekvens:** ~30 tekster i sign-web/portal hvis «selskap» skal overalt; middels jobb.
+
+### 4. Company / tenant (engelsk)
+
+| Variant | sign-web | portal | backoffice |
+| --- | --- | --- | --- |
+| company | 45 | 66 | 36 |
+| tenant | 22 | 3 | 18 |
+
+**Berørte flater:** «tenant» lekker i engelske tekster i sign-web (22) og backoffice (18) — interne systemord i brukertekst.
+**Anbefaling:** «company» i all brukertekst; «tenant» kun i kode/nøkler.
+**Konsekvens:** ~40 engelske tekster; ren opprydding uten designvalg.
+
+### 5. Tilbud / bud / offer / quote
+
+| Variant | sign-web (no) | sign-web (en) |
+| --- | --- | --- |
+| tilbud | 130 | offer: 158 |
+| bud | 14 | quote: 3 |
+
+**Berørte flater:** tilbudsfanen, kundedokumentet, UE-flyten (der «bud» brukes om underleverandørens svar).
+**Anbefaling:** «tilbud/offer» om bedriftens dokument til kunden; «bud» reserveres underleverandørens svar (dagens praksis er nesten konsekvent). «quote» (3) byttes til «offer».
+**Konsekvens:** liten — 3 engelske tekster + en regel som hindrer ny drift.
+
+### 6. Lisensplass: plass / antall brukere
+
+| Variant | portal | backoffice |
+| --- | --- | --- |
+| plass(er) | 18 | 5 |
+| seat (en) | 22 | 9 |
+
+**Berørte flater:** checkout-flyten, lisensadministrasjon, backoffice-abonnementer.
+**Anbefaling:** «plass» på norsk / «seat» på engelsk gjennomgående; «antall brukere» kun som forklarende hjelpetekst første gang.
+**Konsekvens:** liten; mest å låse regelen.
+
+### 7. Underleverandør / underentreprenør / partner / leverandør
+
+| Variant | sign-web |
+| --- | --- |
+| underleverandør | 41 |
+| underentreprenør | 2 |
+| partner | 3 |
+| leverandør | 1 |
+
+**Berørte flater:** UE-fanen, forespørsels-/budflyten, partnerregisteret.
+**Anbefaling:** «underleverandør» i UI (allerede dominerende); «partner» kun om den gjensidige partnerskapsrelasjonen (partnerregisteret). Nøkkelnavn (`subcontractors`, `partners`) står.
+**Konsekvens:** ~6 tekster.
+
+### 8. Bruker / ansatt / medlem
+
+| Variant | portal | backoffice | time-web |
+| --- | --- | --- | --- |
+| bruker | 40 | 47 | 4 |
+| ansatt | 25 | 0 | 2 |
+| medlem | 4 | 4 | 0 |
+
+**Berørte flater:** brukeradministrasjon, ansattregisteret, medlemslister.
+**Anbefaling:** tre ulike entiteter — «bruker» = innloggingskonto, «ansatt» = HR-registeret, «medlem» = tilknytning til et selskap. Vedtaket bør være definisjonene, ikke ett ord.
+**Konsekvens:** få tekstbytter; gevinsten er en skreven regel som stopper sammenblanding.
+
+### Tonemønstre (måling)
+
+| Mønster | sign-web | time-web | portal | backoffice |
+| --- | --- | --- | --- | --- |
+| «Kunne ikke …» (feil) | 93 | 11 | 5 | 71 |
+| «Kan ikke …» (feil) | 1 | 1 | 16 | 1 |
+| «Klarte ikke …» | 2 | 0 | 0 | 0 |
+| `...` (tre punktum) | 12 | 3 | 3 | 2 |
+| `…` (ellipsetegn) | 43 | 4 | 12 | 1 |
+| «Vennligst» | 0 | 0 | 2 | 0 |
+
+**Anbefaling:** «Kunne ikke X.» som feilform (portalens 16 «Kan ikke» skrives om), ellipsetegnet `…` (17 forekomster av `...` byttes), tankestrek `—` er allerede standarden, og de to siste «Vennligst» fjernes.
 
 ## Regler som gjelder uansett
 
