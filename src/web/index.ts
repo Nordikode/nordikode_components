@@ -5,9 +5,11 @@
  */
 export { default as AppLauncherMenu } from './AppLauncherMenu.vue'
 export { default as AccountIdentityMenu } from './AccountIdentityMenu.vue'
+export { default as TenantSwitcherMenu } from './TenantSwitcherMenu.vue'
 export { default as BrandWordmark } from './BrandWordmark.vue'
 
 export type { AppLauncherItem } from './AppLauncherMenu.vue'
 export type { AccountMenuService, AccountMenuLabels } from './AccountIdentityMenu.vue'
+export type { TenantSwitcherOption, TenantSwitcherLabels } from './TenantSwitcherMenu.vue'
 export { webAppIcons, webAppIconFor, webAppFallbackIcon } from './appIcons'
 export type { WebAppIconName } from './appIcons'
