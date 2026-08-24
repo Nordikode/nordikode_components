@@ -1,6 +1,6 @@
 {
   "name": "@nordikode/components",
-  "version": "0.3.2",
+  "version": "0.5.1",
   "private": false,
   "repository": {
     "type": "git",
@@ -14,6 +14,7 @@
     "dist",
     "index.d.ts",
     "tokens.d.ts",
+    "web.d.ts",
     "style.css"
   ],
   "exports": {
@@ -24,6 +25,10 @@
     "./tokens": {
       "types": "./tokens.d.ts",
       "import": "./dist/tokens.js"
+    },
+    "./web": {
+      "types": "./web.d.ts",
+      "import": "./dist/web.js"
     },
     "./style.css": "./style.css"
   },

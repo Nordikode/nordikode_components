@@ -11,6 +11,8 @@ export default defineConfig({
       entry: {
         index: resolve(__dirname, 'src/index.ts'),
         tokens: resolve(__dirname, 'src/tokens/index.ts'),
+        // Vuetify-fri entry for webflatene (nettside/konto-app) — se src/web/.
+        web: resolve(__dirname, 'src/web/index.ts'),
       },
       formats: ['es'],
       fileName: (_format, entryName) => `${entryName}.js`,
