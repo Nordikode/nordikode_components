@@ -14,6 +14,7 @@ export function toVuetifyTheme(scheme: NkScheme, dark: boolean): ThemeDefinition
       surface: scheme.surface,
       'surface-rail': scheme.surfaceRail,
       'surface-soft': scheme.surfaceSoft,
+      'surface-inverse': scheme.surfaceInverse,
       primary: scheme.primary,
       secondary: scheme.secondary,
       'on-secondary': scheme.onSecondary,
@@ -29,6 +30,7 @@ export function toVuetifyTheme(scheme: NkScheme, dark: boolean): ThemeDefinition
       'on-surface': scheme.textPrimary,
       'on-surface-rail': scheme.textPrimary,
       'on-surface-soft': scheme.textPrimary,
+      'on-surface-inverse': scheme.onSurfaceInverse,
       'on-primary': scheme.onPrimary,
     },
     variables: {

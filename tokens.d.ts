@@ -15,6 +15,10 @@ export interface NkScheme {
   surfaceBorder: string
   surfaceGlass: string
   surfaceSubtle: string
+  surfaceInverse: string
+  onSurfaceInverse: string
+  onSurfaceInverseMuted: string
+  onSurfaceInverseAccent: string
   textPrimary: string
   textSecondary: string
   primary: string
