@@ -43,6 +43,8 @@ export const portalTheme: NkProductTheme = {
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
     primarySoft: '#e5ecee',
     onPrimarySoft: '#2a6072',
+    infoSoft: '#e9eced', // avledet: 12 %-blend av info over surface (som de andre soft-flatene)
+    onInfoSoft: '#46606b', // avledet: = info
     successSoft: '#e4f1eb',
     onSuccessSoft: '#1f8a55',
     warningSoft: '#f9f3e6',
@@ -84,6 +86,8 @@ export const portalTheme: NkProductTheme = {
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
     primarySoft: '#22373f',
     onPrimarySoft: '#6db3c7',
+    infoSoft: '#24363e', // avledet: 12 %-blend av info over surface
+    onInfoSoft: '#7fa8b8', // avledet: = info
     successSoft: '#1e3737',
     onSuccessSoft: '#4cb583',
     warningSoft: '#2f3632',

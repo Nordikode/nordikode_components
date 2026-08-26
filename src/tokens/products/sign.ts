@@ -48,6 +48,8 @@ export const signTheme: NkProductTheme = {
     onError: '#ffffff',
     primarySoft: '#e0f5f2', // petrol-100
     onPrimarySoft: '#08675c', // petrol-700
+    infoSoft: '#e7edf1', // fjord-tint — AI-flater (SIGN-174); 7,8:1 mot onInfoSoft
+    onInfoSoft: '#274c5e', // fjord-500
     successSoft: '#e2faec', // nordlys-100
     onSuccessSoft: '#0e633c', // nordlys-700
     warningSoft: '#fbeed2', // varsel-100
@@ -98,6 +100,8 @@ export const signTheme: NkProductTheme = {
     onError: '#3a1c17',
     primarySoft: '#0d2725', // surface-selected
     onPrimarySoft: '#5cc0b4', // text-link — 7,2:1 på kort
+    infoSoft: '#101b26', // fjord-tint mørk — svakt løftet, blåkald (SIGN-174)
+    onInfoSoft: '#9bc2d4', // status-info-fg — 9,2:1 på infoSoft
     successSoft: '#123a2a', // status-ok-bg
     onSuccessSoft: '#7fe0ab',
     warningSoft: '#3a2a16', // status-warn-bg

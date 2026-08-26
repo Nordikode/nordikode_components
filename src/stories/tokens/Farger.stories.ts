@@ -10,7 +10,7 @@ const GROUPS: Array<{ title: string; keys: Array<keyof NkScheme> }> = [
   { title: 'Tekst', keys: ['textPrimary', 'textSecondary'] },
   { title: 'Handling og merkevare', keys: ['primary', 'primaryHover', 'onPrimary', 'secondary', 'onSecondary', 'info', 'onInfo', 'attention', 'onAttention'] },
   { title: 'Status', keys: ['success', 'onSuccess', 'warning', 'onWarning', 'error', 'onError'] },
-  { title: 'Myke flater (soft)', keys: ['primarySoft', 'onPrimarySoft', 'successSoft', 'onSuccessSoft', 'warningSoft', 'onWarningSoft', 'errorSoft', 'onErrorSoft'] },
+  { title: 'Myke flater (soft)', keys: ['primarySoft', 'onPrimarySoft', 'infoSoft', 'onInfoSoft', 'successSoft', 'onSuccessSoft', 'warningSoft', 'onWarningSoft', 'errorSoft', 'onErrorSoft'] },
   { title: 'Kanter og glass', keys: ['surfaceBorder', 'surfaceGlass', 'surfaceSubtle'] },
   { title: 'Skygger', keys: ['shadowSoft', 'shadowStrong'] },
   { title: 'Rail-ikoner', keys: ['railIcon', 'railIconStrong'] },
