@@ -50,6 +50,18 @@ export const Standard: Story = {
   },
 }
 
+export const MedPersonlig: Story = {
+  args: {
+    selectedId: 'personal',
+    labels,
+    personal: { id: 'personal', name: 'Personlig' },
+    tenants: [
+      { id: 't-1', name: 'Bygg og Anlegg AS', logoUrl: null },
+      { id: 't-2', name: 'Håndverkspartner Sørvest AS', logoUrl: null },
+    ],
+  },
+}
+
 export const UnderBytte: Story = {
   args: {
     selectedId: 't-1',
