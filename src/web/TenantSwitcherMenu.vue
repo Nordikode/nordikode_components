@@ -10,6 +10,11 @@
  * (klikk på valgt firma lukker bare menyen). Verts-appen eier selve byttet
  * (f.eks. POST /tenant/switch) og synligheten (innlogget + minst ett firma).
  *
+ * Kontoen er personlig: verts-appen kan sende med `personal` — et valg som
+ * representerer brukeren selv, uten firma. Det rendres som egen rad over
+ * firmalisten med person-markør i stedet for logo, og velges via samme
+ * `select`-event med `personal.id`.
+ *
  * Tema: verts-appens web-designtokens (`--color-*`, `--radius-*`) og
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
  */
@@ -34,13 +39,20 @@ const props = defineProps<{
   tenants: TenantSwitcherOption[]
   selectedId: string
   labels: TenantSwitcherLabels
+  /** Personlig kontekst (brukeren selv, uten firma). `logoUrl` ignoreres — raden får person-markør. */
+  personal?: TenantSwitcherOption | null
   /** Deaktiverer valgene mens verts-appen utfører et bytte. */
   switching?: boolean
 }>()
 
 const emit = defineEmits<{ select: [tenantId: string] }>()
 
-const selected = computed(() => props.tenants.find((tenant) => tenant.id === props.selectedId) ?? null)
+const personalSelected = computed(() => props.personal != null && props.personal.id === props.selectedId)
+
+const selected = computed(() => {
+  if (personalSelected.value) return props.personal ?? null
+  return props.tenants.find((tenant) => tenant.id === props.selectedId) ?? null
+})
 
 // Samme regel som avataren i kontomenyen: de to første ordene.
 function initialsOf(name: string): string {
@@ -60,6 +72,10 @@ function markLogoFailed(tenant: TenantSwitcherOption) {
 }
 
 const CHEVRON = 'm6 9 6 6 6-6'
+
+/** Person-markøren for personlig-raden (hode + skuldre, samme strekspråk som chevronen). */
+const PERSON_HEAD = 'M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z'
+const PERSON_BODY = 'M5.5 20a6.5 6.5 0 0 1 13 0'
 
 const open = ref(false)
 const root = ref<HTMLElement | null>(null)
@@ -145,8 +161,21 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
       @click="toggle"
     >
       <span class="nk-tenant__avatar">
+        <svg
+          v-if="personalSelected"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          class="nk-tenant__person"
+          aria-hidden="true"
+        >
+          <path :d="PERSON_HEAD" />
+          <path :d="PERSON_BODY" />
+        </svg>
         <img
-          v-if="selected.logoUrl && !logoFailed(selected)"
+          v-else-if="selected.logoUrl && !logoFailed(selected)"
           :src="selected.logoUrl"
           alt=""
           class="nk-tenant__avatar-img"
@@ -176,7 +205,37 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
           <p class="nk-tenant__current-label">{{ labels.current }}</p>
         </div>
 
-        <p class="nk-tenant__section-label">{{ labels.companies }}</p>
+        <button
+          v-if="personal"
+          type="button"
+          role="menuitem"
+          class="nk-tenant__item nk-tenant__item--personal"
+          :class="{ 'nk-tenant__item--current': personalSelected }"
+          :disabled="switching"
+          @click="choose(personal)"
+        >
+          <span class="nk-tenant__item-avatar">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              class="nk-tenant__person nk-tenant__person--item"
+              aria-hidden="true"
+            >
+              <path :d="PERSON_HEAD" />
+              <path :d="PERSON_BODY" />
+            </svg>
+          </span>
+          <span class="nk-tenant__item-label">{{ personal.name }}</span>
+          <template v-if="personalSelected">
+            <span class="nk-tenant__dot" aria-hidden="true" />
+            <span class="nk-sr-only">{{ labels.current }}</span>
+          </template>
+        </button>
+
+        <p v-if="tenants.length > 0" class="nk-tenant__section-label">{{ labels.companies }}</p>
         <button
           v-for="tenant in tenants"
           :key="tenant.id"
@@ -256,6 +315,21 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--nk-chrome-accent-ink, var(--nk-chrome-accent, var(--color-ink-secondary)));
+}
+
+.nk-tenant__person {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--nk-chrome-accent-ink, var(--nk-chrome-accent, var(--color-ink-secondary)));
+}
+
+.nk-tenant__person--item {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.nk-tenant__item--personal {
+  margin-top: 0.25rem;
 }
 
 .nk-tenant__chevron {

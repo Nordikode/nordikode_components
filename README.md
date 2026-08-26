@@ -32,7 +32,8 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 - `AppLauncherMenu` — the Google-style app grid menu
 - `AccountIdentityMenu` — the avatar/account menu with service list
 - `TenantSwitcherMenu` — the company menu (tenant logo/initials, switch between
-  the user's companies; the host owns the actual switch request)
+  the user's companies, optional personal context via the `personal` prop; the
+  host owns the actual switch request)
 - `BrandWordmark` — the Nordikode logo (`lockup` or `mark`), light/dark assets
   shipped in the package
 - `webAppIcons` / `webAppIconFor` — the canonical per-app icon registry
