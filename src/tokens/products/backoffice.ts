@@ -23,6 +23,10 @@ export const backofficeTheme: NkProductTheme = {
     surfaceBorder: 'rgba(159, 47, 59, 0.16)',
     surfaceGlass: 'rgba(255, 255, 255, 0.72)',
     surfaceSubtle: 'rgba(255, 255, 255, 0.62)',
+    surfaceInverse: '#271a1e', // avledet: = dark.surface (mørkt panel i light)
+    onSurfaceInverse: '#f2e4e6', // avledet: = dark.textPrimary — 13,6:1 på inverse
+    onSurfaceInverseMuted: '#bfa3a8', // avledet: = dark.textSecondary — 7,2:1
+    onSurfaceInverseAccent: '#4cb583', // avledet: = dark.onSuccessSoft — 6,6:1
     textPrimary: '#35171b',
     textSecondary: '#7b5d62',
     primary: '#9f2f3b',
@@ -64,6 +68,10 @@ export const backofficeTheme: NkProductTheme = {
     surfaceBorder: 'rgba(242, 228, 230, 0.14)',
     surfaceGlass: 'rgba(39, 26, 30, 0.72)',
     surfaceSubtle: 'rgba(39, 26, 30, 0.62)',
+    surfaceInverse: '#3a282e', // avledet: = surfaceSoftAccent (løftet flate)
+    onSurfaceInverse: '#f2e4e6', // avledet: = textPrimary — 11,2:1 på inverse
+    onSurfaceInverseMuted: '#bfa3a8', // avledet: = textSecondary — 5,9:1
+    onSurfaceInverseAccent: '#4cb583', // avledet: = onSuccessSoft — 5,4:1
     textPrimary: '#f2e4e6',
     textSecondary: '#bfa3a8',
     primary: '#d4707b',

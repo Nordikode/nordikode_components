@@ -22,6 +22,14 @@ export interface NkScheme {
   surfaceGlass: string
   surfaceSubtle: string
 
+  /** Invers «spine»-flate: mørkt panel i light (som railen), løftet flate i dark. */
+  surfaceInverse: string
+  onSurfaceInverse: string
+  /** Dempet tekst (labels) på invers flate. */
+  onSurfaceInverseMuted: string
+  /** Positiv aksent (økonomi o.l.) på invers flate. */
+  onSurfaceInverseAccent: string
+
   textPrimary: string
   textSecondary: string
 
