@@ -39,6 +39,8 @@ export const timeTheme: NkProductTheme = {
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
     primarySoft: '#f6eae1',
     onPrimarySoft: '#b45309',
+    infoSoft: '#f6eae1', // avledet: 12 %-blend av info over surface (som de andre soft-flatene)
+    onInfoSoft: '#b45309', // avledet: = info
     successSoft: '#e4f1eb',
     onSuccessSoft: '#1f8a55',
     warningSoft: '#f9f3e6',
@@ -84,6 +86,8 @@ export const timeTheme: NkProductTheme = {
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
     primarySoft: '#3a2b1b',
     onPrimarySoft: '#e0913c',
+    infoSoft: '#3a2b1b', // avledet: 12 %-blend av info over surface
+    onInfoSoft: '#e0913c', // avledet: = info
     successSoft: '#282f23',
     onSuccessSoft: '#4cb583',
     warningSoft: '#392e1e',

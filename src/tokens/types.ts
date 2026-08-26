@@ -54,6 +54,9 @@ export interface NkScheme {
   /** Myke flater (tonal-chips o.l.): bakgrunn + tekst per rolle. */
   primarySoft: string
   onPrimarySoft: string
+  /** Info-/AI-flate (fjord-tint i Sign): rolig tint for maskin-/AI-innhold. */
+  infoSoft: string
+  onInfoSoft: string
   successSoft: string
   onSuccessSoft: string
   warningSoft: string

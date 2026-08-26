@@ -43,6 +43,8 @@ export const backofficeTheme: NkProductTheme = {
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
     primarySoft: '#f3e6e7',
     onPrimarySoft: '#9f2f3b',
+    infoSoft: '#efe5e6', // avledet: 12 %-blend av info over surface (som de andre soft-flatene)
+    onInfoSoft: '#7d2431', // avledet: = info
     successSoft: '#e4f1eb',
     onSuccessSoft: '#1f8a55',
     warningSoft: '#f9f3e6',
@@ -88,6 +90,8 @@ export const backofficeTheme: NkProductTheme = {
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
     primarySoft: '#3c2429',
     onPrimarySoft: '#d4707b',
+    infoSoft: '#3d272c', // avledet: 12 %-blend av info over surface
+    onInfoSoft: '#df8a94', // avledet: = info
     successSoft: '#2b2d2a',
     onSuccessSoft: '#4cb583',
     warningSoft: '#3c2c25',

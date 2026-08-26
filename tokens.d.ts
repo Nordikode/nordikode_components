@@ -38,6 +38,8 @@ export interface NkScheme {
   onError: string
   primarySoft: string
   onPrimarySoft: string
+  infoSoft: string
+  onInfoSoft: string
   successSoft: string
   onSuccessSoft: string
   warningSoft: string
