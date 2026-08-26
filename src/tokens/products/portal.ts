@@ -27,6 +27,10 @@ export const portalTheme: NkProductTheme = {
     surfaceBorder: 'rgba(84, 109, 121, 0.18)',
     surfaceGlass: 'rgba(255, 255, 255, 0.72)',
     surfaceSubtle: 'rgba(255, 255, 255, 0.62)',
+    surfaceInverse: '#18262d', // avledet: = dark.surface (mørkt panel i light)
+    onSurfaceInverse: '#dfeaef', // avledet: = dark.textPrimary — 12,7:1 på inverse
+    onSurfaceInverseMuted: '#9db3bc', // avledet: = dark.textSecondary — 7,1:1
+    onSurfaceInverseAccent: '#4cb583', // avledet: = dark.onSuccessSoft — 6,1:1
     textPrimary: '#19323f',
     textSecondary: '#4d6570',
     primary: '#2a6072',
@@ -70,6 +74,10 @@ export const portalTheme: NkProductTheme = {
     surfaceBorder: 'rgba(194, 214, 222, 0.16)',
     surfaceGlass: 'rgba(24, 38, 45, 0.72)',
     surfaceSubtle: 'rgba(24, 38, 45, 0.62)',
+    surfaceInverse: '#152730', // avledet: = surfaceSoftAccent (løftet flate)
+    onSurfaceInverse: '#dfeaef', // avledet: = textPrimary — 12,6:1 på inverse
+    onSurfaceInverseMuted: '#9db3bc', // avledet: = textSecondary — 7,0:1
+    onSurfaceInverseAccent: '#4cb583', // avledet: = onSuccessSoft — 6,0:1
     textPrimary: '#dfeaef',
     textSecondary: '#9db3bc',
     primary: '#6db3c7',

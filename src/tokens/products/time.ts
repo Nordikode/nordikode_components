@@ -19,6 +19,10 @@ export const timeTheme: NkProductTheme = {
     surfaceBorder: 'rgba(44, 36, 24, 0.12)',
     surfaceGlass: 'rgba(255, 255, 255, 0.72)', // avledet
     surfaceSubtle: 'rgba(255, 255, 255, 0.62)', // avledet
+    surfaceInverse: '#231d16', // avledet: = dark.surface (mørkt panel i light)
+    onSurfaceInverse: '#f1e9dd', // avledet: = dark.textPrimary — 13,9:1 på inverse
+    onSurfaceInverseMuted: '#b3a893', // avledet: = dark.textSecondary — 7,1:1
+    onSurfaceInverseAccent: '#4cb583', // avledet: = dark.onSuccessSoft — 6,6:1
     textPrimary: '#2c2418',
     textSecondary: '#7d715f',
     primary: '#b45309',
@@ -62,6 +66,10 @@ export const timeTheme: NkProductTheme = {
     surfaceBorder: 'rgba(241, 233, 221, 0.14)',
     surfaceGlass: 'rgba(35, 29, 22, 0.72)', // avledet
     surfaceSubtle: 'rgba(35, 29, 22, 0.62)', // avledet
+    surfaceInverse: '#2a2219', // avledet: = surfaceSoftAccent (løftet flate)
+    onSurfaceInverse: '#f1e9dd', // avledet: = textPrimary — 13,0:1 på inverse
+    onSurfaceInverseMuted: '#b3a893', // avledet: = textSecondary — 6,7:1
+    onSurfaceInverseAccent: '#4cb583', // avledet: = onSuccessSoft — 6,2:1
     textPrimary: '#f1e9dd',
     textSecondary: '#b3a893',
     primary: '#e0913c',

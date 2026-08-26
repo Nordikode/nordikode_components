@@ -29,6 +29,10 @@ export const signTheme: NkProductTheme = {
     surfaceBorder: 'rgba(13, 28, 38, 0.12)', // avledet: ≈ snø-300-hairline over hvit
     surfaceGlass: 'rgba(255, 255, 255, 0.72)', // avledet
     surfaceSubtle: 'rgba(255, 255, 255, 0.62)', // avledet
+    surfaceInverse: '#0d1c26', // fjord-900 — samme mørke flate som railen («the spine»)
+    onSurfaceInverse: '#f6f2ea', // = railIconStrong — 15,5:1 på inverse
+    onSurfaceInverseMuted: '#9aa7ad', // avledet: dempet fjord-tone — 7,0:1 på inverse
+    onSurfaceInverseAccent: '#7fe0ab', // nordlys (status-ok-fg fra dark) — 10,9:1 på inverse
     textPrimary: '#241e18', // tjære-800
     textSecondary: '#6b6055', // stein-500
     primary: '#0b8476', // petrol-500 — 4,59:1 mot hvit
@@ -81,6 +85,10 @@ export const signTheme: NkProductTheme = {
     surfaceBorder: 'rgba(255, 255, 255, 0.09)', // border-hairline (#ffffff16)
     surfaceGlass: 'rgba(17, 21, 25, 0.72)', // avledet: kortflaten som glass
     surfaceSubtle: 'rgba(17, 21, 25, 0.62)', // avledet
+    surfaceInverse: '#16283a', // avledet: fjord-tonet løftet flate — skiller seg fra kortflaten
+    onSurfaceInverse: '#cbd3d8', // = textPrimary — 9,9:1 på inverse
+    onSurfaceInverseMuted: '#87919a', // = textSecondary — 4,7:1 på inverse
+    onSurfaceInverseAccent: '#7fe0ab', // = onSuccessSoft — 9,4:1 på inverse
     textPrimary: '#cbd3d8', // text-body — 12,0:1 på kort
     textSecondary: '#87919a', // text-muted — 5,6:1
     primary: '#0b8476', // petrol-500 — samme fyll som light, 4,59:1 med hvit
