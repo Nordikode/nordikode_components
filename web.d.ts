@@ -46,7 +46,46 @@ export type TenantSwitcherLabels = {
   companies: string
 }
 
+export type AppHeaderNavChild = {
+  key: string
+  label: string
+  href: string
+  external?: boolean
+  active?: boolean
+}
+
+export type AppHeaderNavItem = AppHeaderNavChild & {
+  href?: string
+  children?: AppHeaderNavChild[]
+}
+
+export type AppHeaderLabels = {
+  navigation: string
+  menu: string
+}
+
+export type PageHeaderBack = {
+  href: string
+  label: string
+}
+
+export type ThemeToggleLabels = {
+  toLight: string
+  toDark: string
+}
+
+export type ThemePreference = 'system' | 'light' | 'dark'
+
+export function useTheme(): {
+  isDark: import('vue').Ref<boolean>
+  toggle: () => void
+  applyPreference: (preference: ThemePreference) => void
+}
+
 export const AppLauncherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AccountIdentityMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const TenantSwitcherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const BrandWordmark: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const AppHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const PageHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const ThemeToggle: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
