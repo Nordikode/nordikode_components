@@ -29,6 +29,22 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 `--color-line`, `--radius-*`) plus the accent contract `--nk-chrome-accent` /
 `--nk-chrome-accent-ink`, which the host app sets from its own theme.
 
+- `AppHeader` — the header shell itself: sticky 3.25rem bar with blur, brand
+  (wordmark + `#brand-suffix`), nav from a `nav` prop rendered both as desktop
+  nav (one dropdown level, active by `currentPath` prefix) and as the built-in
+  burger drawer below 640px. Widths: `standard` (64rem), `wide` (72rem),
+  `full`. The right side is consumer-composed in `#menus` in the standard
+  order `#actions` → ThemeToggle → AppLauncherMenu → TenantSwitcherMenu →
+  AccountIdentityMenu → burger; `#nav-item` lets Inertia/SPA apps render
+  their own link component. z-index override: `--nk-chrome-z` (default 50).
+- `PageHeader` — the page-heading standard: hierarchical back link (always
+  one level up, never browser history; top-level pages have none) → the
+  page's single H1 → subtitle, with `#badge` (status chip) and `#actions`.
+- `ThemeToggle` + `useTheme` — the shared light/dark switch. Theme is the
+  `dark` class on `<html>`; the OS preference is the default and an explicit
+  choice is stored under `nordikode-theme` only while it differs from the OS
+  (self-clearing). `useTheme().applyPreference()` accepts the signed-in
+  user's `preferredTheme` from core.
 - `AppLauncherMenu` — the Google-style app grid menu
 - `AccountIdentityMenu` — the avatar/account menu with service list
 - `TenantSwitcherMenu` — the company menu (tenant logo/initials, switch between
@@ -37,6 +53,11 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 - `BrandWordmark` — the Nordikode logo (`lockup` or `mark`), light/dark assets
   shipped in the package
 - `webAppIcons` / `webAppIconFor` — the canonical per-app icon registry
+
+The accent contract is mandatory in both themes: hosts must define both
+`--nk-chrome-accent` and `--nk-chrome-accent-ink` in light mode *and* in
+`.dark` — overriding only one of them in dark mode makes the chrome pick up
+mismatched colors.
 
 Import styles once (`@nordikode/components/style.css`) — it carries the scoped
 CSS for these components too.
