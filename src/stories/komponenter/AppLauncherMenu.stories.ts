@@ -43,15 +43,19 @@ export const Standard: Story = {
   },
 }
 
-export const MedBackoffice: Story = {
+/** Gruppert: produktene øverst, deretter tjenestene, nederst de interne verktøyene. */
+export const Gruppert: Story = {
   args: {
     label: 'Nordikode-apper',
     apps: [
-      { key: 'portal', label: 'Portal', url: 'https://portal.nordikode.com' },
-      { key: 'sign', label: 'Sign', url: 'https://sign.nordikode.com' },
-      { key: 'time', label: 'Time', url: 'https://time.nordikode.com' },
-      { key: 'backoffice', label: 'Backoffice', url: 'https://backoffice.nordikode.com' },
-      { key: 'website', label: 'Nettsted', url: 'https://nordikode.com' },
+      { key: 'portal', label: 'Portal', url: 'https://portal.nordikode.com', group: 'products' },
+      { key: 'sign', label: 'Sign', url: 'https://sign.nordikode.com', group: 'products' },
+      { key: 'time', label: 'Time', url: 'https://time.nordikode.com', group: 'products' },
+      { key: 'website', label: 'Nettsiden', url: 'https://nordikode.com', group: 'services' },
+      { key: 'developer', label: 'Utvikler', url: 'https://developer.nordikode.com', group: 'services' },
+      { key: 'backoffice', label: 'Backoffice', url: 'https://backoffice.nordikode.com', group: 'internal' },
+      { key: 'admin', label: 'Nettstedsadmin', url: 'https://nordikode.com/admin', group: 'internal' },
     ],
+    groupLabels: { products: 'Produkter', services: 'Tjenester', internal: 'Internt' },
   },
 }

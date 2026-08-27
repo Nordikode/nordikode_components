@@ -8,20 +8,45 @@
  * Tema: bruker verts-appens web-designtokens (`--color-*`, `--radius-*`) og
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
  */
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { webAppIconFor } from './appIcons'
 
 export type AppLauncherItem = {
   key: string
   label: string
   url: string
+  /** Gruppenøkkel (`products`, `services`, `internal`) — apper uten gruppe havner i én felles seksjon. */
+  group?: string
 }
 
-defineProps<{
+const props = defineProps<{
   apps: AppLauncherItem[]
   /** aria-label på rutenett-knappen og panelet. */
   label: string
+  /** Overskrift per gruppenøkkel (oversatt av verts-appen). Grupper uten oppføring vises uten overskrift. */
+  groupLabels?: Record<string, string>
 }>()
+
+/** Seksjonene i innsettingsrekkefølge — backend eier rekkefølgen på listen. */
+const sections = computed(() => {
+  const byGroup = new Map<string, AppLauncherItem[]>()
+
+  for (const app of props.apps) {
+    const group = app.group ?? ''
+    const bucket = byGroup.get(group)
+    if (bucket) {
+      bucket.push(app)
+    } else {
+      byGroup.set(group, [app])
+    }
+  }
+
+  return Array.from(byGroup, ([group, apps]) => ({
+    group,
+    heading: props.groupLabels?.[group] ?? null,
+    apps,
+  }))
+})
 
 /** 3×3-rutenettet i utløser-knappen. */
 const TRIGGER_DOTS = [5, 12, 19].flatMap((y) => [5, 12, 19].map((x) => ({ x, y })))
@@ -119,32 +144,40 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
         class="nk-launcher__panel"
         @keydown="onPanelKeydown"
       >
-        <div class="nk-launcher__grid">
-          <a
-            v-for="app in apps"
-            :key="app.key"
-            role="menuitem"
-            :href="app.url"
-            rel="noopener"
-            class="nk-launcher__item"
-            @click="close()"
-          >
-            <span class="nk-launcher__chip">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="nk-launcher__app-icon"
-                aria-hidden="true"
-              >
-                <path v-for="(d, index) in webAppIconFor(app.key)" :key="index" :d="d" />
-              </svg>
-            </span>
-            <span class="nk-launcher__label">{{ app.label }}</span>
-          </a>
+        <div
+          v-for="(section, sectionIndex) in sections"
+          :key="section.group"
+          class="nk-launcher__section"
+          :class="{ 'nk-launcher__section--first': sectionIndex === 0 }"
+        >
+          <p v-if="section.heading" class="nk-launcher__heading" role="presentation">{{ section.heading }}</p>
+          <div class="nk-launcher__grid">
+            <a
+              v-for="app in section.apps"
+              :key="app.key"
+              role="menuitem"
+              :href="app.url"
+              rel="noopener"
+              class="nk-launcher__item"
+              @click="close()"
+            >
+              <span class="nk-launcher__chip">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="nk-launcher__app-icon"
+                  aria-hidden="true"
+                >
+                  <path v-for="(d, index) in webAppIconFor(app.key)" :key="index" :d="d" />
+                </svg>
+              </span>
+              <span class="nk-launcher__label">{{ app.label }}</span>
+            </a>
+          </div>
         </div>
       </div>
     </Transition>
@@ -202,6 +235,22 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.25rem;
+}
+
+.nk-launcher__section:not(.nk-launcher__section--first) {
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--color-line);
+  padding-top: 0.5rem;
+}
+
+.nk-launcher__heading {
+  margin: 0 0 0.25rem;
+  padding-inline: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-tertiary);
 }
 
 .nk-launcher__item {
