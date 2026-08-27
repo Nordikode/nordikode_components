@@ -3,14 +3,28 @@ import { computed } from 'vue'
 import IdentityAvatar from './IdentityAvatar.vue'
 import type { SharedLocale } from '../types/SharedLocale'
 
+/**
+ * Identitetsmenyen (avataren) for Vuetify-appene — én komponent for
+ * toppbarer og railene i produktappene, så innholdet er identisk overalt:
+ * navn/e-post, «Kontoinnstillinger» (konto-appen), valgfritt «Avslutt»
+ * (tilbake til portalen) og «Logg ut».
+ *
+ * Appen eier bare sesjonen: utlogging går ut som event; kontolenken
+ * navigerer selv til konto-appen (`accountBaseUrl` + /settings).
+ */
 interface Props {
   userName: string
   userEmail?: string | null
   avatarUrl?: string | null
+  /** Kun avataren som utløser (railene); ellers pille med navn/e-post. */
   compact?: boolean
   locale?: SharedLocale | string | null
+  /** Konto-appens origin (account.nordikode.com) — «Kontoinnstillinger» går til /settings der. */
   accountBaseUrl: string
-  sourceApp?: string | null
+  /** Valgfritt «Avslutt»-mål (portalen). Uten verdi vises ikke innslaget. */
+  exitUrl?: string | null
+  /** v-menu-posisjon; railene bruker 'end bottom'. */
+  location?: string
   menuMinWidth?: number
 }
 
@@ -19,7 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
   avatarUrl: null,
   compact: false,
   locale: 'en',
-  sourceApp: null,
+  exitUrl: null,
+  location: 'bottom end',
   menuMinWidth: 220,
 })
 
@@ -27,12 +42,12 @@ const emit = defineEmits<{
   logout: []
 }>()
 
-const translations: Record<SharedLocale, { editProfile: string, logout: string }> = {
-  en: { editProfile: 'Edit profile', logout: 'Log out' },
-  no: { editProfile: 'Rediger profil', logout: 'Logg ut' },
-  sv: { editProfile: 'Redigera profil', logout: 'Logga ut' },
-  fr: { editProfile: 'Modifier le profil', logout: 'Se déconnecter' },
-  pl: { editProfile: 'Edytuj profil', logout: 'Wyloguj się' },
+const translations: Record<SharedLocale, { accountSettings: string, exitApp: string, logout: string }> = {
+  en: { accountSettings: 'Account settings', exitApp: 'Exit', logout: 'Log out' },
+  no: { accountSettings: 'Kontoinnstillinger', exitApp: 'Avslutt', logout: 'Logg ut' },
+  sv: { accountSettings: 'Kontoinställningar', exitApp: 'Avsluta', logout: 'Logga ut' },
+  fr: { accountSettings: 'Paramètres du compte', exitApp: 'Quitter', logout: 'Se déconnecter' },
+  pl: { accountSettings: 'Ustawienia konta', exitApp: 'Zakończ', logout: 'Wyloguj się' },
 }
 
 const resolvedLocale = computed<SharedLocale>(() => {
@@ -42,32 +57,27 @@ const resolvedLocale = computed<SharedLocale>(() => {
 
 const labels = computed(() => translations[resolvedLocale.value])
 
+/** Kontoinnstillingene bor i konto-appen — alltid full navigasjon dit. */
 const navigateToAccount = (): void => {
-  const accountUrl = new URL('/account', props.accountBaseUrl)
-  const currentUrl = window.location.href
-
-  if (props.sourceApp) {
-    accountUrl.searchParams.set('fromApp', props.sourceApp)
-  }
-
-  accountUrl.searchParams.set('returnTo', currentUrl)
-  window.location.assign(accountUrl.toString())
+  window.location.assign(new URL('/settings', props.accountBaseUrl).toString())
 }
 
-const handleSelect = (key: 'edit-profile' | 'logout'): void => {
-  if (key === 'edit-profile') {
-    navigateToAccount()
-    return
+const navigateToExit = (): void => {
+  if (props.exitUrl) {
+    window.location.assign(props.exitUrl)
   }
-
-  emit('logout')
 }
 </script>
 
 <template>
-  <v-menu location="bottom end" offset="8">
+  <v-menu :location="location" offset="8">
     <template #activator="{ props: activatorProps }">
-      <button :class="['user-menu-trigger', { 'user-menu-trigger--compact': compact }]" type="button" v-bind="activatorProps">
+      <button
+        :aria-label="userName"
+        :class="['user-menu-trigger', { 'user-menu-trigger--compact': compact }]"
+        type="button"
+        v-bind="activatorProps"
+      >
         <IdentityAvatar
           :image-url="avatarUrl"
           :name="userName"
@@ -82,9 +92,12 @@ const handleSelect = (key: 'edit-profile' | 'logout'): void => {
       </button>
     </template>
 
-    <v-list class="user-menu-list" density="comfortable" :min-width="menuMinWidth">
-      <v-list-item :title="labels.editProfile" @click="handleSelect('edit-profile')" />
-      <v-list-item :title="labels.logout" @click="handleSelect('logout')" />
+    <v-list class="user-menu-list" density="compact" :min-width="menuMinWidth">
+      <v-list-item :subtitle="userEmail ?? undefined" :title="userName" />
+      <v-divider class="my-1" />
+      <v-list-item prepend-icon="mdi-account-outline" :title="labels.accountSettings" @click="navigateToAccount" />
+      <v-list-item v-if="exitUrl" prepend-icon="mdi-exit-to-app" :title="labels.exitApp" @click="navigateToExit" />
+      <v-list-item prepend-icon="mdi-logout" :title="labels.logout" @click="emit('logout')" />
     </v-list>
   </v-menu>
 </template>

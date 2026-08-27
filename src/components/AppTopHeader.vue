@@ -13,7 +13,8 @@ interface Props {
   navigationToggleAriaLabel?: string | null
   navigationToggleIcon?: string
   showNavigationToggle?: boolean
-  sourceApp?: string | null
+  /** Valgfritt «Avslutt»-mål (portalen) i identitetsmenyen. */
+  exitUrl?: string | null
   tenantEmptyLabel?: string | null
   tenantItems?: HeaderTenantOption[]
   tenantMenuEnabled?: boolean
@@ -33,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   navigationToggleAriaLabel: null,
   navigationToggleIcon: 'mdi-menu',
   showNavigationToggle: false,
-  sourceApp: null,
+  exitUrl: null,
   tenantEmptyLabel: null,
   tenantItems: () => [],
   tenantMenuEnabled: true,
@@ -128,7 +129,7 @@ onBeforeUnmount(() => {
             :avatar-url="userAvatarUrl"
             :compact="compactActions"
             :locale="locale"
-            :source-app="sourceApp"
+            :exit-url="exitUrl"
             :user-email="userEmail"
             :user-name="userName"
             @logout="emit('logout')"
