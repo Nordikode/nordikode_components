@@ -4,6 +4,8 @@ export type AppLauncherItem = {
   key: string
   label: string
   url: string
+  group?: string
+  badge?: number | null
 }
 
 export type AccountMenuService = {
@@ -29,6 +31,7 @@ export type WebAppIconName =
   | 'helpcenter'
   | 'developer'
   | 'admin'
+  | 'review'
 
 export const webAppIcons: Record<WebAppIconName, string[]>
 export const webAppFallbackIcon: string[]

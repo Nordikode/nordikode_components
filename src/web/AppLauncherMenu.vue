@@ -17,6 +17,13 @@ export type AppLauncherItem = {
   url: string
   /** Gruppenøkkel (`products`, `services`, `internal`) — apper uten gruppe havner i én felles seksjon. */
   group?: string
+  /**
+   * Antall-badge på oppføringen (f.eks. stacker til review). Summen av alle
+   * badges vises også på selve rutenett-knappen. Null/0 = ingen badge.
+   * Farger: kontraktvariablene `--nk-chrome-badge` / `--nk-chrome-badge-ink`
+   * (verts-appen definerer dem fra error-tokenet, som chrome-aksenten).
+   */
+  badge?: number | null
 }
 
 const props = defineProps<{
@@ -50,6 +57,16 @@ const sections = computed(() => {
 
 /** 3×3-rutenettet i utløser-knappen. */
 const TRIGGER_DOTS = [5, 12, 19].flatMap((y) => [5, 12, 19].map((x) => ({ x, y })))
+
+/** Summen av alle badges — vises på rutenett-knappen så tallet synes uten å åpne panelet. */
+const badgeTotal = computed(() =>
+  props.apps.reduce((sum, app) => sum + Math.max(0, app.badge ?? 0), 0),
+)
+
+/** Badge-tekst med tak, så tallet aldri sprenger sirkelen. */
+function badgeText(count: number): string {
+  return count > 99 ? '99+' : String(count)
+}
 
 const open = ref(false)
 const root = ref<HTMLElement | null>(null)
@@ -133,6 +150,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
       <svg viewBox="0 0 24 24" fill="currentColor" class="nk-launcher__grid-icon" aria-hidden="true">
         <circle v-for="(pos, index) in TRIGGER_DOTS" :key="index" :cx="pos.x" :cy="pos.y" r="1.6" />
       </svg>
+      <span v-if="badgeTotal > 0" class="nk-launcher__badge nk-launcher__badge--trigger">{{ badgeText(badgeTotal) }}</span>
     </button>
 
     <Transition name="nk-pop">
@@ -162,6 +180,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
               @click="close()"
             >
               <span class="nk-launcher__chip">
+                <span v-if="(app.badge ?? 0) > 0" class="nk-launcher__badge">{{ badgeText(app.badge!) }}</span>
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -190,6 +209,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 }
 
 .nk-launcher__trigger {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -274,6 +294,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 
 
 .nk-launcher__chip {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -282,6 +303,32 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   border-radius: 9999px;
   background: color-mix(in srgb, var(--nk-chrome-accent, var(--color-ink-tertiary)) 12%, transparent);
   color: var(--nk-chrome-accent-ink, var(--nk-chrome-accent, var(--color-ink-secondary)));
+}
+
+/* Antall-badge (oppføring + rutenett-knapp). Fargene er kontraktvariabler
+   verts-appen definerer fra error-tokenet — fallback til Vuetify-tokenene
+   for verter som allerede laster dem. */
+.nk-launcher__badge {
+  position: absolute;
+  top: -0.25rem;
+  inset-inline-end: -0.4375rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0.9375rem;
+  height: 0.9375rem;
+  border-radius: 9999px;
+  padding: 0 0.1875rem;
+  background: var(--nk-chrome-badge, var(--nk-error));
+  color: var(--nk-chrome-badge-ink, var(--nk-on-error));
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.nk-launcher__badge--trigger {
+  top: 0.0625rem;
+  inset-inline-end: 0.0625rem;
 }
 
 .nk-launcher__app-icon {

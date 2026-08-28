@@ -17,6 +17,9 @@ const webTokens = [
   '--radius-standard: 14px',
   '--nk-chrome-accent: #3b5b72',
   '--nk-chrome-accent-ink: #3b5b72',
+  // Badge-kontrakten: verts-appene setter disse fra error-tokenet.
+  '--nk-chrome-badge: #c0504d',
+  '--nk-chrome-badge-ink: #ffffff',
 ].join(';')
 
 const meta: Meta<typeof AppLauncherMenu> = {
@@ -57,5 +60,19 @@ export const Gruppert: Story = {
       { key: 'admin', label: 'Nettstedsadmin', url: 'https://nordikode.com/admin', group: 'internal' },
     ],
     groupLabels: { products: 'Produkter', services: 'Tjenester', internal: 'Internt' },
+  },
+}
+
+/** Med badge: antall vises på oppføringen, og summen på selve rutenett-knappen. */
+export const MedBadge: Story = {
+  args: {
+    label: 'Nordikode-apper',
+    apps: [
+      { key: 'portal', label: 'Portal', url: 'https://portal.nordikode.com', group: 'products' },
+      { key: 'sign', label: 'Sign', url: 'https://sign.nordikode.com', group: 'products' },
+      { key: 'backoffice', label: 'Backoffice', url: 'https://backoffice.nordikode.com', group: 'internal' },
+      { key: 'review', label: 'Review', url: 'https://review.nordikode.com', group: 'internal', badge: 4 },
+    ],
+    groupLabels: { products: 'Produkter', internal: 'Internt' },
   },
 }

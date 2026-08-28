@@ -17,6 +17,7 @@ export type WebAppIconName =
   | 'helpcenter'
   | 'developer'
   | 'admin'
+  | 'review'
 
 export const webAppIcons: Record<WebAppIconName, string[]> = {
   portal: [
@@ -42,6 +43,12 @@ export const webAppIcons: Record<WebAppIconName, string[]> = {
   admin: [
     'M12 3.5 5.25 6v5.5c0 4.2 2.85 7.35 6.75 8.5 3.9-1.15 6.75-4.3 6.75-8.5V6L12 3.5Z',
     'm9.25 11.75 2 2 3.5-3.75',
+  ],
+  review: [
+    'M6 8.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z',
+    'M6 8.25V20.25',
+    'M12.5 6H16a2 2 0 0 1 2 2v7.75',
+    'M18 20.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z',
   ],
 }
 
