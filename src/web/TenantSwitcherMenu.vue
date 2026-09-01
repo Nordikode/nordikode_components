@@ -43,6 +43,12 @@ const props = defineProps<{
   personal?: TenantSwitcherOption | null
   /** Deaktiverer valgene mens verts-appen utfører et bytte. */
   switching?: boolean
+  /**
+   * 'chip' (produktappenes topbar, jf. SIGN-94): utløseren blir en kompakt
+   * pille på dempet flate med firmanavnet synlig. Default er nettsidens
+   * rene avatar+chevron.
+   */
+  variant?: 'plain' | 'chip'
 }>()
 
 const emit = defineEmits<{ select: [tenantId: string] }>()
@@ -155,6 +161,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
       ref="trigger"
       type="button"
       class="nk-tenant__trigger"
+      :class="{ 'nk-tenant__trigger--chip': variant === 'chip' }"
       :aria-label="labels.menu"
       :aria-expanded="open"
       aria-haspopup="menu"
@@ -184,6 +191,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
         />
         <span v-else class="nk-tenant__initials">{{ initialsOf(selected.name) }}</span>
       </span>
+      <span v-if="variant === 'chip'" class="nk-tenant__trigger-name">{{ selected.name }}</span>
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -290,6 +298,34 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 
 .nk-tenant__trigger:hover {
   background: var(--color-surface-alt);
+}
+
+/* Chip-varianten (produktappenes topbar, SIGN-94): kompakt firma-pille på
+   dempet flate med navn og chevron — jf. Sign-skall-artboardene. */
+.nk-tenant__trigger--chip {
+  gap: 0.5rem;
+  background: var(--color-surface-alt);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+  padding: 0.3125rem 0.875rem 0.3125rem 0.3125rem;
+}
+
+.nk-tenant__trigger--chip:hover {
+  background: color-mix(in srgb, var(--color-surface-alt) 90%, var(--color-ink) 10%);
+}
+
+.nk-tenant__trigger--chip .nk-tenant__avatar {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.nk-tenant__trigger-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 12rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
 .nk-tenant__avatar {

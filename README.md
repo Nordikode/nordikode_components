@@ -45,6 +45,14 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   choice is stored under `nordikode-theme` only while it differs from the OS
   (self-clearing). `useTheme().applyPreference()` accepts the signed-in
   user's `preferredTheme` from core.
+- `AppTopBar` — the product apps' shared top bar (SIGN-94): a flat 4rem
+  surface with a hairline bottom border that composes the literal same chrome
+  the website uses, in the standard order ThemeToggle → AppLauncherMenu →
+  TenantSwitcherMenu (chip variant) → AccountIdentityMenu, each toggleable via
+  props. The host renders the app chip in `#brand` (shared styling via the
+  `nk-topbar__chip` class), passes data/labels as props, and handles
+  `switch-tenant`/`logout` events; `#tenant-menu-footer` reaches the company
+  menu's footer rows.
 - `AppLauncherMenu` — the Google-style app grid menu
 - `AccountIdentityMenu` — the avatar/account menu with service list
 - `TenantSwitcherMenu` — the company menu (tenant logo/initials, switch between

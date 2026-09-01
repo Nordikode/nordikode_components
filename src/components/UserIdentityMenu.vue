@@ -26,11 +26,6 @@ interface Props {
   /** v-menu-posisjon; railene bruker 'end bottom'. */
   location?: string
   menuMinWidth?: number
-  /**
-   * 'avatar' (den stille toppbaren, jf. SIGN-94): kun en 36px avatar på
-   * inverse-flate som utløser — navn/e-post vises bare inne i menyen.
-   */
-  variant?: 'default' | 'avatar'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -41,7 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
   exitUrl: null,
   location: 'bottom end',
   menuMinWidth: 220,
-  variant: 'default',
 })
 
 const emit = defineEmits<{
@@ -80,13 +74,7 @@ const navigateToExit = (): void => {
     <template #activator="{ props: activatorProps }">
       <button
         :aria-label="userName"
-        :class="[
-          'user-menu-trigger',
-          {
-            'user-menu-trigger--compact': compact || variant === 'avatar',
-            'user-menu-trigger--avatar': variant === 'avatar',
-          },
-        ]"
+        :class="['user-menu-trigger', { 'user-menu-trigger--compact': compact }]"
         type="button"
         v-bind="activatorProps"
       >
@@ -94,10 +82,10 @@ const navigateToExit = (): void => {
           :image-url="avatarUrl"
           :name="userName"
           class="user-avatar"
-          :color="variant === 'avatar' ? 'var(--nk-surface-inverse)' : 'primary'"
-          :size="variant === 'avatar' ? 36 : 34"
+          color="primary"
+          :size="34"
         />
-        <span v-if="!compact && variant !== 'avatar'" class="user-meta">
+        <span v-if="!compact" class="user-meta">
           <span class="user-name">{{ userName }}</span>
           <span v-if="userEmail" class="user-email">{{ userEmail }}</span>
         </span>
@@ -179,19 +167,6 @@ const navigateToExit = (): void => {
 .user-menu-trigger--compact:focus-visible,
 .user-menu-trigger--compact:active {
   outline: 0;
-}
-
-/* Avatar-varianten (den stille toppbaren, SIGN-94): initialene på
-   inverse-flaten — identiteten bor inne i menyen, ikke i baren. */
-.user-menu-trigger--avatar .user-avatar :deep(.avatar-fallback) {
-  color: var(--nk-on-surface-inverse);
-  font-size: 0.82rem;
-}
-
-.user-menu-trigger--avatar:focus-visible {
-  border-radius: 999px;
-  outline: 2px solid var(--nk-action-primary);
-  outline-offset: 2px;
 }
 
 @media (max-width: 1024px) {
