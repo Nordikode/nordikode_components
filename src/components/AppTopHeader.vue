@@ -24,7 +24,11 @@ interface Props {
   userAvatarUrl?: string | null
   userEmail?: string | null
   userName: string
-  variant?: 'hero' | 'compact'
+  /**
+   * 'quiet' (produktappenes toppbar, jf. SIGN-94): 64px flat flate uten
+   * gradient/dekor — firma-chip og avatar-utløser i stedet for pillene.
+   */
+  variant?: 'hero' | 'compact' | 'quiet'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -62,8 +66,13 @@ const updateCompactActions = (event?: MediaQueryListEvent): void => {
 
 const hasBrandMeta = computed(() => Boolean(props.appTitle || slots['brand-meta']))
 const headerClasses = computed(() => [`app-top-header--${props.variant}`])
+const isQuiet = computed(() => props.variant === 'quiet')
 const showTenantSelector = computed(() => props.tenantItems.length > 0)
-const tenantInteractive = computed(() => props.tenantMenuEnabled && props.tenantItems.length > 1)
+// Med footer-innslag i firmamenyen (jf. SIGN-94) skal menyen kunne åpnes
+// selv når brukeren bare har ett firma.
+const tenantInteractive = computed(
+  () => props.tenantMenuEnabled && (props.tenantItems.length > 1 || Boolean(slots['tenant-menu-footer'])),
+)
 
 const selectedTenantValue = computed({
   get: () => props.tenantModelValue ?? props.tenantItems[0]?.value ?? '',
@@ -84,7 +93,7 @@ onBeforeUnmount(() => {
 <template>
   <header class="app-top-header" :class="headerClasses">
     <div class="app-top-header__surface">
-      <div class="app-top-header__art" aria-hidden="true">
+      <div v-if="!isQuiet" class="app-top-header__art" aria-hidden="true">
         <span class="app-top-header__glow app-top-header__glow--left" />
         <span class="app-top-header__glow app-top-header__glow--right" />
         <span class="app-top-header__ridge app-top-header__ridge--back" />
@@ -113,6 +122,9 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="app-top-header__actions">
+          <!-- Verts-appens egne toppbar-handlinger (f.eks. produktvelgeren,
+               jf. SIGN-94) — rendres foran firma- og identitetsmenyen. -->
+          <slot name="actions" />
           <TenantSelector
             v-if="showTenantSelector"
             v-model="selectedTenantValue"
@@ -123,7 +135,12 @@ onBeforeUnmount(() => {
             :locale="locale"
             :menu-min-width="tenantMenuMinWidth"
             :personal-value="tenantPersonalValue"
-          />
+            :variant="isQuiet ? 'chip' : 'default'"
+          >
+            <template v-if="slots['tenant-menu-footer']" #footer>
+              <slot name="tenant-menu-footer" />
+            </template>
+          </TenantSelector>
           <UserIdentityMenu
             :account-base-url="accountBaseUrl"
             :avatar-url="userAvatarUrl"
@@ -132,6 +149,7 @@ onBeforeUnmount(() => {
             :exit-url="exitUrl"
             :user-email="userEmail"
             :user-name="userName"
+            :variant="isQuiet ? 'avatar' : 'default'"
             @logout="emit('logout')"
           />
         </div>
@@ -152,7 +170,6 @@ onBeforeUnmount(() => {
   border-bottom: 1px solid color-mix(in srgb, rgb(var(--v-theme-secondary)) 28%, rgb(var(--v-theme-info)) 72%);
   box-shadow: 0 8px 20px color-mix(in srgb, rgb(var(--v-theme-info)) 22%, transparent);
   height: 100%;
-  overflow: hidden;
   position: relative;
 }
 
@@ -210,6 +227,13 @@ onBeforeUnmount(() => {
 .app-top-header__wave {
   inset: 0;
   position: absolute;
+}
+
+/* Klippingen av dekoren ligger på art-laget, ikke på hele flaten — slotted
+   innhold (f.eks. produktvelgerens panel, jf. SIGN-94) skal kunne henge
+   under headeren. */
+.app-top-header__art {
+  overflow: hidden;
 }
 
 .app-top-header__glow {
@@ -320,6 +344,41 @@ onBeforeUnmount(() => {
   height: 40px;
   object-fit: contain;
   width: 40px;
+}
+
+/* Den stille varianten (SIGN-94): 64px flat produktapp-topbar på
+   surface-tokenet med hairline-bunnlinje — ingen gradient, ingen dekor.
+   Rollene kommer fra tokens (@nordikode/components/tokens). */
+.app-top-header--quiet {
+  height: 64px;
+}
+
+.app-top-header--quiet .app-top-header__surface {
+  background: var(--nk-surface);
+  border-bottom: 1px solid var(--nk-surface-border);
+  box-shadow: none;
+}
+
+.app-top-header--quiet .app-top-header__content {
+  padding: 0 20px 0 16px;
+}
+
+.app-top-header--quiet .app-top-header__actions {
+  gap: 14px;
+}
+
+.app-top-header--quiet .app-top-header__brand {
+  gap: 10px;
+}
+
+.app-top-header--quiet .app-top-header__brand-title {
+  color: var(--nk-text-primary);
+  font-size: 1rem;
+}
+
+.app-top-header--quiet .app-top-header__nav-toggle,
+.app-top-header--quiet .app-top-header__brand :slotted(.app-top-header__leading-btn) {
+  color: var(--nk-text-primary);
 }
 
 @media (max-width: 900px) {

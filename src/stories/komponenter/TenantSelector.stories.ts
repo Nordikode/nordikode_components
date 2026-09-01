@@ -33,3 +33,28 @@ export const Kompakt: Story = {
     compact: true,
   },
 }
+
+/**
+ * Footer-slotten (SIGN-94): verts-appens lenker under firmalisten —
+ * firmainnstillinger og «Opprett nytt firma». Med footer kan menyen åpnes
+ * selv når brukeren bare har ett firma.
+ */
+export const MedFooterLenker: Story = {
+  render: (args) => ({
+    components: { TenantSelector },
+    setup: () => ({ args }),
+    template: `
+      <TenantSelector v-bind="args">
+        <template #footer>
+          <v-list-item prepend-icon="mdi-office-building-cog-outline" title="Firmainnstillinger" />
+          <v-list-item prepend-icon="mdi-plus" title="Opprett nytt firma" />
+        </template>
+      </TenantSelector>
+    `,
+  }),
+  args: {
+    items: [{ title: 'Bakken Bygg AS', value: 'bakken' }],
+    modelValue: 'bakken',
+    locale: 'no',
+  },
+}
