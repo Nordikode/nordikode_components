@@ -85,6 +85,7 @@ export function useTheme(): {
   applyPreference: (preference: ThemePreference) => void
 }
 
+export const AppTopBar: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AppLauncherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AccountIdentityMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const TenantSwitcherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
