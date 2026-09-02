@@ -47,6 +47,8 @@ export const backofficeTheme: NkProductTheme = {
     onInfoSoft: '#7d2431', // avledet: = info
     successSoft: '#e4f1eb',
     onSuccessSoft: '#1f8a55',
+    inflightSoft: '#f3e6d8', // avledet: felles kopper-tint (ny palett) til produktet adopterer den
+    onInflightSoft: '#7c5322', // avledet: 5,5:1 på inflightSoft
     warningSoft: '#f9f3e6',
     onWarningSoft: '#c99a2e',
     errorSoft: '#f7eaea',
@@ -94,6 +96,8 @@ export const backofficeTheme: NkProductTheme = {
     onInfoSoft: '#df8a94', // avledet: = info
     successSoft: '#2b2d2a',
     onSuccessSoft: '#4cb583',
+    inflightSoft: '#33260f', // avledet: felles kopper-tint mørk (ny palett)
+    onInflightSoft: '#dfb073', // avledet: 7,4:1 på inflightSoft
     warningSoft: '#3c2c25',
     onWarningSoft: '#d9ad55',
     errorSoft: '#3c2629',

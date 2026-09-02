@@ -42,6 +42,8 @@ export interface NkScheme {
   onInfoSoft: string
   successSoft: string
   onSuccessSoft: string
+  inflightSoft: string
+  onInflightSoft: string
   warningSoft: string
   onWarningSoft: string
   errorSoft: string

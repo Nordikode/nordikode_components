@@ -59,6 +59,9 @@ export interface NkScheme {
   onInfoSoft: string
   successSoft: string
   onSuccessSoft: string
+  /** Underveis-status (kopper i Sign): «tilbud sendt» o.l. Kun som tint — aldri knapp. */
+  inflightSoft: string
+  onInflightSoft: string
   warningSoft: string
   onWarningSoft: string
   errorSoft: string

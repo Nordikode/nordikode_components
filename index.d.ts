@@ -15,6 +15,9 @@ export interface AppBreadcrumbItem {
   to?: unknown
 }
 
+export type NkStatusChipTone = 'success' | 'inflight' | 'warning' | 'error' | 'info' | 'neutral'
+export type NkStatusChipSize = 'sm' | 'md'
+
 export interface AppSidebarRailItem {
   active?: boolean
   disabled?: boolean
@@ -27,6 +30,7 @@ export const AppSidebarRail: DefineComponent<Record<string, unknown>, Record<str
 export const AppTopHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AppBreadcrumbs: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const IdentityAvatar: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const NkStatusChip: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PhoneNumberInput: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const TenantSelector: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const UserIdentityMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>

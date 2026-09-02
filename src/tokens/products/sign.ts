@@ -56,6 +56,8 @@ export const signTheme: NkProductTheme = {
     onInfoSoft: '#274c5e', // fjord-500
     successSoft: '#e2faec', // nordlys-100
     onSuccessSoft: '#0e633c', // nordlys-700
+    inflightSoft: '#f3e6d8', // avledet: kopper-tint fra Saksraden-laben (01.09) — verifiseres mot designprosjektets --status-inflight-bg
+    onInflightSoft: '#7c5322', // avledet: kopper-mørk, 5,5:1 på inflightSoft — verifiseres mot --status-inflight-fg
     warningSoft: '#fbeed2', // varsel-100
     onWarningSoft: '#8a5e0f', // varsel-700
     errorSoft: '#f8e2de', // feil-100
@@ -112,6 +114,8 @@ export const signTheme: NkProductTheme = {
     onInfoSoft: '#9bc2d4', // status-info-fg — 9,2:1 på infoSoft
     successSoft: '#123a2a', // status-ok-bg
     onSuccessSoft: '#7fe0ab',
+    inflightSoft: '#33260f', // avledet: kopper-tint mørk fra Saksraden-laben (01.09) — verifiseres mot dark.css
+    onInflightSoft: '#dfb073', // avledet: 7,4:1 på inflightSoft
     warningSoft: '#3a2a16', // status-warn-bg
     onWarningSoft: '#e8b863',
     errorSoft: '#3a1c17', // status-error-bg
