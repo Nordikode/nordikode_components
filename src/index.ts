@@ -15,3 +15,6 @@ export type { NkStatusChipTone } from './types/NkStatusChipTone'
 export type { NkStatusChipSize } from './types/NkStatusChipSize'
 
 export * from './tokens'
+
+export { installStaleChunkReload, isStaleChunkError } from './staleChunkReload'
+export type { StaleChunkRouter } from './staleChunkReload'

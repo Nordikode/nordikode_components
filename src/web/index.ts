@@ -22,3 +22,6 @@ export type { ThemeToggleLabels } from './ThemeToggle.vue'
 export type { ThemePreference } from './useTheme'
 export { webAppIcons, webAppIconFor, webAppFallbackIcon } from './appIcons'
 export type { WebAppIconName } from './appIcons'
+
+export { installStaleChunkReload, isStaleChunkError } from '../staleChunkReload'
+export type { StaleChunkRouter } from '../staleChunkReload'

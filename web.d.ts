@@ -93,3 +93,9 @@ export const BrandWordmark: DefineComponent<Record<string, unknown>, Record<stri
 export const AppHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PageHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const ThemeToggle: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+
+export interface StaleChunkRouter {
+  onError(handler: (error: unknown, to: { fullPath: string }) => unknown): unknown
+}
+export declare function installStaleChunkReload(router?: StaleChunkRouter): void
+export declare function isStaleChunkError(error: unknown): boolean
