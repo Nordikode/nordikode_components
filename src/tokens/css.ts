@@ -53,6 +53,8 @@ export function cssVariables(scheme: NkScheme): Record<string, string> {
     '--nk-on-info-soft': scheme.onInfoSoft,
     '--nk-success-soft': scheme.successSoft,
     '--nk-on-success-soft': scheme.onSuccessSoft,
+    '--nk-inflight-soft': scheme.inflightSoft,
+    '--nk-on-inflight-soft': scheme.onInflightSoft,
     '--nk-warning-soft': scheme.warningSoft,
     '--nk-on-warning-soft': scheme.onWarningSoft,
     '--nk-error-soft': scheme.errorSoft,

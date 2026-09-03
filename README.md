@@ -13,6 +13,9 @@ Start small, keep APIs stable, and grow the library component by component inste
 - `AppSidebarRail`
 - `AppTopHeader`
 - `IdentityAvatar`
+- `NkStatusChip` — statuschip med to størrelser (`sm`/`md`) og seks semantiske
+  toner (`success`/`inflight`/`warning`/`error`/`info`/`neutral`) fra soft-tokenparene;
+  teksten kommer alltid fra appens i18n
 - `PhoneNumberInput`
 - `TenantSelector`
 - `UserIdentityMenu`
