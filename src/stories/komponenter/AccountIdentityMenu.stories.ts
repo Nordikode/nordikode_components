@@ -55,6 +55,21 @@ export const Standard: Story = {
   },
 }
 
+export const MedTemavalg: Story = {
+  args: {
+    ...Standard.args,
+    theme: {
+      label: 'Utseende',
+      value: 'system',
+      options: [
+        { value: 'light', label: 'Lyst' },
+        { value: 'dark', label: 'Mørkt' },
+        { value: 'system', label: 'Følg systemet' },
+      ],
+    },
+  },
+}
+
 export const UtenTjenesteliste: Story = {
   args: {
     name: 'Christer Såheim',

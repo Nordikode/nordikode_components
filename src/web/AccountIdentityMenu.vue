@@ -27,6 +27,24 @@ export type AccountMenuLabels = {
   logOut: string
 }
 
+export type AccountMenuThemeOption = {
+  value: string
+  label: string
+}
+
+/**
+ * Tema-seksjonen (SIGN-148): lys/mørk/følg systemet som radiogruppe i
+ * menyen. Valgfri — apper uten temavalg utelater propen og ser ingen
+ * endring. Verts-appen eier både etikettene og selve temabyttet (emit).
+ */
+export type AccountMenuTheme = {
+  /** Overskrift for tema-seksjonen. */
+  label: string
+  options: AccountMenuThemeOption[]
+  /** Gjeldende valg; matches mot option.value. */
+  value: string
+}
+
 const props = defineProps<{
   name?: string | null
   email?: string | null
@@ -36,9 +54,15 @@ const props = defineProps<{
   /** Hvilken tjeneste denne appen er; markeres med prikk i listen. */
   currentServiceKey: string
   labels: AccountMenuLabels
+  theme?: AccountMenuTheme | null
 }>()
 
-const emit = defineEmits<{ logout: [] }>()
+const emit = defineEmits<{ logout: []; 'select-theme': [value: string] }>()
+
+function onSelectTheme(value: string) {
+  // Menyen holdes åpen så brukeren ser temaet skifte og kan angre valget.
+  emit('select-theme', value)
+}
 
 const open = ref(false)
 const avatarFailed = ref(false)
@@ -212,6 +236,25 @@ function onLogout() {
         <!-- Reserverader når tjenestelisten mangler (eldre backend/cachet sesjon). -->
         <slot v-else name="fallback" />
 
+        <template v-if="theme && theme.options.length > 0">
+          <p class="nk-account__section-label">{{ theme.label }}</p>
+          <div role="group" :aria-label="theme.label" class="nk-account__theme">
+            <button
+              v-for="option in theme.options"
+              :key="option.value"
+              type="button"
+              role="menuitemradio"
+              :aria-checked="option.value === theme.value"
+              class="nk-account__item nk-account__theme-option"
+              :class="{ 'nk-account__theme-option--active': option.value === theme.value }"
+              @click="onSelectTheme(option.value)"
+            >
+              <span class="nk-account__radio" aria-hidden="true" />
+              <span class="nk-account__item-label">{{ option.label }}</span>
+            </button>
+          </div>
+        </template>
+
         <button type="button" role="menuitem" class="nk-account__item nk-account__logout" @click="onLogout">
           <svg
             viewBox="0 0 24 24"
@@ -337,6 +380,28 @@ function onLogout() {
   white-space: nowrap;
   font-size: 0.75rem;
   color: var(--color-ink-tertiary);
+}
+
+.nk-account__theme-option {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.nk-account__radio {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-ink-secondary);
+}
+
+.nk-account__theme-option--active .nk-account__radio {
+  border-color: var(--nk-chrome-accent, var(--color-ink));
+  background:
+    radial-gradient(circle at center, var(--nk-chrome-accent, var(--color-ink)) 0 45%, transparent 50%);
 }
 
 .nk-account__section-label {
