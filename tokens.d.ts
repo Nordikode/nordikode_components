@@ -23,7 +23,10 @@ export interface NkScheme {
   textSecondary: string
   primary: string
   primaryHover: string
+  primaryPress: string
   onPrimary: string
+  link: string
+  linkHover: string
   secondary: string
   onSecondary: string
   info: string
@@ -40,6 +43,8 @@ export interface NkScheme {
   onPrimarySoft: string
   infoSoft: string
   onInfoSoft: string
+  aiSoft: string
+  onAiSoft: string
   successSoft: string
   onSuccessSoft: string
   inflightSoft: string

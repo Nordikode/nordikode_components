@@ -27,6 +27,9 @@ export const timeTheme: NkProductTheme = {
     textSecondary: '#7d715f',
     primary: '#b45309',
     primaryHover: '#92400e',
+    primaryPress: '#92400e', // avledet: = hover til produktet adopterer ny palett
+    link: '#b45309', // avledet: = primary til produktet adopterer ny palett
+    linkHover: '#92400e', // avledet
     onPrimary: '#ffffff',
     secondary: '#c98f57',
     onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
@@ -41,6 +44,8 @@ export const timeTheme: NkProductTheme = {
     onPrimarySoft: '#b45309',
     infoSoft: '#f6eae1', // avledet: 12 %-blend av info over surface (som de andre soft-flatene)
     onInfoSoft: '#b45309', // avledet: = info
+    aiSoft: '#f6eae1', // avledet: = infoSoft til produktet adopterer ny palett
+    onAiSoft: '#b45309', // avledet
     successSoft: '#e4f1eb',
     onSuccessSoft: '#1f8a55',
     inflightSoft: '#f3e6d8', // avledet: felles kopper-tint (ny palett) til produktet adopterer den
@@ -76,6 +81,9 @@ export const timeTheme: NkProductTheme = {
     textSecondary: '#b3a893',
     primary: '#e0913c',
     primaryHover: '#eaa55c',
+    primaryPress: '#eaa55c', // avledet: = hover til produktet adopterer ny palett
+    link: '#e0913c', // avledet: = primary til produktet adopterer ny palett
+    linkHover: '#eaa55c', // avledet
     onPrimary: '#2c2418',
     secondary: '#d9b189',
     onSecondary: '#000000', // avledet: Vuetifys tidligere auto-verdi
@@ -90,6 +98,8 @@ export const timeTheme: NkProductTheme = {
     onPrimarySoft: '#e0913c',
     infoSoft: '#3a2b1b', // avledet: 12 %-blend av info over surface
     onInfoSoft: '#e0913c', // avledet: = info
+    aiSoft: '#3a2b1b', // avledet: = infoSoft til produktet adopterer ny palett
+    onAiSoft: '#e0913c', // avledet
     successSoft: '#282f23',
     onSuccessSoft: '#4cb583',
     inflightSoft: '#33260f', // avledet: felles kopper-tint mørk (ny palett)
