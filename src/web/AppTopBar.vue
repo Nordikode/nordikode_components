@@ -19,7 +19,7 @@ import AccountIdentityMenu from './AccountIdentityMenu.vue'
 import AppLauncherMenu from './AppLauncherMenu.vue'
 import TenantSwitcherMenu from './TenantSwitcherMenu.vue'
 import ThemeToggle from './ThemeToggle.vue'
-import type { AccountMenuLabels, AccountMenuService } from './AccountIdentityMenu.vue'
+import type { AccountMenuLabels, AccountMenuService, AccountMenuTheme } from './AccountIdentityMenu.vue'
 import type { AppLauncherItem } from './AppLauncherMenu.vue'
 import type { TenantSwitcherLabels, TenantSwitcherOption } from './TenantSwitcherMenu.vue'
 import type { ThemeToggleLabels } from './ThemeToggle.vue'
@@ -57,6 +57,8 @@ const props = withDefaults(
     /** Hvilken tjeneste denne appen er (`sign`, `time`, …) — markeres i tjenestelisten. */
     currentServiceKey?: string
     accountLabels?: AccountMenuLabels | null
+    /** Tema-seksjonen i kontomenyen (SIGN-148); null = ingen seksjon. */
+    accountTheme?: AccountMenuTheme | null
   }>(),
   {
     appTitle: null,
@@ -79,12 +81,14 @@ const props = withDefaults(
     accountServices: () => [],
     currentServiceKey: '',
     accountLabels: null,
+    accountTheme: null,
   },
 )
 
 const emit = defineEmits<{
   logout: []
   'switch-tenant': [tenantId: string]
+  'select-theme': [value: string]
 }>()
 </script>
 
@@ -130,7 +134,9 @@ const emit = defineEmits<{
         :labels="accountLabels"
         :name="userName"
         :services="accountServices"
+        :theme="accountTheme"
         @logout="emit('logout')"
+        @select-theme="(value) => emit('select-theme', value)"
       />
     </div>
   </header>

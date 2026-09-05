@@ -14,7 +14,7 @@ export { default as ThemeToggle } from './ThemeToggle.vue'
 export { useTheme } from './useTheme'
 
 export type { AppLauncherItem } from './AppLauncherMenu.vue'
-export type { AccountMenuService, AccountMenuLabels } from './AccountIdentityMenu.vue'
+export type { AccountMenuService, AccountMenuLabels, AccountMenuTheme, AccountMenuThemeOption } from './AccountIdentityMenu.vue'
 export type { TenantSwitcherOption, TenantSwitcherLabels } from './TenantSwitcherMenu.vue'
 export type { AppHeaderNavItem, AppHeaderNavChild, AppHeaderLabels } from './AppHeader.vue'
 export type { PageHeaderBack } from './PageHeader.vue'
