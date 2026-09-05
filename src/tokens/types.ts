@@ -35,7 +35,12 @@ export interface NkScheme {
 
   primary: string
   primaryHover: string
+  /** Press-trinn for primærhandling (petrol-700 i Sign) — mørkere enn hover. */
+  primaryPress: string
   onPrimary: string
+  /** Lenkefarge i løpende tekst — mørkere enn knappefyllet for kontrast på lyse flater. */
+  link: string
+  linkHover: string
   secondary: string
   onSecondary: string
   info: string
@@ -54,9 +59,12 @@ export interface NkScheme {
   /** Myke flater (tonal-chips o.l.): bakgrunn + tekst per rolle. */
   primarySoft: string
   onPrimarySoft: string
-  /** Info-/AI-flate (fjord-tint i Sign): rolig tint for maskin-/AI-innhold. */
+  /** Info-flate (fjord-tint i Sign). */
   infoSoft: string
   onInfoSoft: string
+  /** Dedikert AI-flate (fjord i Sign, SIGN-146) — skiller AI-innhold semantisk fra generell info. */
+  aiSoft: string
+  onAiSoft: string
   successSoft: string
   onSuccessSoft: string
   /** Underveis-status (kopper i Sign): «tilbud sendt» o.l. Kun som tint — aldri knapp. */

@@ -37,7 +37,10 @@ export const signTheme: NkProductTheme = {
     textSecondary: '#6b6055', // stein-500
     primary: '#0b8476', // petrol-500 — 4,59:1 mot hvit
     primaryHover: '#097568', // petrol-600
+    primaryPress: '#08675c', // petrol-700 — designets --action-primary-press
     onPrimary: '#ffffff',
+    link: '#08675c', // petrol-700 — mørkere enn knappefyllet, 6,73:1 på papir
+    linkHover: '#097568', // petrol-600
     secondary: '#274c5e', // fjord-500
     onSecondary: '#ffffff',
     info: '#274c5e', // fjord-500
@@ -52,8 +55,10 @@ export const signTheme: NkProductTheme = {
     onError: '#ffffff',
     primarySoft: '#e0f5f2', // petrol-100
     onPrimarySoft: '#08675c', // petrol-700
-    infoSoft: '#e7edf1', // fjord-tint — AI-flater (SIGN-174); 7,8:1 mot onInfoSoft
+    infoSoft: '#e7edf1', // fjord-tint; 7,8:1 mot onInfoSoft
     onInfoSoft: '#274c5e', // fjord-500
+    aiSoft: '#e7edf1', // fjord-50 — designets --ai-bg (samme flate som info i dag, egen rolle)
+    onAiSoft: '#274c5e', // fjord-500 — designets --ai-fg
     successSoft: '#e2faec', // nordlys-100
     onSuccessSoft: '#0e633c', // nordlys-700
     inflightSoft: '#f3e6d8', // avledet: kopper-tint fra Saksraden-laben (01.09) — verifiseres mot designprosjektets --status-inflight-bg
@@ -95,7 +100,10 @@ export const signTheme: NkProductTheme = {
     textSecondary: '#87919a', // text-muted — 5,6:1
     primary: '#0b8476', // petrol-500 — samme fyll som light, 4,59:1 med hvit
     primaryHover: '#0a7a6d', // mørkere, ikke lysere — 5,23:1 med hvit
+    primaryPress: '#08675c', // petrol-700 — press-trinnet under hover (samme regel)
     onPrimary: '#ffffff',
+    link: '#5cc0b4', // text-link fra dark.css — 7,2:1 på kort
+    linkHover: '#6ec8bd', // avledet: ett trinn lysere enn link
     secondary: '#9bc2d4', // status-info-fg — den kalde maskintonen
     onSecondary: '#0a171e', // avledet: select-text
     info: '#9bc2d4',
@@ -112,6 +120,8 @@ export const signTheme: NkProductTheme = {
     onPrimarySoft: '#5cc0b4', // text-link — 7,2:1 på kort
     infoSoft: '#101b26', // fjord-tint mørk — svakt løftet, blåkald (SIGN-174)
     onInfoSoft: '#9bc2d4', // status-info-fg — 9,2:1 på infoSoft
+    aiSoft: '#101b26', // fjord-tint mørk — designets AI-flate i dark
+    onAiSoft: '#9bc2d4', // status-info-fg
     successSoft: '#123a2a', // status-ok-bg
     onSuccessSoft: '#7fe0ab',
     inflightSoft: '#33260f', // avledet: kopper-tint mørk fra Saksraden-laben (01.09) — verifiseres mot dark.css
