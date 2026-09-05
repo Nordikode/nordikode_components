@@ -21,6 +21,17 @@ export type AccountMenuLabels = {
   logOut: string
 }
 
+export type AccountMenuThemeOption = {
+  value: string
+  label: string
+}
+
+export type AccountMenuTheme = {
+  label: string
+  options: AccountMenuThemeOption[]
+  value: string
+}
+
 export type WebAppIconName =
   | 'portal'
   | 'sign'
