@@ -17,7 +17,10 @@
  *
  * Tema: verts-appens web-designtokens (`--color-*`, `--radius-*`) og
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
- * z-index kan overstyres med `--nk-chrome-z` (default 50).
+ * z-index styres av `--nk-chrome-z`: pakka setter 50 på `html` (uscopet
+ * blokk under), verts-appen overstyrer på `:root`. Ikke stol på fallbacken i
+ * `var()` alene — i Chrome 152 ble den til 0, og innhold med `z-index: 0`
+ * (kort, knapper) la seg over menypanelene (SIGN-442).
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import BrandWordmark from './BrandWordmark.vue'
@@ -538,6 +541,12 @@ const drawerItems = computed(() =>
 <!-- Uscopet med vilje: `:global()` i scoped CSS knekker i pakkas
      LightningCSS-minifisering. Klassenavnene er nk-namespacet. -->
 <style>
+/* Standardlaget for chromen. `html` (0,0,1) taper for verts-appens `:root`
+   (0,1,0) uansett lastrekkefølge, så appene kan overstyre. */
+html {
+  --nk-chrome-z: 50;
+}
+
 .dark .nk-header__burger:hover,
 .dark .nk-header__burger:focus-visible {
   background: var(--color-surface-raised);
