@@ -95,6 +95,16 @@ export type NotificationBellLabels = {
   unread: string
 }
 
+export type NkSignedOutReason = 'revoked' | 'expired'
+
+export type NkSignedOutDialogLabels = {
+  title: string
+  revoked: string
+  expired: string
+  signInAgain: string
+  waiting: string
+}
+
 export function useTheme(): {
   isDark: import('vue').Ref<boolean>
   preference: import('vue').Ref<ThemePreference>
@@ -110,6 +120,7 @@ export const AppHeader: DefineComponent<Record<string, unknown>, Record<string, 
 export const PageHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const ThemeToggle: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NotificationBellMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const NkSignedOutDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 
 export interface StaleChunkRouter {
   onError(handler: (error: unknown, to: { fullPath: string }) => unknown): unknown
