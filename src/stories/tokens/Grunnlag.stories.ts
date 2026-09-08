@@ -28,6 +28,7 @@ const SPACING_LABELS: Record<keyof typeof nkSpacing, string> = {
   cardPadding: 'Innvendig polstring i kort/paneler',
   sectionGap: 'Vertikal avstand mellom kort/seksjoner',
   inlineGap: 'Avstand mellom elementer på rad',
+  fabReserve: 'Plass reservert nederst til høyre til en flytende handling (figur 64px + margin 24px)',
 }
 
 export const Spacing: Story = {

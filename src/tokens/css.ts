@@ -73,7 +73,7 @@ export function cssVariables(scheme: NkScheme): Record<string, string> {
 export interface NkStaticTokens {
   radius: { sm: string; md: string; lg: string; pill: string }
   spaceUnit: string
-  spacing: { cardPadding: string; sectionGap: string; inlineGap: string }
+  spacing: { cardPadding: string; sectionGap: string; inlineGap: string; fabReserve: string }
   typography: { rootSize: string; heading: string; body: string; label: string; button: string }
   fontFamily: string
 }
@@ -100,6 +100,7 @@ export function cssStaticVariables(statics: NkStaticTokens = defaultStaticTokens
     '--nk-pad-card': statics.spacing.cardPadding,
     '--nk-gap-section': statics.spacing.sectionGap,
     '--nk-gap-inline': statics.spacing.inlineGap,
+    '--nk-fab-reserve': statics.spacing.fabReserve ?? nkSpacing.fabReserve,
     '--nk-font-root': statics.typography.rootSize,
     '--nk-text-heading': statics.typography.heading,
     '--nk-text-body': statics.typography.body,
