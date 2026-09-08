@@ -95,6 +95,9 @@ export interface NkStaticTokens {
 export declare function defaultStaticTokens(): NkStaticTokens
 export declare function cssStaticVariables(statics?: NkStaticTokens): Record<string, string>
 export declare function productCss(theme: NkProductTheme, statics?: NkStaticTokens): string
+export declare function tailwindThemeVariables(scheme: NkScheme): Record<string, string>
+export declare function tailwindStaticVariables(statics?: NkStaticTokens): Record<string, string>
+export declare function tailwindThemeCss(theme: NkProductTheme, statics?: NkStaticTokens): string
 
 export declare const signTheme: NkProductTheme
 export declare const timeTheme: NkProductTheme
