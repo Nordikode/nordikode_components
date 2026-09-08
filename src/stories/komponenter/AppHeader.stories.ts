@@ -111,3 +111,49 @@ export const MedMenyer: Story = {
     `,
   }),
 }
+
+/**
+ * Smal mobil (SIGN-537): alle fem knappene skal være synlige uten
+ * horisontal scroll ved 360–414 px — merkevaren krymper, suffikset og
+ * tenant-navnet skjules, radene tettes.
+ */
+export const SmalMobil: Story = {
+  name: 'Smal mobil (390 px, fem menyer)',
+  args: { labels, nav, currentPath: '/produkter' },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+  decorators: [
+    () => ({
+      template: `<div style="width: 390px; max-width: 100%; overflow: hidden; border-right: 1px dashed #c00;"><story /></div>`,
+    }),
+  ],
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu },
+    setup: () => ({
+      args,
+      toggleLabels: { toLight: 'Bytt til lys modus', toDark: 'Bytt til mørk modus' },
+      tenants: [
+        { id: 't-1', name: 'Bygg og Anlegg AS', logoUrl: null },
+        { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
+      ],
+      tenantLabels: { menu: 'Bytt firma', current: 'Aktivt firma', companies: 'Firmaene dine' },
+      accountLabels: { menu: 'Konto', services: 'Tjenester', current: 'Du er her', logOut: 'Logg ut' },
+      services: [{ key: 'account', label: 'Kontoinnstillinger', url: '#' }],
+    }),
+    template: `
+      <AppHeader v-bind="args">
+        <template #brand-suffix>Company</template>
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="chip" />
+          <AccountIdentityMenu
+            name="Kari Nordmann"
+            email="kari@example.com"
+            :services="services"
+            current-service-key="company"
+            :labels="accountLabels"
+          />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}

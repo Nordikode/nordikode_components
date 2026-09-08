@@ -299,6 +299,8 @@ const drawerItems = computed(() =>
   /* Kun standard-egenskapen: LightningCSS slår sammen prefikset+uprefikset
      og lar siste vinne — en manuell -webkit-linje ville strippet denne. */
   backdrop-filter: saturate(180%) blur(20px);
+  /* Siste vern (SIGN-537): headeren skal aldri gi siden horisontal scroll. */
+  overflow-x: clip;
 }
 
 .nk-header__inner {
@@ -323,19 +325,26 @@ const drawerItems = computed(() =>
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex-shrink: 0;
+  /* Merkevaren er det som krymper på smale skjermer — menyene og burgeren
+     er viktigere enn hele navnet (SIGN-537). */
+  flex-shrink: 1;
+  min-width: 0;
   color: var(--color-ink);
   text-decoration: none;
 }
 
 .nk-header__brand-mark {
   height: 1.5rem;
+  flex-shrink: 0;
 }
 
 .nk-header__brand-label {
+  min-width: 0;
+  overflow: hidden;
   font-size: 0.9375rem;
   font-weight: 600;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .nk-header__brand-suffix {
@@ -437,6 +446,7 @@ const drawerItems = computed(() =>
   display: flex;
   align-items: center;
   gap: 0.375rem;
+  flex-shrink: 0;
 }
 
 .nk-header__burger {
@@ -500,6 +510,23 @@ const drawerItems = computed(() =>
   font-weight: 500;
 }
 
+/* Smale mobiler (SIGN-537): tettere rad, suffikset bort, tenant-velgeren
+   som ikon — så tema, app-velger, firma, konto og burger får plass på 360 px. */
+@media (max-width: 479px) {
+  .nk-header__inner {
+    gap: 0.75rem;
+    padding-inline: 0.75rem;
+  }
+
+  .nk-header__brand-suffix {
+    display: none;
+  }
+
+  .nk-header__end {
+    gap: 0.125rem;
+  }
+}
+
 @media (min-width: 640px) {
   .nk-header__nav {
     display: flex;
@@ -550,6 +577,14 @@ html {
 .dark .nk-header__burger:hover,
 .dark .nk-header__burger:focus-visible {
   background: var(--color-surface-raised);
+}
+
+/* Tenant-velgeren i headeren viser bare avataren på smale mobiler (SIGN-537);
+   navnet står fortsatt øverst i panelet. Uscopet fordi triggeren er slot-innhold. */
+@media (max-width: 479px) {
+  .nk-header .nk-tenant__trigger-name {
+    display: none;
+  }
 }
 
 .dark .nk-header__dropdown-link:hover,
