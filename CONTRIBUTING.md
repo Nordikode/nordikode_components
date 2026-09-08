@@ -22,7 +22,7 @@ If a component is meant to feel identical to users across products, the shared r
 Example:
 
 - The shared user menu must expose the same actions in every app.
-- The "Edit profile" action must take the user to the Portal account page from any app.
+- The account settings action must take the user to the account app (account.nordikode.com) from any app; company settings go to the company app.
 - The menu labels and their ordering must not be redefined per application unless the shared contract is intentionally changed here first.
 - Authenticated shell rails that share the same brand slot, company selector, settings access, and user menu contract belong here rather than being reimplemented per app.
 - Breadcrumb rendering, spacing, and back-button presentation that should feel identical across apps belong here, while each app may still own its route/back decision logic.
