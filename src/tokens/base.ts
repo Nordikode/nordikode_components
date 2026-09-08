@@ -27,6 +27,14 @@ export const nkSpacing = {
   sectionGap: '24px',
   /** Avstand mellom elementer på rad (knapper, chips). */
   inlineGap: '12px',
+  /**
+   * Plass reservert nederst til høyre til en flytende handling (FAB,
+   * assistentfigur som Nordi): bunnhandlinger til høyre (send, lagre) får
+   * denne som padding/margin så de aldri havner under figuren (SIGN-466).
+   * 64px figur + 24px kantmargin (8 + 3 × space-unit) — avledet av dagens
+   * figurstørrelse, ikke en designbeslutning i seg selv.
+   */
+  fabReserve: '88px',
 } as const
 
 export const nkFontFamily = "'Inter', 'Segoe UI', sans-serif"

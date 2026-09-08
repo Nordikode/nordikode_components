@@ -152,3 +152,7 @@ Kanoniske CSS-variabelnavn: `--nk-page` (sidebakgrunn) og `--nk-surface`
 (kort/flate) erstatter det tvetydige `--nk-bg-base`, som betydde forskjellige
 ting i ulike apper. Se `src/tokens/` for beslutningslogg (design-audit
 2026-08-18).
+
+Layout-token for flytende handlinger: `--nk-fab-reserve` (88px) er plassen
+bunnhandlinger til høyre (send, lagre) holder unna en flytende figur/FAB nede
+til høyre (SIGN-466). Bruk `padding-right: var(--nk-fab-reserve)` på raden.
