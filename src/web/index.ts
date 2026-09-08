@@ -4,6 +4,9 @@
  * slik at konsumenter uten Vuetify aldri berører hovedinngangens
  * Vuetify-imports.
  */
+// Temakontrakten (color-scheme følger `dark`-klassen) — havner i style.css.
+import './theme.css'
+
 export { default as AppLauncherMenu } from './AppLauncherMenu.vue'
 export { default as AccountIdentityMenu } from './AccountIdentityMenu.vue'
 export { default as TenantSwitcherMenu } from './TenantSwitcherMenu.vue'

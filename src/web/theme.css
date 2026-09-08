@@ -1,0 +1,20 @@
+/*
+ * Temakontrakten for webflatene (SIGN-433): temaet er `dark`-klassen på
+ * `<html>` (settes av verts-appens head-script og useTheme). Klassen må også
+ * styre `color-scheme`, ellers tegner nettleseren native kontroller
+ * (scrollbar, checkbox, tekstfelt, select) etter OS-preferansen — vertene
+ * deklarerer `<meta name="color-scheme" content="light dark">`, og da lekker
+ * mørk styling inn i en flate brukeren eksplisitt har satt til lys (og
+ * omvendt). CSS-deklarasjonen på rot vinner over meta-taggen og gjelder fra
+ * første paint, siden style.css lastes i head.
+ *
+ * Vuetify-appene har samme kontrakt på `nk-dark` — den genereres i
+ * productCss() (tokens/css.ts).
+ */
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}

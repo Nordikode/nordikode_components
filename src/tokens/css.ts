@@ -117,11 +117,16 @@ function block(selector: string, vars: Record<string, string>): string {
 /**
  * Genererer hele CSS-blokken en app trenger i sin style.css:
  * `:root` med light + statiske tokens, og `:root.nk-dark` med mørke
- * motstykker (klassen settes av themePreference i app-core).
+ * motstykker (klassen settes av themePreference i app-core). Begge bærer
+ * `color-scheme`, så native kontroller følger klassen og ikke OS-et.
  */
 export function productCss(theme: NkProductTheme, statics: NkStaticTokens = defaultStaticTokens()): string {
-  const light = { ...cssStaticVariables(statics), ...cssVariables(theme.light) }
-  const dark = cssVariables(theme.dark)
+  // color-scheme hører til temaklassen (SIGN-433): uten den følger native
+  // kontroller og scrollbars OS-preferansen når verten har
+  // `<meta name="color-scheme" content="light dark">`, uansett hva brukeren
+  // har valgt. Web-lagets `dark`-klasse har samme regel i web/theme.css.
+  const light = { 'color-scheme': 'light', ...cssStaticVariables(statics), ...cssVariables(theme.light) }
+  const dark = { 'color-scheme': 'dark', ...cssVariables(theme.dark) }
   return [
     `/* Generert fra @nordikode/components tokens — produkt: ${theme.product}. Ikke rediger for hånd. */`,
     block(':root', light),

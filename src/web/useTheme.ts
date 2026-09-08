@@ -9,6 +9,9 @@ import { ref } from 'vue'
  * (selvryddende overstyring) — velges OS-verdien igjen, følger flaten OS-et
  * live. Verts-appens head-script bør sette initial klasse før paint med samme
  * nøkkel; composablen synker derfra.
+ *
+ * Klassen styrer også `color-scheme` (theme.css i style.css), slik at native
+ * kontroller og scrollbars følger appens tema og ikke OS-et (SIGN-433).
  */
 
 const STORAGE_KEY = 'nordikode-theme'
