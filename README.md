@@ -71,6 +71,14 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 - `BrandWordmark` — the Nordikode logo (`lockup` or `mark`), light/dark assets
   shipped in the package
 - `webAppIcons` / `webAppIconFor` — the canonical per-app icon registry
+- `NkSignedOutDialog` — the «You are signed out» overlay (SIGN-509): shown by
+  every first-party app when the shared platform session is gone (signed out in
+  another tab/device, or expired). It never navigates away and cannot be
+  dismissed — the page underneath keeps its unsaved state — and emits `sign-in`
+  so the host can open the account app's sign-in in a separate window and
+  resume in place (`waiting` shows the pending state). Labels via `labels`
+  (`title`, `revoked`, `expired`, `signInAgain`, `waiting`); z-index from
+  `--nk-overlay-z` (default 60).
 
 The accent contract is mandatory in both themes: hosts must define both
 `--nk-chrome-accent` and `--nk-chrome-accent-ink` in light mode *and* in
