@@ -47,7 +47,6 @@ export const Standard: Story = {
     labels,
     services: [
       { key: 'account', label: 'Kontoinnstillinger', url: 'https://account.nordikode.com/settings' },
-      { key: 'portal', label: 'Portal', url: 'https://portal.nordikode.com' },
       { key: 'sign', label: 'Sign', url: 'https://sign.nordikode.com' },
       { key: 'time', label: 'Time', url: 'https://time.nordikode.com' },
       { key: 'website', label: 'Nettsted', url: 'https://nordikode.com' },

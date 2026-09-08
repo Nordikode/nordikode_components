@@ -1,14 +1,13 @@
 /**
  * Kanonisk ikonregister for Nordikode-appene på webflatene (nettsiden og
  * konto-appen). Én tegning per app — før dette registeret fantes tre ulike
- * portal-/sign-tegninger fordelt på fire filer i to repoer.
+ * sign-tegninger fordelt på fire filer i to repoer.
  *
  * Håndtegnede 24px-strektikoner, samme strek (1.5–1.6) som resten av
  * web-designspråket. Nye apper får sin oppføring her, ikke lokale kopier.
  */
 
 export type WebAppIconName =
-  | 'portal'
   | 'sign'
   | 'time'
   | 'website'
@@ -20,10 +19,6 @@ export type WebAppIconName =
   | 'review'
 
 export const webAppIcons: Record<WebAppIconName, string[]> = {
-  portal: [
-    'M3.75 10.5 12 3.75l8.25 6.75',
-    'M5.25 9.5V19a1 1 0 0 0 1 1h3.5v-5.25h4.5V20h3.5a1 1 0 0 0 1-1V9.5',
-  ],
   sign: ['m14.5 5 4.5 4.5L8.5 20H4v-4.5L14.5 5Z', 'm12.5 7 4.5 4.5'],
   time: ['M12 3.25a8.75 8.75 0 1 1 0 17.5 8.75 8.75 0 0 1 0-17.5Z', 'M12 7.5V12l3 2'],
   website: [

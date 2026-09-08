@@ -49,7 +49,6 @@ const preview: Preview = {
         items: [
           { value: 'sign', title: 'Sign' },
           { value: 'time', title: 'Time' },
-          { value: 'portal', title: 'Portal' },
           { value: 'backoffice', title: 'Backoffice' },
         ],
         dynamicTitle: true,

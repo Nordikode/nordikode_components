@@ -39,7 +39,6 @@ export const Standard: Story = {
   args: {
     label: 'Nordikode-apper',
     apps: [
-      { key: 'portal', label: 'Portal', url: 'https://portal.nordikode.com' },
       { key: 'sign', label: 'Sign', url: 'https://sign.nordikode.com' },
       { key: 'time', label: 'Time', url: 'https://time.nordikode.com' },
     ],
@@ -51,7 +50,6 @@ export const Gruppert: Story = {
   args: {
     label: 'Nordikode-apper',
     apps: [
-      { key: 'portal', label: 'Portal', url: 'https://portal.nordikode.com', group: 'products' },
       { key: 'sign', label: 'Sign', url: 'https://sign.nordikode.com', group: 'products' },
       { key: 'time', label: 'Time', url: 'https://time.nordikode.com', group: 'products' },
       { key: 'website', label: 'Nettsiden', url: 'https://nordikode.com', group: 'services' },
@@ -68,7 +66,6 @@ export const MedBadge: Story = {
   args: {
     label: 'Nordikode-apper',
     apps: [
-      { key: 'portal', label: 'Portal', url: 'https://portal.nordikode.com', group: 'products' },
       { key: 'sign', label: 'Sign', url: 'https://sign.nordikode.com', group: 'products' },
       { key: 'backoffice', label: 'Backoffice', url: 'https://backoffice.nordikode.com', group: 'internal' },
       { key: 'review', label: 'Review', url: 'https://review.nordikode.com', group: 'internal', badge: 4 },
