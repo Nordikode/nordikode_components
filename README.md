@@ -9,16 +9,17 @@ Start small, keep APIs stable, and grow the library component by component inste
 
 ## Current exports
 
-- `AppBreadcrumbs`
-- `AppSidebarRail`
-- `AppTopHeader`
+Chrome (header, app-velger, firmameny, kontomeny, temabryter) bor i
+`@nordikode/components/web` — se under. Vuetify-inngangens gamle
+chrome-komponenter (`AppTopHeader`, `AppSidebarRail`, `UserIdentityMenu`,
+`TenantSelector`, `AppBreadcrumbs`) ble fjernet i 0.24.0 (SIGN-535): alle
+flatene bruker `AppHeader` med de delte menyene.
+
 - `IdentityAvatar`
 - `NkStatusChip` — statuschip med to størrelser (`sm`/`md`) og seks semantiske
   toner (`success`/`inflight`/`warning`/`error`/`info`/`neutral`) fra soft-tokenparene;
   teksten kommer alltid fra appens i18n
 - `PhoneNumberInput`
-- `TenantSelector`
-- `UserIdentityMenu`
 - `formatMoney` / `formatMinorAmount` / `formatMoneyRange` / `toBcp47` /
   `supportedCurrencyCodes` — **den ene** beløpsformatteren for alle flater
   (SIGN-499). Valuta er alltid data (tenantens `activeTenant.currency` eller
