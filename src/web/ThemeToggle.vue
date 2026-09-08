@@ -5,9 +5,12 @@
  * av OS-preferansen) og verts-appens web-designtokens.
  *
  * Etikettene kommer som props: pakka er i18n-fri, verts-appen eier språket.
+ * `change` sender det resulterende valget (`system`/`light`/`dark`) slik at
+ * innloggede flater kan lagre det på profilen (`preferredTheme` i core).
  */
 import { computed } from 'vue'
 import { useTheme } from './useTheme'
+import type { ThemePreference } from './useTheme'
 
 export type ThemeToggleLabels = {
   /** aria-label når mørk modus er på (handlingen: bytt til lys). */
@@ -18,13 +21,19 @@ export type ThemeToggleLabels = {
 
 const props = defineProps<{ labels: ThemeToggleLabels }>()
 
+const emit = defineEmits<{ change: [preference: ThemePreference] }>()
+
 const { isDark, toggle } = useTheme()
 
 const label = computed(() => (isDark.value ? props.labels.toLight : props.labels.toDark))
+
+function onToggle() {
+  emit('change', toggle())
+}
 </script>
 
 <template>
-  <button type="button" class="nk-theme-toggle" :aria-label="label" :title="label" @click="toggle">
+  <button type="button" class="nk-theme-toggle" :aria-label="label" :title="label" @click="onToggle">
     <svg
       v-if="isDark"
       viewBox="0 0 24 24"
