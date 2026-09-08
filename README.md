@@ -19,6 +19,14 @@ Start small, keep APIs stable, and grow the library component by component inste
 - `PhoneNumberInput`
 - `TenantSelector`
 - `UserIdentityMenu`
+- `formatMoney` / `formatMinorAmount` / `formatMoneyRange` / `toBcp47` /
+  `supportedCurrencyCodes` — **den ene** beløpsformatteren for alle flater
+  (SIGN-499). Valuta er alltid data (tenantens `activeTenant.currency` eller
+  dokumentets), locale er brukerens UI-locale som full BCP-47-tag. Standard er
+  valutaens egne desimaler («100 000,00 kr» / «NOK 100,000.00»); hele beløp
+  bes om eksplisitt med `maximumFractionDigits: 0`. Ingen app skal ha sin egen
+  `Intl.NumberFormat(..., { style: 'currency' })`, `toFixed(2)` eller «kr»-tekst.
+  Eksporteres også fra `@nordikode/components/web`.
 
 `style.css` contains only this package's own component styles. Vuetify (JS and styles)
 and `libphonenumber-js` are externalized — the consuming app owns the Vuetify setup,

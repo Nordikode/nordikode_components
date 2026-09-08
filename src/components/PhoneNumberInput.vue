@@ -9,6 +9,7 @@ import {
   type CountryCode,
 } from 'libphonenumber-js/min'
 import type { SharedLocale } from '../types/SharedLocale'
+import { toBcp47 } from '../money'
 
 interface Props {
   modelValue?: string | null
@@ -59,7 +60,7 @@ const applyingExternalValue = ref(false)
 const countryMenuOpen = ref(false)
 const countrySearch = ref('')
 
-const intlLocale = computed(() => resolveIntlLocale(props.locale))
+const intlLocale = computed(() => toBcp47(props.locale))
 const regionNames = computed(() => {
   if (typeof Intl === 'undefined' || typeof Intl.DisplayNames === 'undefined') {
     return null
@@ -224,20 +225,6 @@ function resolveCountryCode(value: string | null | undefined): CountryCode | nul
   return isSupportedCountry(normalized) ? normalized : null
 }
 
-function resolveIntlLocale(locale: SharedLocale | null): string {
-  switch (locale) {
-    case 'no':
-      return 'nb-NO'
-    case 'sv':
-      return 'sv-SE'
-    case 'fr':
-      return 'fr-FR'
-    case 'pl':
-      return 'pl-PL'
-    default:
-      return 'en-GB'
-  }
-}
 
 function countryCodeToFlag(countryCode: string): string {
   return countryCode
