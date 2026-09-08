@@ -20,6 +20,9 @@ flatene bruker `AppHeader` med de delte menyene.
   toner (`success`/`inflight`/`warning`/`error`/`info`/`neutral`) fra soft-tokenparene;
   teksten kommer alltid fra appens i18n
 - `PhoneNumberInput`
+- `mdiRegistryIconSet(registry)` — Vuetify-ikonsett som slår opp `mdi-*`-navn i et generert
+  `@mdi/js`-register (SIGN-521); registeret lages av bin-scriptet `nk-mdi-registry` fra appens
+  kildekode, så bare ikonene som brukes bundles (ingen ikonfont).
 - `formatMoney` / `formatMinorAmount` / `formatMoneyRange` / `toBcp47` /
   `supportedCurrencyCodes` — **den ene** beløpsformatteren for alle flater
   (SIGN-499). Valuta er alltid data (tenantens `activeTenant.currency` eller

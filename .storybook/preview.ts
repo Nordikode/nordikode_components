@@ -4,9 +4,10 @@ import type { Preview } from '@storybook/vue3-vite'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import { aliases } from 'vuetify/iconsets/mdi-svg'
 import 'vuetify/styles'
-import '@mdi/font/css/materialdesignicons.css'
+import { mdiRegistryIconSet } from '../src/icons/mdiRegistrySet'
+import { mdiRegistry } from './mdiRegistry'
 import type { ThemeDefinition } from 'vuetify'
 import {
   buildVuetifyThemes,
@@ -25,7 +26,9 @@ const themes = Object.values(nkProductThemes).reduce<Record<string, ThemeDefinit
 const vuetify = createVuetify({
   components,
   directives,
-  icons: { defaultSet: 'mdi', aliases, sets: { mdi } },
+  // Samme ikonsett som appene (SIGN-521): SVG-stier fra @mdi/js via det
+  // genererte registeret (npm run icons:generate) — ingen ikonfont.
+  icons: { defaultSet: 'mdi', aliases, sets: { mdi: mdiRegistryIconSet(mdiRegistry) } },
   theme: { defaultTheme: signTheme.vuetifyThemeName, themes },
 })
 

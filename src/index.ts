@@ -8,6 +8,9 @@ export type { NkStatusChipSize } from './types/NkStatusChipSize'
 
 export * from './tokens'
 
+export { mdiRegistryIconSet } from './icons/mdiRegistrySet'
+export type { MdiRegistry } from './icons/mdiRegistrySet'
+
 export { installStaleChunkReload, isStaleChunkError } from './staleChunkReload'
 export type { StaleChunkRouter } from './staleChunkReload'
 
