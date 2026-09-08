@@ -27,13 +27,13 @@ export const Kompakt: Story = {
   },
 }
 
-/** Rail-varianten i produktappene: kompakt utløser, meny mot høyre, med «Avslutt» tilbake til portalen. */
+/** Rail-varianten i produktappene: kompakt utløser, meny mot høyre, med valgfritt «Avslutt»-mål. */
 export const Rail: Story = {
   args: {
     userName: 'Hedvig Moore',
     userEmail: 'hedvig.moore@nordikode.com',
     accountBaseUrl: 'https://account.nordikode.com',
-    exitUrl: 'https://portal.nordikode.com',
+    exitUrl: 'https://nordikode.com',
     location: 'end bottom',
     locale: 'no',
     compact: true,

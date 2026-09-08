@@ -22,7 +22,6 @@ export type AccountMenuLabels = {
 }
 
 export type WebAppIconName =
-  | 'portal'
   | 'sign'
   | 'time'
   | 'website'

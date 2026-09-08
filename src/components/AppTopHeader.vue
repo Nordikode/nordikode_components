@@ -13,7 +13,7 @@ interface Props {
   navigationToggleAriaLabel?: string | null
   navigationToggleIcon?: string
   showNavigationToggle?: boolean
-  /** Valgfritt «Avslutt»-mål (portalen) i identitetsmenyen. */
+  /** Valgfritt «Avslutt»-mål utenfor appen i identitetsmenyen. */
   exitUrl?: string | null
   tenantEmptyLabel?: string | null
   tenantItems?: HeaderTenantOption[]

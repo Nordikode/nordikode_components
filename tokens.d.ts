@@ -98,6 +98,5 @@ export declare function productCss(theme: NkProductTheme, statics?: NkStaticToke
 
 export declare const signTheme: NkProductTheme
 export declare const timeTheme: NkProductTheme
-export declare const portalTheme: NkProductTheme
 export declare const backofficeTheme: NkProductTheme
 export declare const nkProductThemes: Record<string, NkProductTheme>

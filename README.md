@@ -92,9 +92,6 @@ npm link
 cd ../sign-web
 npm link @nordikode/components
 
-cd ../portal
-npm link @nordikode/components
-
 cd ../nordikode_backoffice
 npm link @nordikode/components
 ```
@@ -110,7 +107,7 @@ When a consuming app is linked locally, its `dev` and `build` scripts will autom
 ## Design tokens
 
 `@nordikode/components/tokens` er kilden til sannhet for farger, radius, spacing
-og typografi — per produkt (Sign, Time, Portal, Backoffice), light + dark.
+og typografi — per produkt (Sign, Time, Backoffice), light + dark.
 
 ```ts
 // src/plugins/vuetify.ts i en app:

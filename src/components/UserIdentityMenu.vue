@@ -7,7 +7,7 @@ import type { SharedLocale } from '../types/SharedLocale'
  * Identitetsmenyen (avataren) for Vuetify-appene — én komponent for
  * toppbarer og railene i produktappene, så innholdet er identisk overalt:
  * navn/e-post, «Kontoinnstillinger» (konto-appen), valgfritt «Avslutt»
- * (tilbake til portalen) og «Logg ut».
+ * (valgfritt mål utenfor appen) og «Logg ut».
  *
  * Appen eier bare sesjonen: utlogging går ut som event; kontolenken
  * navigerer selv til konto-appen (`accountBaseUrl` + /settings).
@@ -21,7 +21,7 @@ interface Props {
   locale?: SharedLocale | string | null
   /** Konto-appens origin (account.nordikode.com) — «Kontoinnstillinger» går til /settings der. */
   accountBaseUrl: string
-  /** Valgfritt «Avslutt»-mål (portalen). Uten verdi vises ikke innslaget. */
+  /** Valgfritt «Avslutt»-mål utenfor appen. Uten verdi vises ikke innslaget. */
   exitUrl?: string | null
   /** v-menu-posisjon; railene bruker 'end bottom'. */
   location?: string
