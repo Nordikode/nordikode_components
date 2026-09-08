@@ -16,6 +16,10 @@ import {
   productCss,
   signTheme,
 } from '../src/tokens'
+import { useTheme } from '../src/web/useTheme'
+// Web-lagets temakontrakt (color-scheme følger `dark`) — appene får den via
+// style.css; historiene importerer komponentene direkte og trenger den her.
+import '../src/web/theme.css'
 
 // Alle produkttemaer (light + dark) i én Vuetify-instans; toolbaren bytter.
 const themes = Object.values(nkProductThemes).reduce<Record<string, ThemeDefinition>>(
@@ -85,10 +89,15 @@ const preview: Preview = {
         const themeName = computed(() =>
           dark.value ? `${product.value.vuetifyThemeName}Dark` : product.value.vuetifyThemeName,
         )
-        // Speil appene: --nk-*-variabler i :root og nk-dark-klassen, slik at
-        // komponenter som leser CSS-variabler oppfører seg som i appene.
+        // Speil appene: --nk-*-variabler i :root og begge temaklassene —
+        // `nk-dark` (Vuetify-appene) og `dark` (webflatene, via useTheme så
+        // Modus-valget er et eksplisitt brukervalg som i appene og ikke
+        // overstyres av OS-preferansen). Meta-taggen i preview-head.html
+        // speiler vertene.
+        const { applyPreference } = useTheme()
         watchEffect(() => {
           document.documentElement.classList.toggle('nk-dark', dark.value)
+          applyPreference(dark.value ? 'dark' : 'light')
           let styleEl = document.getElementById('nk-tokens-css')
           if (!styleEl) {
             styleEl = document.createElement('style')

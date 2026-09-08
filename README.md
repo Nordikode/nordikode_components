@@ -63,6 +63,11 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   user's `preferredTheme` from core, and `ThemeToggle` emits `change` with
   the resulting preference (`system`/`light`/`dark`) so signed-in surfaces
   can persist it (the Vuetify product apps map it onto their own theme).
+  `style.css` binds `color-scheme` to the class (`html` → light,
+  `html.dark` → dark), so native controls and scrollbars follow the chosen
+  theme rather than the OS even when the host declares
+  `<meta name="color-scheme" content="light dark">`; `productCss()` does the
+  same for `nk-dark` in the Vuetify apps.
 - `AppLauncherMenu` — the Google-style app grid menu
 - `NotificationBellMenu` — the global notification bell (SIGN-459): unread badge,
   panel with the user's feed and «mark all as read»; the host maps app-core's
