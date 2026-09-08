@@ -79,6 +79,23 @@ export type ThemeToggleLabels = {
 
 export type ThemePreference = 'system' | 'light' | 'dark'
 
+export type NotificationBellItem = {
+  id: string
+  title: string
+  body?: string | null
+  timeLabel: string
+  read: boolean
+}
+
+export type NotificationBellLabels = {
+  menu: string
+  menuWithUnread: string
+  title: string
+  empty: string
+  markAllRead: string
+  unread: string
+}
+
 export function useTheme(): {
   isDark: import('vue').Ref<boolean>
   preference: import('vue').Ref<ThemePreference>
@@ -93,6 +110,7 @@ export const BrandWordmark: DefineComponent<Record<string, unknown>, Record<stri
 export const AppHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PageHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const ThemeToggle: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const NotificationBellMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 
 export interface StaleChunkRouter {
   onError(handler: (error: unknown, to: { fullPath: string }) => unknown): unknown

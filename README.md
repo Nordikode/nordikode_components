@@ -60,6 +60,10 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   the resulting preference (`system`/`light`/`dark`) so signed-in surfaces
   can persist it (the Vuetify product apps map it onto their own theme).
 - `AppLauncherMenu` — the Google-style app grid menu
+- `NotificationBellMenu` — the global notification bell (SIGN-459): unread badge,
+  panel with the user's feed and «mark all as read»; the host maps app-core's
+  `useNotificationStore` items to `{ id, title, body, timeLabel, read }`, translates
+  `eventKey` + `params` itself and navigates on `select`
 - `AccountIdentityMenu` — the avatar/account menu with service list
 - `TenantSwitcherMenu` — the company menu (tenant logo/initials, switch between
   the user's companies, optional personal context via the `personal` prop; the
