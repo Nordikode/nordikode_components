@@ -1,6 +1,6 @@
 {
   "name": "@nordikode/components",
-  "version": "0.26.0",
+  "version": "0.27.0",
   "private": false,
   "repository": {
     "type": "git",
@@ -12,6 +12,7 @@
   "types": "./index.d.ts",
   "files": [
     "dist",
+    "bin",
     "index.d.ts",
     "tokens.d.ts",
     "web.d.ts",
@@ -43,14 +44,15 @@
     "dev": "vite build --watch",
     "prepare": "npm run build",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "icons:generate": "node bin/nk-mdi-registry.mjs --out .storybook/mdiRegistry.ts src"
   },
   "peerDependencies": {
     "vue": "^3.5.0",
     "vuetify": "^4.0.0"
   },
   "devDependencies": {
-    "@mdi/font": "^7.4.47",
+    "@mdi/js": "^7.4.47",
     "@storybook/addon-docs": "^10.5.9",
     "@storybook/vue3-vite": "^10.5.9",
     "@vitejs/plugin-vue": "^6.0.6",
@@ -62,5 +64,8 @@
     "vue": "^3.5.34",
     "vue-tsc": "^3.2.8",
     "vuetify": "^4.0.7"
+  },
+  "bin": {
+    "nk-mdi-registry": "bin/nk-mdi-registry.mjs"
   }
 }

@@ -49,3 +49,8 @@ export declare function formatMoneyRange(
   options?: FormatMoneyOptions,
 ): string
 export declare function supportedCurrencyCodes(): string[]
+
+import type { IconSet } from 'vuetify'
+export type MdiRegistry = Readonly<Record<string, string>>
+/** Vuetify-ikonsett som slår opp `mdi-*`-navn i et generert @mdi/js-register (SIGN-521). */
+export declare function mdiRegistryIconSet(registry: MdiRegistry): IconSet
