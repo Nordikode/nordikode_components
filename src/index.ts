@@ -18,3 +18,6 @@ export * from './tokens'
 
 export { installStaleChunkReload, isStaleChunkError } from './staleChunkReload'
 export type { StaleChunkRouter } from './staleChunkReload'
+
+export { formatMinorAmount, formatMoney, formatMoneyRange, supportedCurrencyCodes, toBcp47 } from './money'
+export type { FormatMoneyOptions } from './money'

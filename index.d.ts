@@ -40,3 +40,36 @@ export interface StaleChunkRouter {
 }
 export declare function installStaleChunkReload(router?: StaleChunkRouter): void
 export declare function isStaleChunkError(error: unknown): boolean
+
+/**
+ * Delt beløpsformatering (SIGN-499): valuta er alltid data (tenant/dokument),
+ * locale er brukerens UI-locale som full BCP-47-tag. Se src/money.ts.
+ */
+export interface FormatMoneyOptions {
+  maximumFractionDigits?: number
+  minimumFractionDigits?: number
+  compact?: boolean
+  currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code' | 'name'
+  signDisplay?: 'auto' | 'never' | 'always' | 'exceptZero'
+}
+export declare function toBcp47(locale: string | null | undefined): string
+export declare function formatMoney(
+  amount: number,
+  currency: string | null | undefined,
+  locale: string | null | undefined,
+  options?: FormatMoneyOptions,
+): string
+export declare function formatMinorAmount(
+  amountMinor: number,
+  currency: string | null | undefined,
+  locale: string | null | undefined,
+  options?: FormatMoneyOptions,
+): string
+export declare function formatMoneyRange(
+  from: number,
+  to: number,
+  currency: string | null | undefined,
+  locale: string | null | undefined,
+  options?: FormatMoneyOptions,
+): string
+export declare function supportedCurrencyCodes(): string[]
