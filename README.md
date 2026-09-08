@@ -26,8 +26,9 @@ including `vuetify-settings.scss`.
 
 ### `@nordikode/components/web` (Vuetify-free)
 
-Separate entry for the web surfaces (nordikode.com, account.nordikode.com) —
-no Vuetify anywhere in its import graph, styled with plain scoped CSS against
+Separate entry for the web surfaces (nordikode.com, admin, account, company)
+and for the product apps' chrome (Sign, Time use the same `AppHeader` and
+menus, SIGN-442) — no Vuetify anywhere in its import graph, styled with plain scoped CSS against
 the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 `--color-line`, `--radius-*`) plus the accent contract `--nk-chrome-accent` /
 `--nk-chrome-accent-ink`, which the host app sets from its own theme.
@@ -47,15 +48,9 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   `dark` class on `<html>`; the OS preference is the default and an explicit
   choice is stored under `nordikode-theme` only while it differs from the OS
   (self-clearing). `useTheme().applyPreference()` accepts the signed-in
-  user's `preferredTheme` from core.
-- `AppTopBar` — the product apps' shared top bar (SIGN-94): a flat 4rem
-  surface with a hairline bottom border that composes the literal same chrome
-  the website uses, in the standard order ThemeToggle → AppLauncherMenu →
-  TenantSwitcherMenu (chip variant) → AccountIdentityMenu, each toggleable via
-  props. The host renders the app chip in `#brand` (shared styling via the
-  `nk-topbar__chip` class), passes data/labels as props, and handles
-  `switch-tenant`/`logout` events; `#tenant-menu-footer` reaches the company
-  menu's footer rows.
+  user's `preferredTheme` from core, and `ThemeToggle` emits `change` with
+  the resulting preference (`system`/`light`/`dark`) so signed-in surfaces
+  can persist it (the Vuetify product apps map it onto their own theme).
 - `AppLauncherMenu` — the Google-style app grid menu
 - `AccountIdentityMenu` — the avatar/account menu with service list
 - `TenantSwitcherMenu` — the company menu (tenant logo/initials, switch between

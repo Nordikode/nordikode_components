@@ -17,6 +17,8 @@ const STORAGE_KEY = 'nordikode-theme'
 export type ThemePreference = 'system' | 'light' | 'dark'
 
 const isDark = ref(false)
+/** Gjeldende valg — `system` når ingen lokal overstyring finnes. */
+const preference = ref<ThemePreference>('system')
 let initialized = false
 
 function readStored(): string | null {
@@ -25,6 +27,11 @@ function readStored(): string | null {
   } catch {
     return null
   }
+}
+
+function storedPreference(): ThemePreference {
+  const stored = readStored()
+  return stored === 'dark' || stored === 'light' ? stored : 'system'
 }
 
 function apply(dark: boolean) {
@@ -37,11 +44,15 @@ function osPrefersDark(): boolean {
 }
 
 export function useTheme() {
+  const preferenceRef = preference
+
   if (!initialized && typeof document !== 'undefined') {
     initialized = true
 
     // Respekter klassen head-scriptet alt har satt; fall tilbake til lagret
     // valg/OS når flaten ikke har et slikt script.
+    preference.value = storedPreference()
+
     if (document.documentElement.classList.contains('dark')) {
       isDark.value = true
     } else {
@@ -55,18 +66,27 @@ export function useTheme() {
     })
   }
 
-  function toggle() {
+  /**
+   * Bytter lys/mørk og returnerer det resulterende valget: `system` når det
+   * nye temaet er OS-ets (overstyringen ryddes), ellers `light`/`dark`.
+   * Verts-apper som lagrer valget på profilen (Sign, Time) bruker
+   * returverdien — eller `change`-eventet på ThemeToggle.
+   */
+  function toggle(): ThemePreference {
     const next = !isDark.value
+    const nextPreference: ThemePreference = next === osPrefersDark() ? 'system' : next ? 'dark' : 'light'
     try {
-      if (next === osPrefersDark()) {
+      if (nextPreference === 'system') {
         localStorage.removeItem(STORAGE_KEY)
       } else {
-        localStorage.setItem(STORAGE_KEY, next ? 'dark' : 'light')
+        localStorage.setItem(STORAGE_KEY, nextPreference)
       }
     } catch {
       // Privat modus — temaet gjelder likevel ut besøket.
     }
+    preference.value = nextPreference
     apply(next)
+    return nextPreference
   }
 
   /**
@@ -83,8 +103,9 @@ export function useTheme() {
     } catch {
       // Privat modus — temaet gjelder likevel ut besøket.
     }
+    preferenceRef.value = preference
     apply(preference === 'dark' || (preference === 'system' && osPrefersDark()))
   }
 
-  return { isDark, toggle, applyPreference }
+  return { isDark, preference: preferenceRef, toggle, applyPreference }
 }

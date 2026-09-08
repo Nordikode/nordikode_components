@@ -21,17 +21,6 @@ export type AccountMenuLabels = {
   logOut: string
 }
 
-export type AccountMenuThemeOption = {
-  value: string
-  label: string
-}
-
-export type AccountMenuTheme = {
-  label: string
-  options: AccountMenuThemeOption[]
-  value: string
-}
-
 export type WebAppIconName =
   | 'portal'
   | 'sign'
@@ -92,11 +81,11 @@ export type ThemePreference = 'system' | 'light' | 'dark'
 
 export function useTheme(): {
   isDark: import('vue').Ref<boolean>
-  toggle: () => void
+  preference: import('vue').Ref<ThemePreference>
+  toggle: () => ThemePreference
   applyPreference: (preference: ThemePreference) => void
 }
 
-export const AppTopBar: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AppLauncherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AccountIdentityMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const TenantSwitcherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
