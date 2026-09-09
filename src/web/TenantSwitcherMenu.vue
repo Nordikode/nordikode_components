@@ -5,6 +5,11 @@
  * bytte mellom firmaene sine. Samme visuelle språk og meny-mekanikk som
  * AccountIdentityMenu.
  *
+ * Standardplasseringen er firmablokken i `AppHeader`s `#tenant`-slot
+ * (SIGN-561): `variant="block"` viser logo og fullt firmanavn til venstre
+ * ved merkevaren, og hele blokken er utløseren for firmabyttet — den lille
+ * avataren til høyre i `#menus` er dermed borte fra alle innloggede flater.
+ *
  * Ren presentasjon: tenants, valgt id og etiketter kommer som props; et
  * `select`-event går ut når brukeren velger et ANNET firma enn det valgte
  * (klikk på valgt firma lukker bare menyen). Verts-appen eier selve byttet
@@ -44,14 +49,18 @@ const props = defineProps<{
   /** Deaktiverer valgene mens verts-appen utfører et bytte. */
   switching?: boolean
   /**
-   * 'chip' (produktappenes topbar, jf. SIGN-94): utløseren blir en kompakt
-   * pille på dempet flate med firmanavnet synlig. Default er nettsidens
-   * rene avatar+chevron.
+   * 'block' (standard i `AppHeader`s `#tenant`-slot, SIGN-561): logo/initialer
+   * og fullt firmanavn på transparent flate, panelet henger under blokken
+   * (venstrejustert). Navnet trunkeres med ellipse når plassen er knapp —
+   * logoen står alltid. 'chip' (jf. SIGN-94): kompakt pille på dempet flate
+   * med firmanavnet synlig. Default er nettsidens rene avatar+chevron.
    */
-  variant?: 'plain' | 'chip'
+  variant?: 'plain' | 'chip' | 'block'
 }>()
 
 const emit = defineEmits<{ select: [tenantId: string] }>()
+
+const showsName = computed(() => props.variant === 'chip' || props.variant === 'block')
 
 const personalSelected = computed(() => props.personal != null && props.personal.id === props.selectedId)
 
@@ -156,13 +165,16 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 </script>
 
 <template>
-  <div v-if="selected" ref="root" class="nk-tenant">
+  <div v-if="selected" ref="root" class="nk-tenant" :class="{ 'nk-tenant--block': variant === 'block' }">
+    <!-- Blokken har navnet som synlig tekst: skjermleseren får «Valgt firma:
+         <navn>» i stedet for en aria-label som ville skjult navnet. -->
     <button
       ref="trigger"
       type="button"
       class="nk-tenant__trigger"
-      :class="{ 'nk-tenant__trigger--chip': variant === 'chip' }"
-      :aria-label="labels.menu"
+      :class="{ 'nk-tenant__trigger--chip': variant === 'chip', 'nk-tenant__trigger--block': variant === 'block' }"
+      :aria-label="variant === 'block' ? undefined : labels.menu"
+      :title="variant === 'block' ? selected.name : undefined"
       :aria-expanded="open"
       aria-haspopup="menu"
       @click="toggle"
@@ -191,7 +203,8 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
         />
         <span v-else class="nk-tenant__initials">{{ initialsOf(selected.name) }}</span>
       </span>
-      <span v-if="variant === 'chip'" class="nk-tenant__trigger-name">{{ selected.name }}</span>
+      <span v-if="variant === 'block'" class="nk-sr-only">{{ labels.current }}: </span>
+      <span v-if="showsName" class="nk-tenant__trigger-name">{{ selected.name }}</span>
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -318,6 +331,33 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   height: 1.75rem;
 }
 
+/* Firmablokken (SIGN-561): logo + fullt navn på transparent flate ved
+   merkevaren. Blokken krymper før menyene til høyre — navnet trunkeres,
+   logoen og chevronen står. */
+.nk-tenant--block {
+  display: flex;
+  min-width: 0;
+}
+
+.nk-tenant__trigger--block {
+  gap: 0.5rem;
+  min-width: 0;
+  max-width: 100%;
+  border-radius: var(--radius-compact);
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  color: var(--color-ink);
+  font-family: inherit;
+}
+
+.nk-tenant__trigger--block .nk-tenant__avatar {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.nk-tenant__trigger--block .nk-tenant__trigger-name {
+  max-width: 16rem;
+}
+
 .nk-tenant__trigger-name {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -388,6 +428,13 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   margin-top: 0.5rem;
   width: 16rem;
   transform-origin: top right;
+}
+
+/* Panelet henger under blokken, venstrejustert som blokken selv. */
+.nk-tenant--block .nk-tenant__panel {
+  inset-inline-end: auto;
+  inset-inline-start: 0;
+  transform-origin: top left;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-standard);
   background: var(--color-surface-raised);

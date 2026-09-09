@@ -5,22 +5,35 @@ import TenantSwitcherMenu from '../../web/TenantSwitcherMenu.vue'
 import AccountIdentityMenu from '../../web/AccountIdentityMenu.vue'
 
 /**
- * Verts-appen eier web-designtokenene; dekoratøren setter dem slik
- * nettsiden/konto-appen gjør i sin app.css (lys modus).
+ * Verts-appen eier web-designtokenene; dekoratøren mapper dem fra `--nk-*`
+ * slik Sign/Time gjør i sin style.css, så historien følger Modus-valget
+ * (lys/mørk) i verktøylinja.
  */
 const webTokens = [
-  '--color-surface: #ffffff',
-  '--color-surface-alt: #f5f7f9',
-  '--color-surface-raised: #ffffff',
-  '--color-ink: #1d1d1f',
-  '--color-ink-secondary: #52525b',
-  '--color-ink-tertiary: #6e6e73',
-  '--color-line: #e8e8ed',
-  '--radius-compact: 8px',
-  '--radius-standard: 14px',
-  '--nk-chrome-accent: #3b5b72',
-  '--nk-chrome-accent-ink: #3b5b72',
+  '--color-surface: var(--nk-surface)',
+  '--color-surface-alt: var(--nk-surface-soft)',
+  '--color-surface-raised: var(--nk-surface)',
+  '--color-ink: var(--nk-text-primary)',
+  '--color-ink-secondary: var(--nk-text-secondary)',
+  '--color-ink-tertiary: var(--nk-text-secondary)',
+  '--color-line: var(--nk-surface-border)',
+  '--radius-compact: var(--nk-radius-sm)',
+  '--radius-standard: var(--nk-radius-lg)',
+  '--nk-chrome-accent: var(--nk-on-info-soft)',
+  '--nk-chrome-accent-ink: var(--nk-on-info-soft)',
 ].join(';')
+
+/** Firmalogo til historiene — inline SVG, ingen ekstern fil. */
+const demoLogo =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#35569f"/><path d="M14 44 32 16l18 28H14Z" fill="#bfd75b"/></svg>',
+  )
+
+const tenantLabels = { menu: 'Firmameny', current: 'Valgt firma', companies: 'Dine firmaer' }
+const toggleLabels = { toLight: 'Bytt til lys modus', toDark: 'Bytt til mørk modus' }
+const accountLabels = { menu: 'Konto', services: 'Tjenester', current: 'Du er her', logOut: 'Logg ut' }
+const services = [{ key: 'account', label: 'Kontoinnstillinger', url: '#' }]
 
 const meta: Meta<typeof AppHeader> = {
   title: 'Komponenter/Web/AppHeader',
@@ -28,7 +41,7 @@ const meta: Meta<typeof AppHeader> = {
   parameters: { layout: 'fullscreen' },
   decorators: [
     () => ({
-      template: `<div style="min-height: 420px; background: #fafafa; ${webTokens}"><story /></div>`,
+      template: `<div style="min-height: 420px; background: var(--nk-page); ${webTokens}"><story /></div>`,
     }),
   ],
 }
@@ -97,27 +110,34 @@ export const MedProduktsymbol: Story = {
   }),
 }
 
+/**
+ * Standardoppsettet for innloggede flater (SIGN-561): firmablokken i
+ * `#tenant` rett etter merkevaren, menyene i `#menus`. Firmablokken er selve
+ * TenantSwitcherMenu med `variant="block"` — klikk åpner firmabyttet.
+ */
 export const MedMenyer: Story = {
-  name: 'Med menyene i #menus',
+  name: 'Med firmablokk og menyene',
   args: { labels, nav, currentPath: '/produkter' },
   render: (args) => ({
     components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu },
     setup: () => ({
       args,
-      toggleLabels: { toLight: 'Bytt til lys modus', toDark: 'Bytt til mørk modus' },
+      toggleLabels,
       tenants: [
-        { id: 't-1', name: 'Bygg og Anlegg AS', logoUrl: null },
+        { id: 't-1', name: 'Bygg og Anlegg AS', logoUrl: demoLogo },
         { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
       ],
-      tenantLabels: { menu: 'Bytt firma', current: 'Aktivt firma', companies: 'Firmaene dine' },
-      accountLabels: { menu: 'Konto', services: 'Tjenester', current: 'Du er her', logOut: 'Logg ut' },
-      services: [{ key: 'account', label: 'Kontoinnstillinger', url: '#' }],
+      tenantLabels,
+      accountLabels,
+      services,
     }),
     template: `
       <AppHeader v-bind="args">
+        <template #tenant>
+          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" />
+        </template>
         <template #menus>
           <ThemeToggle :labels="toggleLabels" />
-          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" />
           <AccountIdentityMenu
             name="Kari Nordmann"
             email="kari@example.com"
@@ -132,12 +152,149 @@ export const MedMenyer: Story = {
 }
 
 /**
- * Smal mobil (SIGN-537): alle fem knappene skal være synlige uten
- * horisontal scroll ved 360–414 px — merkevaren krymper, suffikset og
- * tenant-navnet skjules, radene tettes.
+ * Firmablokken (SIGN-561) i produktappenes oppsett: symbol + produktnavn,
+ * skillestrek, logo og fullt firmanavn — ingen navigasjon i headeren.
+ */
+export const FirmablokkMedLogo: Story = {
+  name: 'Firmablokk – med logo',
+  args: { labels, width: 'full', productSymbol: 'sign' },
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu },
+    setup: () => ({
+      args,
+      toggleLabels,
+      tenants: [
+        { id: 't-1', name: 'Bygg og Anlegg AS', logoUrl: demoLogo },
+        { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
+      ],
+      tenantLabels,
+      accountLabels,
+      services,
+    }),
+    template: `
+      <AppHeader v-bind="args">
+        <template #brand-suffix>Sign</template>
+        <template #tenant>
+          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" />
+        </template>
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <AccountIdentityMenu
+            name="Kari Nordmann"
+            email="kari@example.com"
+            :services="services"
+            current-service-key="sign"
+            :labels="accountLabels"
+          />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}
+
+/** Uten logo (eller når logoen feiler å laste) står initialene i samme rute. */
+export const FirmablokkUtenLogo: Story = {
+  name: 'Firmablokk – uten logo (initialer)',
+  args: { labels, width: 'full', productSymbol: 'sign' },
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu },
+    setup: () => ({
+      args,
+      toggleLabels,
+      tenants: [
+        { id: 't-1', name: 'Håndverkspartner Sørvest AS', logoUrl: null },
+        { id: 't-2', name: 'Moore Eiendom AS', logoUrl: demoLogo },
+      ],
+      tenantLabels,
+      accountLabels,
+      services,
+    }),
+    template: `
+      <AppHeader v-bind="args">
+        <template #brand-suffix>Sign</template>
+        <template #tenant>
+          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" />
+        </template>
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <AccountIdentityMenu
+            name="Kari Nordmann"
+            email="kari@example.com"
+            :services="services"
+            current-service-key="sign"
+            :labels="accountLabels"
+          />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}
+
+/**
+ * Langt firmanavn med navigasjon (company-appen): blokken krymper før
+ * navigasjonen og menyene — navnet trunkeres med ellipse, logoen står.
+ * Full tittel ligger i `title` på blokken.
+ */
+export const FirmablokkLangtNavn: Story = {
+  name: 'Firmablokk – langt firmanavn + nav',
+  args: {
+    labels,
+    width: 'full',
+    currentPath: '/personer',
+    nav: [
+      { key: 'profile', label: 'Profil', href: '/profil' },
+      { key: 'people', label: 'Personer', href: '/personer' },
+      { key: 'departments', label: 'Avdelinger', href: '/avdelinger' },
+      { key: 'roles', label: 'Roller', href: '/roller' },
+      { key: 'subscription', label: 'Abonnement', href: '/abonnement' },
+    ],
+  },
+  decorators: [
+    () => ({
+      template: `<div style="width: 900px; max-width: 100%;"><story /></div>`,
+    }),
+  ],
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu },
+    setup: () => ({
+      args,
+      toggleLabels,
+      tenants: [
+        { id: 't-1', name: 'Nordvestlandske Entreprenør og Anleggsgartnere Holding AS', logoUrl: demoLogo },
+        { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
+      ],
+      tenantLabels,
+      accountLabels,
+      services,
+    }),
+    template: `
+      <AppHeader v-bind="args">
+        <template #brand-suffix>Company</template>
+        <template #tenant>
+          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" />
+        </template>
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <AccountIdentityMenu
+            name="Kari Nordmann"
+            email="kari@example.com"
+            :services="services"
+            current-service-key="company"
+            :labels="accountLabels"
+          />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}
+
+/**
+ * Smal mobil (SIGN-537/561): merket, firmablokken og menyene skal være
+ * synlige uten horisontal scroll ved 360–414 px — ordet «Nordikode» og
+ * suffikset viker, firmanavnet trunkeres og logoen står.
  */
 export const SmalMobil: Story = {
-  name: 'Smal mobil (390 px, fem menyer)',
+  name: 'Firmablokk – smal mobil (390 px)',
   args: { labels, nav, currentPath: '/produkter' },
   parameters: { viewport: { defaultViewport: 'mobile1' } },
   decorators: [
@@ -149,21 +306,23 @@ export const SmalMobil: Story = {
     components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu },
     setup: () => ({
       args,
-      toggleLabels: { toLight: 'Bytt til lys modus', toDark: 'Bytt til mørk modus' },
+      toggleLabels,
       tenants: [
-        { id: 't-1', name: 'Bygg og Anlegg AS', logoUrl: null },
+        { id: 't-1', name: 'Håndverkspartner Sørvest AS', logoUrl: demoLogo },
         { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
       ],
-      tenantLabels: { menu: 'Bytt firma', current: 'Aktivt firma', companies: 'Firmaene dine' },
-      accountLabels: { menu: 'Konto', services: 'Tjenester', current: 'Du er her', logOut: 'Logg ut' },
-      services: [{ key: 'account', label: 'Kontoinnstillinger', url: '#' }],
+      tenantLabels,
+      accountLabels,
+      services,
     }),
     template: `
       <AppHeader v-bind="args">
         <template #brand-suffix>Company</template>
+        <template #tenant>
+          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" />
+        </template>
         <template #menus>
           <ThemeToggle :labels="toggleLabels" />
-          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="chip" />
           <AccountIdentityMenu
             name="Kari Nordmann"
             email="kari@example.com"
