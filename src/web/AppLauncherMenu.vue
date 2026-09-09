@@ -301,15 +301,20 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 }
 
 
+/* Appflisen (SIGN-661): avrundet kvadrat som et app-ikon, ikke sirkel —
+   samme størrelse og radius for strekikonene og appikonene (Sign), så de
+   leses som én familie. Kun tokens: tonet aksentflate og en tynn linje som
+   gir flisen kant uten skygger. */
 .nk-launcher__chip {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 9999px;
-  background: color-mix(in srgb, var(--nk-chrome-accent, var(--color-ink-tertiary)) 12%, transparent);
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-compact, 0.625rem);
+  background: color-mix(in srgb, var(--nk-chrome-accent, var(--color-ink-tertiary)) 12%, var(--color-surface-raised));
+  box-shadow: inset 0 0 0 1px var(--color-line);
   color: var(--nk-chrome-accent-ink, var(--nk-chrome-accent, var(--color-ink-secondary)));
 }
 
@@ -340,19 +345,15 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 }
 
 .nk-launcher__app-icon {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.375rem;
+  height: 1.375rem;
 }
 
-/* Appikon-flisen (SIGN-655): samme 2.5rem som chipen, men avrundet kvadrat
-   som iOS-ikonet er tegnet for. Den lyse PNG-en er en hvit flis, så en tynn
-   linje skiller den fra panelet; i mørk modus får flisen hevet flate bak det
-   hvite symbolet. */
+/* Appikon-flisen (SIGN-655): PNG-en fyller flisen. Den lyse er en hvit flis,
+   i mørk modus står det hvite symbolet på den hevede flaten. */
 .nk-launcher__chip--tile {
   overflow: hidden;
-  border-radius: 0.625rem;
   background: var(--color-surface-raised);
-  box-shadow: inset 0 0 0 1px var(--color-line);
 }
 
 .nk-launcher__tile {
