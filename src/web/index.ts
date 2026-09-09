@@ -24,6 +24,7 @@ export type { AccountMenuService, AccountMenuLabels } from './AccountIdentityMen
 export type { TenantSwitcherOption, TenantSwitcherLabels } from './TenantSwitcherMenu.vue'
 export type { AppHeaderNavItem, AppHeaderNavChild, AppHeaderLabels } from './AppHeader.vue'
 export type { ProductSymbolKey } from './ProductSymbol.vue'
+export type { BrandKey } from './BrandWordmark.vue'
 export type { PageHeaderBack } from './PageHeader.vue'
 export type { ThemeToggleLabels } from './ThemeToggle.vue'
 export type { NotificationBellItem, NotificationBellLabels } from './NotificationBellMenu.vue'

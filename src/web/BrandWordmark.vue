@@ -1,39 +1,66 @@
 <script setup lang="ts">
 /**
- * Nordikode-logoen for webflatene — den kalligrafiske «N»-en, med eller uten
- * NORDIKODE-ordmerket under. Assetene shippes i pakka slik at logoen
- * vedlikeholdes ett sted; lys/mørk variant byttes automatisk via `.dark` på
- * rot-elementet (samme konvensjon som webflatenes tema).
+ * Merkevarelogoen for webflatene (SIGN-641) — Nordikode eller Sign, som hel
+ * logo (`lockup` = symbol + ordmerke) eller kun symbolet (`mark`). Assetene
+ * (SVG fra merkevarefilene) shippes i pakka slik at logoen vedlikeholdes ett
+ * sted; lys/mørk variant byttes automatisk via `.dark` på rot-elementet
+ * (samme konvensjon som webflatenes tema). Merkefargene (periwinkle, berry)
+ * er brand-assets og like i begge moduser — det er blekket som byttes.
  *
  * Størrelse settes av verts-appen (f.eks. `class="h-7"` eller en height-stil)
  * — bildet skalerer proporsjonalt.
  */
-withDefaults(
+export type BrandKey = 'nordikode' | 'sign'
+
+const props = withDefaults(
   defineProps<{
-    /** `lockup` = monogram + NORDIKODE (innloggingssider); `mark` = kun monogrammet (toppbarer). */
+    /** Hvilken merkevare: `nordikode` (plattformen) eller `sign` (produktet). */
+    brand?: BrandKey
+    /** `lockup` = symbol + ordmerke (header, innloggingssider); `mark` = kun symbolet. */
     variant?: 'lockup' | 'mark'
+    /** Alternativtekst. Tom streng når logoen er dekorativ (lenketekst finnes ved siden av). */
     alt?: string
   }>(),
-  { variant: 'lockup', alt: 'Nordikode' },
+  { brand: 'nordikode', variant: 'lockup', alt: undefined },
 )
 
-const lockupBlack = new URL('./brand/nordikode-lockup-black.png', import.meta.url).href
-const lockupWhite = new URL('./brand/nordikode-lockup-white.png', import.meta.url).href
-const markBlack = new URL('./brand/nordikode-mark-black.png', import.meta.url).href
-const markWhite = new URL('./brand/nordikode-mark-white.png', import.meta.url).href
+const assets: Record<BrandKey, Record<'lockup' | 'mark', { light: string; dark: string }>> = {
+  nordikode: {
+    lockup: {
+      light: new URL('./brand/nordikode-lockup-light.svg', import.meta.url).href,
+      dark: new URL('./brand/nordikode-lockup-dark.svg', import.meta.url).href,
+    },
+    mark: {
+      light: new URL('./brand/nordikode-mark-light.svg', import.meta.url).href,
+      dark: new URL('./brand/nordikode-mark-dark.svg', import.meta.url).href,
+    },
+  },
+  sign: {
+    lockup: {
+      light: new URL('./brand/sign-lockup-light.svg', import.meta.url).href,
+      dark: new URL('./brand/sign-lockup-dark.svg', import.meta.url).href,
+    },
+    mark: {
+      light: new URL('./brand/sign-mark-light.svg', import.meta.url).href,
+      dark: new URL('./brand/sign-mark-dark.svg', import.meta.url).href,
+    },
+  },
+}
+
+const defaultAlt: Record<BrandKey, string> = { nordikode: 'Nordikode', sign: 'Nordikode Sign' }
 </script>
 
 <template>
-  <span class="nk-brand">
+  <span class="nk-brand" :class="`nk-brand--${props.brand} nk-brand--${props.variant}`">
     <img
       class="nk-brand__img nk-brand__img--light"
-      :src="variant === 'mark' ? markBlack : lockupBlack"
-      :alt="alt"
+      :src="assets[props.brand][props.variant].light"
+      :alt="props.alt ?? defaultAlt[props.brand]"
     />
     <img
       class="nk-brand__img nk-brand__img--dark"
-      :src="variant === 'mark' ? markWhite : lockupWhite"
-      :alt="alt"
+      :src="assets[props.brand][props.variant].dark"
+      alt=""
       aria-hidden="true"
     />
   </span>

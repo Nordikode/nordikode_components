@@ -68,8 +68,8 @@ export const Standard: Story = {
   args: { labels, nav, currentPath: '/priser' },
 }
 
-export const MedSuffiksOgBredde: Story = {
-  name: 'Admin (suffiks + wide)',
+export const AdminWide: Story = {
+  name: 'Admin (wide)',
   args: {
     labels,
     width: 'wide',
@@ -80,24 +80,43 @@ export const MedSuffiksOgBredde: Story = {
       { key: 'seo', label: 'SEO', href: '/admin/seo' },
     ],
   },
+}
+
+/**
+ * Sign (SIGN-641): produktet har egen logo og viser den alene — ingen
+ * produktnavn bak.
+ */
+export const Sign: Story = {
+  name: 'Sign (egen logo, full)',
+  args: { labels, width: 'full', brand: 'sign' },
+}
+
+/**
+ * Produkter uten egen logo (Time, backoffice, SIGN-641): Nordikode-logoen
+ * med produktnavnet i `#brand-suffix`. Suffikset skjules under 480 px.
+ */
+export const MedSuffiks: Story = {
+  name: 'Time (Nordikode-logo + suffiks)',
+  args: { labels, width: 'full' },
   render: (args) => ({
     components: { AppHeader },
     setup: () => ({ args }),
     template: `
       <AppHeader v-bind="args">
-        <template #brand-suffix>Admin</template>
+        <template #brand-suffix>Time</template>
       </AppHeader>
     `,
   }),
 }
 
 /**
- * Produktappene (SIGN-614): produktsymbolet står foran produktnavnet i
- * `#brand-suffix` via `productSymbol` — samme kilde for alle appene, ingen
- * lokal `<img>`. Tar-delen følger blekket (lys/mørk), light berry er fast.
+ * Produktsymbol foran produktnavnet i `#brand-suffix` via `productSymbol`
+ * (SIGN-614). Etter SIGN-641 viser Sign hele sin egen logo (`brand="sign"`,
+ * storyen over); propen står igjen for produkter uten egen logo. Tar-delen
+ * følger blekket (lys/mørk), merkefargen er fast.
  */
 export const MedProduktsymbol: Story = {
-  name: 'Sign (produktsymbol + full)',
+  name: 'Produktsymbol foran suffiks (productSymbol)',
   args: { labels, width: 'full', productSymbol: 'sign' },
   render: (args) => ({
     components: { AppHeader },

@@ -50,9 +50,11 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 `--nk-chrome-accent-ink`, which the host app sets from its own theme.
 
 - `AppHeader` — the header shell itself: sticky 3.25rem bar with blur, brand
-  (wordmark + `#brand-suffix`, optionally with the product's symbol in front of
-  the suffix via `productSymbol="sign"`, SIGN-614), the company block in
-  `#tenant` (SIGN-561, see below), nav from a `nav` prop rendered both as desktop
+  (the full brand logo via `brand="nordikode" | "sign"` (SIGN-641), plus
+  `#brand-suffix` for products without their own logo, optionally with the
+  product's symbol in front of the suffix via `productSymbol="sign"`,
+  SIGN-614), the company block in `#tenant` (SIGN-561, see below), nav from a
+  `nav` prop rendered both as desktop
   nav (one dropdown level, active by `currentPath` prefix) and as the built-in
   burger drawer below 640px. Widths: `standard` (64rem), `wide` (72rem),
   `full`. **Standard order** on every signed-in surface: brand → thin divider →
@@ -96,8 +98,9 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   «Nordikode» (the mark stays) to give the company name room. The personal
   context shows the user's name with the person marker. Data comes from the
   session (`sessionTenant`/memberships: `name`, `logoUrl`) — never hardcoded.
-- `BrandWordmark` — the Nordikode logo (`lockup` or `mark`), light/dark assets
-  shipped in the package
+- `BrandWordmark` — the brand logo (`brand="nordikode"` or `"sign"`, `lockup` or
+  `mark`, SIGN-641), light/dark SVG assets shipped in the package and swapped
+  by `.dark` on the root element
 - `ProductSymbol` — the product's own symbol (`product="sign"`, SIGN-614),
   rendered inline so the ink part follows `currentColor` (light/dark) while
   the brand colour stays fixed (Sign: light berry). Sized by `height` on the
