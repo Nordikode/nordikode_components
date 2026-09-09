@@ -24,6 +24,8 @@
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import BrandWordmark from './BrandWordmark.vue'
+import ProductSymbol from './ProductSymbol.vue'
+import type { ProductSymbolKey } from './ProductSymbol.vue'
 
 export type AppHeaderNavChild = {
   key: string
@@ -56,6 +58,11 @@ const props = withDefaults(
     /** Dit merkevaren lenker. Kan være ekstern (konto-appen → nettsiden). */
     brandHref?: string
     brandLabel?: string
+    /**
+     * Produktsymbolet foran produktnavnet i `#brand-suffix` (SIGN-614) —
+     * pakkas `ProductSymbol`, så alle apper viser sitt symbol fra samme kilde.
+     */
+    productSymbol?: ProductSymbolKey | null
     /** Innholdsbredde: standard 64rem (nettsiden), wide 72rem (admin), full uten tak. */
     width?: 'standard' | 'wide' | 'full'
     /** Aktiv sti for aktiv-markering (f.eks. `location.pathname`). */
@@ -65,6 +72,7 @@ const props = withDefaults(
     nav: () => [],
     brandHref: '/',
     brandLabel: 'Nordikode',
+    productSymbol: null,
     width: 'standard',
     currentPath: null,
   },
@@ -150,7 +158,8 @@ const drawerItems = computed(() =>
         <a :href="brandHref" class="nk-header__brand">
           <BrandWordmark variant="mark" class="nk-header__brand-mark" alt="" />
           <span class="nk-header__brand-label">
-            {{ brandLabel }}<span v-if="$slots['brand-suffix']" class="nk-header__brand-suffix">
+            {{ brandLabel }}<span v-if="$slots['brand-suffix'] || productSymbol" class="nk-header__brand-suffix">
+              <ProductSymbol v-if="productSymbol" :product="productSymbol" class="nk-header__brand-symbol" />
               <slot name="brand-suffix" /></span>
           </span>
         </a>
@@ -348,9 +357,21 @@ const drawerItems = computed(() =>
 }
 
 .nk-header__brand-suffix {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  vertical-align: bottom;
   margin-inline-start: 0.375rem;
   font-weight: 400;
   color: var(--color-ink-tertiary);
+}
+
+/* Produktsymbolet (SIGN-614): litt høyere enn versalhøyden slik at det leses
+   som et merke foran navnet, ikke som et tegn i det. Tar-delen følger
+   blekkfargen (ikke suffiksets dempede tone), merkefargen er fast. */
+.nk-header__brand-symbol {
+  height: 1.25rem;
+  color: var(--color-ink);
 }
 
 .nk-header__nav {

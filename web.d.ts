@@ -116,6 +116,9 @@ export const AppLauncherMenu: DefineComponent<Record<string, unknown>, Record<st
 export const AccountIdentityMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const TenantSwitcherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const BrandWordmark: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/** Produktsymbolet foran produktnavnet (SIGN-614). `AppHeader` tar det som `productSymbol`. */
+export type ProductSymbolKey = 'sign'
+export const ProductSymbol: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AppHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PageHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const ThemeToggle: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
