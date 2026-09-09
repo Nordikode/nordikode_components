@@ -139,4 +139,6 @@ export declare const documentScheme: NkDocumentScheme
 export declare const signTheme: NkProductTheme
 export declare const timeTheme: NkProductTheme
 export declare const backofficeTheme: NkProductTheme
+/** Nordikode-paletten for plattformappene company, account og developer (SIGN-657). */
+export declare const platformTheme: NkProductTheme
 export declare const nkProductThemes: Record<string, NkProductTheme>
