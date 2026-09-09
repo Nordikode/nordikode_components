@@ -92,6 +92,36 @@ skal derfor aldri stå som knapp eller tekst der.
 | Aksent (lime) på invers flate | `onSurfaceInverseAccent` / `surfaceInverse` | `#bfd75b` på `#0d1c26` — **10,8:1** | `#bfd75b` på `#161d25` — **10,6:1** |
 | Sterkt rail-ikon på rail | `railIconStrong` / `surfaceRail` | `#f6f2ea` på `#0d1c26` — **15,5:1** | `#f6f2ea` på `#020304` — **18,5:1** |
 
+### Kundevendte dokumenter (papir, `--nk-doc-*`)
+
+Dokument-tokenene (SIGN-610) er lys-bare — tilbudsdokumentet i Sign er papir
+uansett appens modus — så hvert par har én verdi. Verdiene bygger på lys
+Sign-palett (`documentScheme` i `src/tokens/document.ts`).
+
+| Par | Tokens | Kontrast |
+| --- | --- | --- |
+| Blekk på arket | `ink` / `paper` | `#0d1c26` på `#ffffff` — **17,3:1** |
+| Brødtekst på arket | `inkSoft` / `paper` | `#3d4951` på `#ffffff` — **9,3:1** |
+| Etiketter og metadata på arket | `inkMuted` / `paper` | `#5f6970` på `#ffffff` — **5,6:1** |
+| Tittel (plum) på arket | `title` / `paper` | `#2f1220` på `#ffffff` — **17,1:1** |
+| Blekk på tonet felt | `ink` / `paperSoft` | `#0d1c26` på `#f5f5f7` — **15,9:1** |
+| Brødtekst på tonet felt | `inkSoft` / `paperSoft` | `#3d4951` på `#f5f5f7` — **8,5:1** |
+| Etiketter på tonet felt | `inkMuted` / `paperSoft` | `#5f6970` på `#f5f5f7` — **5,2:1** |
+| Tekst på båndet | `onBand` / `band` | `#f6f2ea` på `#0d1c26` — **15,5:1** |
+| Dempet tekst på båndet | `onBandMuted` / `band` | `#9aa7ad` på `#0d1c26` — **7,0:1** |
+| Handling som tekst på arket | `accent` / `paper` | `#aa4c6e` på `#ffffff` — **5,3:1** |
+| Etikett på handling | `onAccent` / `accent` | `#ffffff` på `#aa4c6e` — **5,3:1** |
+| Tekst på myk handlingsflate | `onAccentSoft` / `accentSoft` | `#7a374f` på `#f1e2e8` — **6,7:1** |
+| Tittel på forbeholdsflate | `onAttentionSoft` / `attentionSoft` | `#504c26` på `#eee0b6` — **6,6:1** |
+| Brødtekst på forbeholdsflate | `inkSoft` / `attentionSoft` | `#3d4951` på `#eee0b6` — **7,0:1** |
+| Etikett på gold | `onAttention` / `attention` | `#0d1c26` på `#cca427` — **7,4:1** |
+| Etikett på fullført | `onSuccess` / `success` | `#ffffff` på `#5b7423` — **5,3:1** |
+| Tekst på myk fullført-flate | `onSuccessSoft` / `successSoft` | `#4f6a1f` på `#ecf3ce` — **5,4:1** |
+
+Før SIGN-610 hadde dokumentet hardkodede farger der små etiketter (`#a39a8f`
+på hvit, 2,8:1) og omskrivingsknappen (petrol på petrol-tint, 4,0:1) ikke
+holdt AA.
+
 ## Verktøy
 
 - **Theme lab i Sign** (`/theme-lab`, dev) viser WCAG-kontrast live for alle

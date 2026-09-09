@@ -1,5 +1,6 @@
 import { nkFontFamily, nkRadius, nkSpaceUnit, nkSpacing, nkTypography } from './base'
-import type { NkProductTheme, NkScheme } from './types'
+import { documentScheme } from './document'
+import type { NkDocumentScheme, NkProductTheme, NkScheme } from './types'
 
 // Kanoniske CSS-variabelnavn.
 //
@@ -74,6 +75,42 @@ export function cssVariables(scheme: NkScheme): Record<string, string> {
   }
 }
 
+/**
+ * CSS-variabler for kundevendte dokumenter (`--nk-doc-*`, SIGN-610). Papiret
+ * er lyst i begge moduser, så settet genereres én gang i `:root` og har
+ * ingen `.nk-dark`-variant.
+ */
+export function documentCssVariables(scheme: NkDocumentScheme = documentScheme): Record<string, string> {
+  return {
+    '--nk-doc-paper': scheme.paper,
+    '--nk-doc-paper-soft': scheme.paperSoft,
+    '--nk-doc-border': scheme.border,
+    '--nk-doc-border-soft': scheme.borderSoft,
+    '--nk-doc-ink': scheme.ink,
+    '--nk-doc-ink-soft': scheme.inkSoft,
+    '--nk-doc-ink-muted': scheme.inkMuted,
+    '--nk-doc-title': scheme.title,
+    '--nk-doc-band': scheme.band,
+    '--nk-doc-on-band': scheme.onBand,
+    '--nk-doc-on-band-muted': scheme.onBandMuted,
+    '--nk-doc-accent': scheme.accent,
+    '--nk-doc-on-accent': scheme.onAccent,
+    '--nk-doc-accent-soft': scheme.accentSoft,
+    '--nk-doc-on-accent-soft': scheme.onAccentSoft,
+    '--nk-doc-accent-border': scheme.accentBorder,
+    '--nk-doc-attention': scheme.attention,
+    '--nk-doc-on-attention': scheme.onAttention,
+    '--nk-doc-attention-soft': scheme.attentionSoft,
+    '--nk-doc-on-attention-soft': scheme.onAttentionSoft,
+    '--nk-doc-attention-border': scheme.attentionBorder,
+    '--nk-doc-success': scheme.success,
+    '--nk-doc-on-success': scheme.onSuccess,
+    '--nk-doc-success-soft': scheme.successSoft,
+    '--nk-doc-on-success-soft': scheme.onSuccessSoft,
+    '--nk-doc-shadow': scheme.shadow,
+  }
+}
+
 /** Modus-uavhengige base-tokens (radius, spacing, font) — felles for alle produkter. */
 export interface NkStaticTokens {
   radius: { sm: string; md: string; lg: string; pill: string }
@@ -125,6 +162,8 @@ function block(selector: string, vars: Record<string, string>): string {
  * `:root` med light + statiske tokens, og `:root.nk-dark` med mørke
  * motstykker (klassen settes av themePreference i app-core). Begge bærer
  * `color-scheme`, så native kontroller følger klassen og ikke OS-et.
+ * Dokument-tokenene (`--nk-doc-*`) ligger i sin egen `:root`-blokk uten
+ * mørk variant — papiret er lyst uansett modus.
  */
 export function productCss(theme: NkProductTheme, statics: NkStaticTokens = defaultStaticTokens()): string {
   // color-scheme hører til temaklassen (SIGN-433): uten den følger native
@@ -137,6 +176,7 @@ export function productCss(theme: NkProductTheme, statics: NkStaticTokens = defa
     `/* Generert fra @nordikode/components tokens — produkt: ${theme.product}. Ikke rediger for hånd. */`,
     block(':root', light),
     block(':root.nk-dark', dark),
+    block(':root', documentCssVariables()),
     // Global tekstskala: html-rot + default-knapper. Standardverdiene er
     // identiske med nettleser-/Vuetify-defaults, så blokkene er no-op til
     // noen faktisk endrer typografi-tokens.

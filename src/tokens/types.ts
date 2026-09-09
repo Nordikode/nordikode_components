@@ -100,3 +100,52 @@ export interface NkProductTheme {
   light: NkScheme
   dark: NkScheme
 }
+
+/**
+ * Kundevendte dokumenter (tilbud, ordrebekreftelse …) er «papir»: alltid lyse,
+ * uavhengig av appens fargemodus, og identiske i web, print og PDF. Derfor er
+ * dette et eget, lys-bare tokensett (`--nk-doc-*`) og ikke felter i NkScheme —
+ * NkScheme bytter til mørk modus, papiret gjør det aldri (SIGN-610).
+ */
+export interface NkDocumentScheme {
+  /** Arket (hvitt). */
+  paper: string
+  /** Tonet felt på arket: sammendragskort, glyph-brikker, signaturfelt. */
+  paperSoft: string
+  /** Hårlinje mellom seksjoner og rundt kort. */
+  border: string
+  /** Svakere linje mellom tabellrader. */
+  borderSoft: string
+  /** Blekk: overskrifter, navn, summer og løpende tekst. */
+  ink: string
+  /** Lettere blekk for brødtekst-avsnitt (beskrivelser, betingelser). */
+  inkSoft: string
+  /** Dempet blekk: etiketter, metadata, bunntekst, signaturlinje. */
+  inkMuted: string
+  /** Sidetitler (andre blekk — plum i Sign). */
+  title: string
+  /** Mørkt bånd på arket: forsidehodet og totalsummen. */
+  band: string
+  onBand: string
+  onBandMuted: string
+  /** Handling på arket (berry): redigeringsmarkering, knapper i redigering. */
+  accent: string
+  onAccent: string
+  accentSoft: string
+  onAccentSoft: string
+  /** Kant rundt myk handlingsflate. */
+  accentBorder: string
+  /** Venter/forbehold (gold). */
+  attention: string
+  onAttention: string
+  attentionSoft: string
+  onAttentionSoft: string
+  attentionBorder: string
+  /** Fullført (oliv/lime): akseptert, signert. */
+  success: string
+  onSuccess: string
+  successSoft: string
+  onSuccessSoft: string
+  /** Arkets skygge mot appens sidebakgrunn. */
+  shadow: string
+}
