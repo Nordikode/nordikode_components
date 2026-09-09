@@ -6,8 +6,11 @@ export type SharedLocale = 'en' | 'no' | 'sv' | 'fr' | 'pl'
 
 export type NkStatusChipTone = 'success' | 'inflight' | 'warning' | 'error' | 'info' | 'ai' | 'neutral'
 export type NkStatusChipSize = 'sm' | 'md'
+/** NkEmptyState (SIGN-447): `default` for hele flater, `compact` for lister etter søk/filter. */
+export type NkEmptyStateSize = 'default' | 'compact'
 
 export const IdentityAvatar: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const NkEmptyState: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkStatusChip: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PhoneNumberInput: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 
