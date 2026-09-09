@@ -32,6 +32,10 @@ export function toVuetifyTheme(scheme: NkScheme, dark: boolean): ThemeDefinition
       'on-surface-soft': scheme.textPrimary,
       'on-surface-inverse': scheme.onSurfaceInverse,
       'on-primary': scheme.onPrimary,
+      frame: scheme.frame,
+      'on-frame': scheme.onFrame,
+      attention: scheme.attention,
+      'on-attention': scheme.onAttention,
     },
     variables: {
       'border-color': scheme.borderColor,

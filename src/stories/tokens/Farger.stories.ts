@@ -7,10 +7,10 @@ import type { NkScheme } from '../../tokens'
 
 const GROUPS: Array<{ title: string; keys: Array<keyof NkScheme> }> = [
   { title: 'Flater', keys: ['page', 'surface', 'surfaceSoft', 'surfaceSoftAccent', 'surfaceRail', 'railStart', 'railEnd', 'surfaceInverse', 'onSurfaceInverse', 'onSurfaceInverseMuted', 'onSurfaceInverseAccent'] },
-  { title: 'Tekst', keys: ['textPrimary', 'textSecondary'] },
-  { title: 'Handling og merkevare', keys: ['primary', 'primaryHover', 'primaryPress', 'onPrimary', 'link', 'linkHover', 'secondary', 'onSecondary', 'info', 'onInfo', 'attention', 'onAttention'] },
+  { title: 'Tekst', keys: ['textPrimary', 'textSecondary', 'textTitle'] },
+  { title: 'Handling og merkevare', keys: ['primary', 'primaryHover', 'primaryPress', 'onPrimary', 'link', 'linkHover', 'secondary', 'onSecondary', 'info', 'onInfo', 'attention', 'onAttention', 'frame', 'onFrame'] },
   { title: 'Status', keys: ['success', 'onSuccess', 'warning', 'onWarning', 'error', 'onError'] },
-  { title: 'Myke flater (soft)', keys: ['primarySoft', 'onPrimarySoft', 'infoSoft', 'onInfoSoft', 'aiSoft', 'onAiSoft', 'successSoft', 'onSuccessSoft', 'inflightSoft', 'onInflightSoft', 'warningSoft', 'onWarningSoft', 'errorSoft', 'onErrorSoft'] },
+  { title: 'Myke flater (soft)', keys: ['primarySoft', 'onPrimarySoft', 'infoSoft', 'onInfoSoft', 'aiSoft', 'onAiSoft', 'successSoft', 'onSuccessSoft', 'inflightSoft', 'onInflightSoft', 'mutedSoft', 'onMutedSoft', 'warningSoft', 'onWarningSoft', 'errorSoft', 'onErrorSoft'] },
   { title: 'Kanter og glass', keys: ['surfaceBorder', 'surfaceGlass', 'surfaceSubtle'] },
   { title: 'Skygger', keys: ['shadowSoft', 'shadowStrong'] },
   { title: 'Rail-ikoner', keys: ['railIcon', 'railIconStrong'] },

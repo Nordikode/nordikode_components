@@ -21,6 +21,7 @@ export interface NkScheme {
   onSurfaceInverseAccent: string
   textPrimary: string
   textSecondary: string
+  textTitle: string
   primary: string
   primaryHover: string
   primaryPress: string
@@ -33,6 +34,8 @@ export interface NkScheme {
   onInfo: string
   attention: string
   onAttention: string
+  frame: string
+  onFrame: string
   success: string
   onSuccess: string
   warning: string
@@ -49,6 +52,8 @@ export interface NkScheme {
   onSuccessSoft: string
   inflightSoft: string
   onInflightSoft: string
+  mutedSoft: string
+  onMutedSoft: string
   warningSoft: string
   onWarningSoft: string
   errorSoft: string

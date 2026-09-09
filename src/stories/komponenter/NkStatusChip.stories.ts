@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import NkStatusChip from '../../components/NkStatusChip.vue'
 import type { NkStatusChipTone } from '../../types/NkStatusChipTone'
 
-// Statuschipen (SIGN-309): TO størrelser, seks semantiske toner.
+// Statuschipen (SIGN-309): TO størrelser, sju semantiske toner (ai fra SIGN-604).
 // sm = lister/tabeller (sakslisten), md = hoder/kort (sakshodets «TILBUD SENDT»).
 // Tonene følger designsystemets fargeroller: fullført = nordlys-tint,
 // underveis = kopper-tint, venter = varsel, feil, info = fjord, nøytral.
@@ -13,7 +13,7 @@ const meta: Meta<typeof NkStatusChip> = {
   title: 'Komponenter/NkStatusChip',
   component: NkStatusChip,
   argTypes: {
-    tone: { control: 'select', options: ['success', 'inflight', 'warning', 'error', 'info', 'neutral'] },
+    tone: { control: 'select', options: ['success', 'inflight', 'warning', 'error', 'info', 'ai', 'neutral'] },
     size: { control: 'select', options: ['sm', 'md'] },
   },
 }
@@ -23,11 +23,12 @@ type Story = StoryObj<typeof NkStatusChip>
 
 // Norske eksempeldata fra Sign — én typisk tekst per tone.
 const EKSEMPLER: Array<{ tone: NkStatusChipTone; label: string; rolle: string }> = [
-  { tone: 'success', label: 'Signert', rolle: 'fullført (nordlys-tint)' },
+  { tone: 'success', label: 'Signert', rolle: 'fullført (lime-tint)' },
   { tone: 'inflight', label: 'Tilbud sendt', rolle: 'underveis (kopper-tint)' },
   { tone: 'warning', label: 'Venter på kunde', rolle: 'venter på noen (varsel)' },
   { tone: 'error', label: 'Avvist', rolle: 'feil' },
-  { tone: 'info', label: 'I melding', rolle: 'maskinen/AI (fjord)' },
+  { tone: 'info', label: 'I melding', rolle: 'informasjon' },
+  { tone: 'ai', label: 'AI-foreslått', rolle: 'maskinen (AI-tint)' },
   { tone: 'neutral', label: 'Utkast', rolle: 'nøytral' },
 ]
 

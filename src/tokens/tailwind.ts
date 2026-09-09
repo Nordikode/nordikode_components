@@ -20,6 +20,7 @@ export function tailwindThemeVariables(scheme: NkScheme): Record<string, string>
     '--color-surface-inverse': scheme.surfaceInverse,
     '--color-ink': scheme.textPrimary,
     '--color-ink-secondary': scheme.textSecondary,
+    '--color-ink-title': scheme.textTitle,
     '--color-ink-inverse': scheme.onSurfaceInverse,
     '--color-ink-inverse-muted': scheme.onSurfaceInverseMuted,
     '--color-line': scheme.surfaceBorder,
@@ -42,6 +43,8 @@ export function tailwindThemeVariables(scheme: NkScheme): Record<string, string>
     '--color-ok-ink': scheme.onSuccessSoft,
     '--color-inflight-surface': scheme.inflightSoft,
     '--color-inflight-ink': scheme.onInflightSoft,
+    '--color-muted-surface': scheme.mutedSoft,
+    '--color-muted-ink': scheme.onMutedSoft,
     '--color-warn-surface': scheme.warningSoft,
     '--color-warn-ink': scheme.onWarningSoft,
     '--color-error-surface': scheme.errorSoft,
@@ -55,6 +58,8 @@ export function tailwindThemeVariables(scheme: NkScheme): Record<string, string>
     '--color-on-error': scheme.onError,
     '--color-attention': scheme.attention,
     '--color-on-attention': scheme.onAttention,
+    '--color-frame': scheme.frame,
+    '--color-on-frame': scheme.onFrame,
   }
 }
 
