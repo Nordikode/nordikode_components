@@ -115,6 +115,8 @@ export function useTheme(): {
 export const AppLauncherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AccountIdentityMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const TenantSwitcherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/** Merkevaren i `BrandWordmark`/`AppHeader` (SIGN-641): plattformen eller Sign. */
+export type BrandKey = 'nordikode' | 'sign'
 export const BrandWordmark: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /** Produktsymbolet foran produktnavnet (SIGN-614). `AppHeader` tar det som `productSymbol`. */
 export type ProductSymbolKey = 'sign'

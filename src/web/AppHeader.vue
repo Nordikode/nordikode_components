@@ -12,7 +12,8 @@
  * (Inertia `Link`, `RouterLink`, …) — default er en vanlig `<a>`.
  *
  * Standardrekkefølgen (dokumentert i design systemet):
- * merkevare (+ produktsymbol/`#brand-suffix`) → tynn skillestrek →
+ * merkevare (hele logoen via `brand`, SIGN-641, + produktsymbol/`#brand-suffix`
+ * for produkter uten egen logo) → tynn skillestrek →
  * firmablokken i `#tenant` (`TenantSwitcherMenu variant="block"`: logo og
  * fullt firmanavn, klikk åpner firmabyttet — SIGN-561) → navigasjon → …
  * → `#actions` → ThemeToggle → NotificationBellMenu → AppLauncherMenu →
@@ -30,6 +31,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } 
 import BrandWordmark from './BrandWordmark.vue'
 import ProductSymbol from './ProductSymbol.vue'
 import type { ProductSymbolKey } from './ProductSymbol.vue'
+import type { BrandKey } from './BrandWordmark.vue'
 
 export type AppHeaderNavChild = {
   key: string
@@ -61,6 +63,14 @@ const props = withDefaults(
     nav?: AppHeaderNavItem[]
     /** Dit merkevaren lenker. Kan være ekstern (konto-appen → nettsiden). */
     brandHref?: string
+    /**
+     * Logoen i headeren (SIGN-641): hele merkevarelogoen fra `BrandWordmark`.
+     * Plattformflatene viser `nordikode`; Sign viser sin egen (`sign`).
+     * Produkter uten egen logo (Time, backoffice) beholder `nordikode` og
+     * legger produktnavnet i `#brand-suffix`.
+     */
+    brand?: BrandKey
+    /** Tilgjengelig navn på logolenken (alt-tekst). Standard følger merkevaren. */
     brandLabel?: string
     /**
      * Produktsymbolet foran produktnavnet i `#brand-suffix` (SIGN-614) —
@@ -75,7 +85,8 @@ const props = withDefaults(
   {
     nav: () => [],
     brandHref: '/',
-    brandLabel: 'Nordikode',
+    brand: 'nordikode',
+    brandLabel: undefined,
     productSymbol: null,
     width: 'full',
     currentPath: null,
@@ -164,11 +175,23 @@ const drawerItems = computed(() =>
     <div :class="innerClass">
       <slot name="brand" :close="closeAll">
         <a :href="brandHref" class="nk-header__brand">
-          <BrandWordmark variant="mark" class="nk-header__brand-mark" alt="" />
-          <span class="nk-header__brand-label">
-            {{ brandLabel }}<span v-if="$slots['brand-suffix'] || productSymbol" class="nk-header__brand-suffix">
-              <ProductSymbol v-if="productSymbol" :product="productSymbol" class="nk-header__brand-symbol" />
-              <slot name="brand-suffix" /></span>
+          <!-- Hele logoen (SIGN-641); med firmablokk på smale mobiler vises kun
+               symbolet så firmanavnet får plass (SIGN-561). -->
+          <BrandWordmark
+            :brand="brand"
+            variant="lockup"
+            :alt="brandLabel"
+            class="nk-header__brand-logo nk-header__brand-logo--full"
+          />
+          <BrandWordmark
+            :brand="brand"
+            variant="mark"
+            :alt="brandLabel"
+            class="nk-header__brand-logo nk-header__brand-logo--compact"
+          />
+          <span v-if="$slots['brand-suffix'] || productSymbol" class="nk-header__brand-suffix">
+            <ProductSymbol v-if="productSymbol" :product="productSymbol" class="nk-header__brand-symbol" />
+            <slot name="brand-suffix" />
           </span>
         </a>
       </slot>
@@ -352,23 +375,24 @@ const drawerItems = computed(() =>
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  /* Merkevaren er det som krymper på smale skjermer — menyene og burgeren
-     er viktigere enn hele navnet (SIGN-537). */
-  flex-shrink: 1;
-  min-width: 0;
+  /* Logoen kan ikke krympe uten å forvrenges — merkevaren holder bredden sin;
+     på smale skjermer krympes logoen i høyde, suffikset skjules og med
+     firmablokk vises kun symbolet (SIGN-537/561-prinsippet: menyene og
+     burgeren skal alltid få plass, og det er firmanavnet som trunkeres). */
+  flex-shrink: 0;
   color: var(--color-ink);
   text-decoration: none;
 }
 
-.nk-header__brand-mark {
-  height: 1.5rem;
+/* Hele logoen (symbol + ordmerke) i en 3.25rem-header: 2.25rem gir ordmerket
+   lesbar høyde. */
+.nk-header__brand-logo {
+  height: 2.25rem;
   flex-shrink: 0;
 }
 
-/* Merkevaren holder sin bredde når firmablokken står ved siden av — det er
-   firmanavnet som trunkeres, ikke «Nordikode». */
-.nk-header--tenant .nk-header__brand {
-  flex-shrink: 0;
+.nk-header__brand-logo--compact {
+  display: none;
 }
 
 .nk-header__divider {
@@ -387,23 +411,19 @@ const drawerItems = computed(() =>
   flex: 0 1 auto;
 }
 
-.nk-header__brand-label {
-  min-width: 0;
-  overflow: hidden;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
+/* Produktnavnet bak logoen for produkter uten egen logo (Time, backoffice):
+   dempet, så logoen forblir merkevaren og navnet blir konteksten. */
 .nk-header__brand-suffix {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  vertical-align: bottom;
-  margin-inline-start: 0.375rem;
-  font-weight: 400;
-  color: var(--color-ink-tertiary);
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-ink-secondary);
 }
 
 /* Produktsymbolet (SIGN-614): litt høyere enn versalhøyden slik at det leses
@@ -581,9 +601,21 @@ const drawerItems = computed(() =>
     padding-inline: 0.75rem;
   }
 
-  .nk-header__brand-suffix,
-  .nk-header--tenant .nk-header__brand-label {
+  .nk-header__brand-logo {
+    height: 1.75rem;
+  }
+
+  .nk-header__brand-suffix {
     display: none;
+  }
+
+  /* Med firmablokk viker ordmerket for firmanavnet — symbolet står. */
+  .nk-header--tenant .nk-header__brand-logo--full {
+    display: none;
+  }
+
+  .nk-header--tenant .nk-header__brand-logo--compact {
+    display: inline-flex;
   }
 
   .nk-header--tenant .nk-header__inner {
