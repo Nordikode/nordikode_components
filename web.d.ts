@@ -35,6 +35,9 @@ export type WebAppIconName =
 export const webAppIcons: Record<WebAppIconName, string[]>
 export const webAppFallbackIcon: string[]
 export function webAppIconFor(key: string): string[]
+/** Apper med egen merkevarelogo — vises stablet i app-velgeren (SIGN-655). */
+export const webAppBrands: Partial<Record<WebAppIconName, BrandKey>>
+export function webAppBrandFor(key: string): BrandKey | null
 
 export type TenantSwitcherOption = {
   id: string
@@ -117,6 +120,7 @@ export const AccountIdentityMenu: DefineComponent<Record<string, unknown>, Recor
 export const TenantSwitcherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /** Merkevaren i `BrandWordmark`/`AppHeader` (SIGN-641): plattformen eller Sign. */
 export type BrandKey = 'nordikode' | 'sign'
+export type BrandVariant = 'lockup' | 'stacked' | 'mark'
 export const BrandWordmark: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /** Produktsymbolet foran produktnavnet (SIGN-614). `AppHeader` tar det som `productSymbol`. */
 export type ProductSymbolKey = 'sign'

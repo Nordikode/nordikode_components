@@ -98,14 +98,16 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   «Nordikode» (the mark stays) to give the company name room. The personal
   context shows the user's name with the person marker. Data comes from the
   session (`sessionTenant`/memberships: `name`, `logoUrl`) — never hardcoded.
-- `BrandWordmark` — the brand logo (`brand="nordikode"` or `"sign"`, `lockup` or
-  `mark`, SIGN-641), light/dark SVG assets shipped in the package and swapped
-  by `.dark` on the root element
+- `BrandWordmark` — the brand logo (`brand="nordikode"` or `"sign"`; `lockup`,
+  `stacked` or `mark`, SIGN-641/655), light/dark SVG assets shipped in the
+  package and swapped by `.dark` on the root element
 - `ProductSymbol` — the product's own symbol (`product="sign"`, SIGN-614),
   rendered inline so the ink part follows `currentColor` (light/dark) while
   the brand colour stays fixed (Sign: light berry). Sized by `height` on the
   host; `AppHeader` places it in front of `#brand-suffix` via `productSymbol`
-- `webAppIcons` / `webAppIconFor` — the canonical per-app icon registry
+- `webAppIcons` / `webAppIconFor` — the canonical per-app icon registry;
+  `webAppBrandFor` names the apps with their own logo, which `AppLauncherMenu`
+  shows as the stacked `BrandWordmark` instead of the line icon (SIGN-655)
 - `NkSignedOutDialog` — the «You are signed out» overlay (SIGN-509): shown by
   every first-party app when the shared platform session is gone (signed out in
   another tab/device, or expired). It never navigates away and cannot be
