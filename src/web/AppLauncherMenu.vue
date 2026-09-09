@@ -9,7 +9,8 @@
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
-import { webAppIconFor } from './appIcons'
+import { webAppBrandFor, webAppIconFor } from './appIcons'
+import BrandWordmark from './BrandWordmark.vue'
 
 export type AppLauncherItem = {
   key: string
@@ -181,7 +182,17 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
             >
               <span class="nk-launcher__chip">
                 <span v-if="(app.badge ?? 0) > 0" class="nk-launcher__badge">{{ badgeText(app.badge!) }}</span>
+                <!-- Apper med egen logo (SIGN-655) viser den stablede logoen
+                     i stedet for strekikonet; lys/mørk følger .dark på rot. -->
+                <BrandWordmark
+                  v-if="webAppBrandFor(app.key)"
+                  :brand="webAppBrandFor(app.key)!"
+                  variant="stacked"
+                  alt=""
+                  class="nk-launcher__app-logo"
+                />
                 <svg
+                  v-else
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -334,6 +345,11 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 .nk-launcher__app-icon {
   width: 1.25rem;
   height: 1.25rem;
+}
+
+/* Den stablede logoen fyller chipen (2.5rem) i høyden; bredden følger. */
+.nk-launcher__app-logo {
+  height: 2rem;
 }
 
 .nk-launcher__label {

@@ -11,7 +11,7 @@ const meta: Meta<typeof BrandWordmark> = {
   component: BrandWordmark,
   argTypes: {
     brand: { control: 'radio', options: ['nordikode', 'sign'] },
-    variant: { control: 'radio', options: ['lockup', 'mark'] },
+    variant: { control: 'radio', options: ['lockup', 'stacked', 'mark'] },
   },
 }
 
@@ -68,6 +68,26 @@ export const SignSymbol: Story = {
     template: sideBySide('64px'),
   }),
   args: { brand: 'sign', variant: 'mark' },
+}
+
+export const Stablet: Story = {
+  name: 'Stablet (Nordikode og Sign, app-velgeren)',
+  render: (args) => ({
+    components: { BrandWordmark },
+    setup: () => ({ args }),
+    template: `
+      <div style="display: flex; gap: 24px; align-items: stretch">
+        <div style="display: flex; gap: 24px; padding: 24px; background: #ffffff; border-radius: 12px">
+          <BrandWordmark brand="nordikode" variant="stacked" style="height: 96px" />
+          <BrandWordmark brand="sign" variant="stacked" style="height: 96px" />
+        </div>
+        <div class="dark" style="display: flex; gap: 24px; padding: 24px; background: #0d1c26; border-radius: 12px">
+          <BrandWordmark brand="nordikode" variant="stacked" style="height: 96px" />
+          <BrandWordmark brand="sign" variant="stacked" style="height: 96px" />
+        </div>
+      </div>
+    `,
+  }),
 }
 
 export const IHeaderstørrelse: Story = {

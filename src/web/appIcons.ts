@@ -7,6 +7,8 @@
  * web-designspråket. Nye apper får sin oppføring her, ikke lokale kopier.
  */
 
+import type { BrandKey } from './BrandWordmark.vue'
+
 export type WebAppIconName =
   | 'sign'
   | 'time'
@@ -56,4 +58,17 @@ export const webAppFallbackIcon = [
 
 export function webAppIconFor(key: string): string[] {
   return webAppIcons[key as WebAppIconName] ?? webAppFallbackIcon
+}
+
+/**
+ * Apper med egen merkevarelogo vises med den (stablet variant fra
+ * `BrandWordmark`) i stedet for strekikonet (SIGN-655). Nye produktlogoer
+ * registreres her når de finnes.
+ */
+export const webAppBrands: Partial<Record<WebAppIconName, BrandKey>> = {
+  sign: 'sign',
+}
+
+export function webAppBrandFor(key: string): BrandKey | null {
+  return webAppBrands[key as WebAppIconName] ?? null
 }
