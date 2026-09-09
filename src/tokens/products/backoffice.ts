@@ -29,6 +29,7 @@ export const backofficeTheme: NkProductTheme = {
     onSurfaceInverseAccent: '#4cb583', // avledet: = dark.onSuccessSoft — 6,6:1
     textPrimary: '#35171b',
     textSecondary: '#7b5d62',
+    textTitle: '#35171b', // avledet: = textPrimary til produktet adopterer ny palett
     primary: '#9f2f3b',
     primaryHover: '#7d2431',
     primaryPress: '#7d2431', // avledet: = hover til produktet adopterer ny palett
@@ -41,6 +42,8 @@ export const backofficeTheme: NkProductTheme = {
     onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#c99a2e', // avledet: = felles warning
     onAttention: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
+    frame: '#9f2f3b', // avledet: = primary til produktet får egen rammefarge
+    onFrame: '#fff9fa', // avledet
     ...nkStatusLight,
     // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
@@ -54,6 +57,8 @@ export const backofficeTheme: NkProductTheme = {
     onSuccessSoft: '#1f8a55',
     inflightSoft: '#f3e6d8', // avledet: felles kopper-tint (ny palett) til produktet adopterer den
     onInflightSoft: '#7c5322', // avledet: 5,5:1 på inflightSoft
+    mutedSoft: '#f7ebec', // avledet: = surfaceSoft til produktet adopterer ny palett
+    onMutedSoft: '#35171b', // avledet
     warningSoft: '#f9f3e6',
     onWarningSoft: '#c99a2e',
     errorSoft: '#f7eaea',
@@ -83,6 +88,7 @@ export const backofficeTheme: NkProductTheme = {
     onSurfaceInverseAccent: '#4cb583', // avledet: = onSuccessSoft — 5,4:1
     textPrimary: '#f2e4e6',
     textSecondary: '#bfa3a8',
+    textTitle: '#f2e4e6', // avledet: = textPrimary til produktet adopterer ny palett
     primary: '#d4707b',
     primaryHover: '#df8a94',
     primaryPress: '#df8a94', // avledet: = hover til produktet adopterer ny palett
@@ -95,6 +101,8 @@ export const backofficeTheme: NkProductTheme = {
     onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#d9ad55', // avledet: = felles warning (dark)
     onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
+    frame: '#d4707b', // avledet: = primary til produktet får egen rammefarge
+    onFrame: '#35171b', // avledet
     ...nkStatusDark,
     // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
@@ -108,6 +116,8 @@ export const backofficeTheme: NkProductTheme = {
     onSuccessSoft: '#4cb583',
     inflightSoft: '#33260f', // avledet: felles kopper-tint mørk (ny palett)
     onInflightSoft: '#dfb073', // avledet: 7,4:1 på inflightSoft
+    mutedSoft: '#2e2024', // avledet: = surfaceSoft til produktet adopterer ny palett
+    onMutedSoft: '#f2e4e6', // avledet
     warningSoft: '#3c2c25',
     onWarningSoft: '#d9ad55',
     errorSoft: '#3c2629',

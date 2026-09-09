@@ -1,137 +1,149 @@
 import { nkOpacity } from '../base'
 import type { NkProductTheme } from '../types'
 
-// SIGN-139: ny palett fra designsystemet (Claude Design «Nordikode Design
-// System», 2026-08-24). Light er hentet uendret fra tokens/colors.css og
-// dark fra tokens/dark.css; verdier merket «avledet» fantes ikke der og er
-// utledet mekanisk.
+// SIGN-604 (2026-09-09): ny palett vedtatt av teamet etter utforskingen i
+// SIGN-583 (lab + forslagsside med skjermbilder og målt kontrast). Fargene
+// har engelske navn:
+//   tar         #0d1c26  blekk (løpende tekst) og mørk flate (rail, bånd, løftet panel)
+//   plum        #2f1220  andre blekk: overskrifter og titler
+//   berry       #aa4c6e  handling i lys modus (knapper, lenker, aktiv fane)
+//   light berry #dc7499  merket (Sign-logoen) og handling i mørk modus
+//   periwinkle  #90afed  rammen og maskinen: hel på aktiv rail-knapp, ellers som lys tint
+//   lime        #bfd75b  fullført-familien (vunnet, bud mottatt, fortjeneste)
+//   gold        #cca427  venter på noen (venter på kundesvar, ny sak, meldingsvarsler)
+//   mauve       #b19eb4  dempet (kategorier, tagger, utkast)
 //
-// Palettens regel: én farge har én jobb.
-//   petrol  → handling (knapper, aktiv fane, lenker, fokus)
-//   fjord   → rammen og maskinen (rail, AI-flater, info)
-//   nordlys → fullført (kun tint)
-//   varsel/feil → status
-// Statusfargene overstyres her per Sign (basepaletten nkStatusLight/Dark
-// beholdes av de andre produktene til de adopterer den nye paletten).
+// Palettens regel er fortsatt én farge, én jobb. Tinter er regnet ut som
+// palettfargen blandet over flaten (prosent i kommentaren) og alle tekst/flate-
+// par er målt til ≥ 4,5:1 i kjørende app (kontrastrevisjonen i SIGN-583).
+// Verdier merket «avledet» finnes ikke som egen palettfarge.
 export const signTheme: NkProductTheme = {
   product: 'sign',
   vuetifyThemeName: 'NordikodeSign',
   light: {
-    page: '#eff1f2', // snø-100
+    page: '#f3f3f5', // nøytral kald side («hvit» papir fra laben)
     surface: '#ffffff',
-    surfaceSoft: '#f5f7f8', // snø-50
-    surfaceSoftAccent: '#e0f5f2', // petrol-100
-    surfaceRail: '#0d1c26', // fjord-900 — mørk rail («the spine»)
-    railStart: '#0d1c26', // fjord-900, flat — designet har ingen gradient
+    surfaceSoft: '#f5f5f7',
+    surfaceSoftAccent: '#e9effb', // periwinkle 20 %: valgt rad, aktivt filter — berry-tekst 4,6:1
+    surfaceRail: '#0d1c26', // tar — flat rail, ingen gradient
+    railStart: '#0d1c26',
     railEnd: '#0d1c26',
     railIcon: 'rgba(246, 242, 234, 0.55)',
     railIconStrong: '#f6f2ea',
-    surfaceBorder: 'rgba(13, 28, 38, 0.12)', // avledet: ≈ snø-300-hairline over hvit
+    surfaceBorder: 'rgba(13, 28, 38, 0.12)', // avledet: tar-hairline over hvit
     surfaceGlass: 'rgba(255, 255, 255, 0.72)', // avledet
     surfaceSubtle: 'rgba(255, 255, 255, 0.62)', // avledet
-    surfaceInverse: '#0d1c26', // fjord-900 — samme mørke flate som railen («the spine»)
-    onSurfaceInverse: '#f6f2ea', // = railIconStrong — 15,5:1 på inverse
-    onSurfaceInverseMuted: '#9aa7ad', // avledet: dempet fjord-tone — 7,0:1 på inverse
-    onSurfaceInverseAccent: '#7fe0ab', // nordlys (status-ok-fg fra dark) — 10,9:1 på inverse
-    textPrimary: '#241e18', // tjære-800
-    textSecondary: '#6b6055', // stein-500
-    primary: '#0b8476', // petrol-500 — 4,59:1 mot hvit
-    primaryHover: '#097568', // petrol-600
-    primaryPress: '#08675c', // petrol-700 — designets --action-primary-press
+    surfaceInverse: '#0d1c26', // tar — samme mørke flate som railen
+    onSurfaceInverse: '#f6f2ea', // 15,5:1 på inverse
+    onSurfaceInverseMuted: '#9aa7ad', // avledet, 7,0:1 på inverse
+    onSurfaceInverseAccent: '#bfd75b', // lime — 10,8:1 på inverse
+    textPrimary: '#0d1c26', // tar
+    textSecondary: '#5f6970', // avledet: tar 66 % over hvit — 5,6:1
+    textTitle: '#2f1220', // plum — 17:1
+    primary: '#aa4c6e', // berry — hvit etikett 5,3:1
+    primaryHover: '#92415f', // avledet: berry mørknet — 6,7:1
+    primaryPress: '#7e3852', // avledet
     onPrimary: '#ffffff',
-    link: '#08675c', // petrol-700 — mørkere enn knappefyllet, 6,73:1 på papir
-    linkHover: '#097568', // petrol-600
-    secondary: '#274c5e', // fjord-500
+    link: '#aa4c6e', // berry — 5,3:1 på hvit, 4,8:1 på page
+    linkHover: '#92415f',
+    secondary: '#35569f', // avledet: mørk periwinkle som tekst/fyll — 7,0:1 på hvit
     onSecondary: '#ffffff',
-    info: '#274c5e', // fjord-500
+    info: '#35569f', // avledet, som secondary
     onInfo: '#ffffff',
-    attention: '#d99b2b', // varsel-500
-    onAttention: '#14100d', // tjære-900
-    success: '#0e633c', // nordlys-700
+    attention: '#cca427', // gold — tar-etikett 7,4:1
+    onAttention: '#0d1c26',
+    frame: '#90afed', // periwinkle — aktiv rail-knapp, tar-ikon 7,9:1
+    onFrame: '#0d1c26',
+    success: '#5b7423', // avledet: mørk lime (oliv) — hvit etikett 5,3:1
     onSuccess: '#ffffff',
-    warning: '#8a5e0f', // varsel-700
+    warning: '#8a5e0f', // varsel-700 beholdt: gold tåler ikke hvit etikett
     onWarning: '#ffffff',
-    error: '#b4392b', // feil-500
+    error: '#b4392b', // feil-500 beholdt
     onError: '#ffffff',
-    primarySoft: '#e0f5f2', // petrol-100
-    onPrimarySoft: '#08675c', // petrol-700
-    infoSoft: '#e7edf1', // fjord-tint; 7,8:1 mot onInfoSoft
-    onInfoSoft: '#274c5e', // fjord-500
-    aiSoft: '#e7edf1', // fjord-50 — designets --ai-bg (samme flate som info i dag, egen rolle)
-    onAiSoft: '#274c5e', // fjord-500 — designets --ai-fg
-    successSoft: '#e2faec', // nordlys-100
-    onSuccessSoft: '#0e633c', // nordlys-700
-    inflightSoft: '#f3e6d8', // avledet: kopper-tint fra Saksraden-laben (01.09) — verifiseres mot designprosjektets --status-inflight-bg
-    onInflightSoft: '#7c5322', // avledet: kopper-mørk, 5,5:1 på inflightSoft — verifiseres mot --status-inflight-fg
-    warningSoft: '#fbeed2', // varsel-100
-    onWarningSoft: '#8a5e0f', // varsel-700
-    errorSoft: '#f8e2de', // feil-100
-    onErrorSoft: '#96301f', // feil-600
-    shadowSoft: 'rgba(13, 28, 38, 0.14)', // avledet: fjord-tonet
+    primarySoft: '#f1e2e8', // berry 16 %
+    onPrimarySoft: '#7a374f', // avledet — 6,8:1 på primarySoft
+    infoSoft: '#e2eafa', // periwinkle 26 %
+    onInfoSoft: '#35569f', // 6,1:1 på infoSoft
+    aiSoft: '#e2eafa', // maskinen = periwinkle-tint (samme flate som info, egen rolle)
+    onAiSoft: '#35569f',
+    successSoft: '#ecf3ce', // lime 30 %
+    onSuccessSoft: '#4f6a1f', // avledet — 5,4:1 på successSoft
+    inflightSoft: '#f3e6d8', // kopper-tint beholdt (underveis)
+    onInflightSoft: '#7c5322', // 5,5:1
+    mutedSoft: '#efeaf0', // mauve 30 %
+    onMutedSoft: '#0d1c26', // tar — 15:1
+    warningSoft: '#eee0b6', // gold 34 %
+    onWarningSoft: '#504c26', // avledet: gold 35 % mot tar — 6,7:1
+    errorSoft: '#f8e2de', // feil-100 beholdt
+    onErrorSoft: '#96301f',
+    shadowSoft: 'rgba(13, 28, 38, 0.14)', // avledet: tar-tonet
     shadowStrong: 'rgba(13, 28, 38, 0.2)', // avledet
-    borderColor: '#14100d', // tjære-900
+    borderColor: '#0d1c26',
     borderOpacity: nkOpacity.borderLight,
     mediumEmphasisOpacity: nkOpacity.mediumEmphasisLight,
   },
-  // Dark er designet i Claude Design (tokens/dark.css, 2026-08-24): «tjære,
-  // blåkald» — nesten-svart side med blå understrøm, ikke invertert light.
-  // Reglene derfra: teksten er aldri ren hvit; petrol-500 beholdes uendret som
-  // fyll (hover/press går MØRKERE, så hvit etikett aldri faller under AA);
-  // mørke flater forblir mørke i begge moduser (railen), så ikonene der er
-  // like lyse som i light. Status = dyp tint + lys forgrunn, målt ≥ 7,2:1.
+  // Mørk modus (SIGN-604): nesten svarte flater med tar-understrøm, ikke invertert
+  // lys. Markeringsflater er grå-svart, ikke blå. Berry (#aa4c6e) som tekst målte
+  // 3,1–3,8:1 på nesten svart, så handling er light berry med tar-etikett; hover
+  // går lysere fordi etiketten er mørk. Teksten er aldri ren hvit.
   dark: {
-    page: '#07090c', // sky-page
-    surface: '#111519', // sky-card
-    surfaceSoft: '#0a0d10', // sky-sunken
-    surfaceSoftAccent: '#0d2725', // surface-selected — petrolfarget dyp fylling
-    surfaceRail: '#030507', // surface-dark-deep
-    railStart: '#030507',
-    railEnd: '#030507',
+    page: '#050708',
+    surface: '#0e1216',
+    surfaceSoft: '#080b0e',
+    surfaceSoftAccent: '#1b2026', // grå-svart markering: valgt rad, aktivt filter
+    surfaceRail: '#020304',
+    railStart: '#020304',
+    railEnd: '#020304',
     railIcon: 'rgba(246, 242, 234, 0.55)', // som light — railen er mørk i begge
     railIconStrong: '#f6f2ea',
-    surfaceBorder: 'rgba(255, 255, 255, 0.09)', // border-hairline (#ffffff16)
-    surfaceGlass: 'rgba(17, 21, 25, 0.72)', // avledet: kortflaten som glass
-    surfaceSubtle: 'rgba(17, 21, 25, 0.62)', // avledet
-    surfaceInverse: '#16283a', // avledet: fjord-tonet løftet flate — skiller seg fra kortflaten
-    onSurfaceInverse: '#cbd3d8', // = textPrimary — 9,9:1 på inverse
-    onSurfaceInverseMuted: '#87919a', // = textSecondary — 4,7:1 på inverse
-    onSurfaceInverseAccent: '#7fe0ab', // = onSuccessSoft — 9,4:1 på inverse
-    textPrimary: '#cbd3d8', // text-body — 12,0:1 på kort
-    textSecondary: '#87919a', // text-muted — 5,6:1
-    primary: '#0b8476', // petrol-500 — samme fyll som light, 4,59:1 med hvit
-    primaryHover: '#0a7a6d', // mørkere, ikke lysere — 5,23:1 med hvit
-    primaryPress: '#08675c', // petrol-700 — press-trinnet under hover (samme regel)
-    onPrimary: '#ffffff',
-    link: '#5cc0b4', // text-link fra dark.css — 7,2:1 på kort
-    linkHover: '#6ec8bd', // avledet: ett trinn lysere enn link
-    secondary: '#9bc2d4', // status-info-fg — den kalde maskintonen
-    onSecondary: '#0a171e', // avledet: select-text
-    info: '#9bc2d4',
-    onInfo: '#0a171e', // avledet
-    attention: '#e8b863', // status-warn-fg
-    onAttention: '#14100d',
-    success: '#7fe0ab', // status-ok-fg som fyll, dyp tint som etikett
-    onSuccess: '#123a2a',
-    warning: '#e8b863',
-    onWarning: '#3a2a16',
-    error: '#f2a093', // status-error-fg
+    surfaceBorder: 'rgba(255, 255, 255, 0.09)',
+    surfaceGlass: 'rgba(14, 18, 22, 0.72)', // avledet
+    surfaceSubtle: 'rgba(14, 18, 22, 0.62)', // avledet
+    surfaceInverse: '#161d25', // løftet panel (Tilbudssammendrag)
+    onSurfaceInverse: '#e6e9ee',
+    onSurfaceInverseMuted: '#98a2ab',
+    onSurfaceInverseAccent: '#bfd75b', // lime
+    textPrimary: '#e6e9ee',
+    textSecondary: '#98a2ab', // 5,6:1 på kort
+    textTitle: '#e9d3db', // plum lysnet — overskrifter på mørkt
+    primary: '#dc7499', // light berry — tar-etikett 5,8:1; som tekst 6,2:1 på kort
+    primaryHover: '#e38bab', // lysere: etiketten er mørk
+    primaryPress: '#c9668a',
+    onPrimary: '#0d1c26',
+    link: '#dc7499', // light berry — 6,2:1 på kort, 5,6:1 på markering
+    linkHover: '#e795b3',
+    secondary: '#90afed', // periwinkle — 7,9:1 på tar
+    onSecondary: '#0d1c26',
+    info: '#90afed',
+    onInfo: '#0d1c26',
+    attention: '#cca427', // gold
+    onAttention: '#0d1c26',
+    frame: '#90afed', // periwinkle — aktiv rail-knapp
+    onFrame: '#0d1c26',
+    success: '#bfd75b', // lime som fyll, tar-etikett 10,8:1
+    onSuccess: '#0d1c26',
+    warning: '#cca427', // gold som fyll, tar-etikett 7,4:1
+    onWarning: '#0d1c26',
+    error: '#f2a093', // beholdt
     onError: '#3a1c17',
-    primarySoft: '#0d2725', // surface-selected
-    onPrimarySoft: '#5cc0b4', // text-link — 7,2:1 på kort
-    infoSoft: '#101b26', // fjord-tint mørk — svakt løftet, blåkald (SIGN-174)
-    onInfoSoft: '#9bc2d4', // status-info-fg — 9,2:1 på infoSoft
-    aiSoft: '#101b26', // fjord-tint mørk — designets AI-flate i dark
-    onAiSoft: '#9bc2d4', // status-info-fg
-    successSoft: '#123a2a', // status-ok-bg
-    onSuccessSoft: '#7fe0ab',
-    inflightSoft: '#33260f', // avledet: kopper-tint mørk fra Saksraden-laben (01.09) — verifiseres mot dark.css
-    onInflightSoft: '#dfb073', // avledet: 7,4:1 på inflightSoft
-    warningSoft: '#3a2a16', // status-warn-bg
-    onWarningSoft: '#e8b863',
-    errorSoft: '#3a1c17', // status-error-bg
+    primarySoft: '#3a1f2b', // berry dyp
+    onPrimarySoft: '#e8b4c8', // 8,9:1
+    infoSoft: '#1b2026', // grå-svart flate, periwinkle tekst
+    onInfoSoft: '#90afed',
+    aiSoft: '#1b2026',
+    onAiSoft: '#a9c1f2',
+    successSoft: '#26300f', // lime dyp
+    onSuccessSoft: '#c9dd75',
+    inflightSoft: '#33260f', // kopper dyp beholdt
+    onInflightSoft: '#dfb073',
+    mutedSoft: '#2a2430', // mauve dyp
+    onMutedSoft: '#e6e9ee',
+    warningSoft: '#332a10', // gold dyp
+    onWarningSoft: '#dfc056',
+    errorSoft: '#3a1c17', // beholdt
     onErrorSoft: '#f2a093',
-    shadowSoft: 'rgba(0, 0, 0, 0.45)', // shadow-2 — shadow-1 er none i dark
-    shadowStrong: 'rgba(0, 0, 0, 0.6)', // shadow-3
+    shadowSoft: 'rgba(0, 0, 0, 0.55)',
+    shadowStrong: 'rgba(0, 0, 0, 0.7)',
     borderColor: '#ffffff',
     borderOpacity: nkOpacity.borderDark,
     mediumEmphasisOpacity: nkOpacity.mediumEmphasisDark,

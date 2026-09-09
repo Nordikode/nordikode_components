@@ -32,6 +32,8 @@ export interface NkScheme {
 
   textPrimary: string
   textSecondary: string
+  /** Andre blekk: overskrifter og titler (plum i Sign) — løpende tekst står i textPrimary. */
+  textTitle: string
 
   primary: string
   primaryHover: string
@@ -48,6 +50,9 @@ export interface NkScheme {
   /** Gul oppmerksomhetsfarge (badge/varsling), ikke det samme som warning. */
   attention: string
   onAttention: string
+  /** Rammen (periwinkle i Sign): aktiv rail-knapp og andre hele markører — aldri knapp, aldri tekst. */
+  frame: string
+  onFrame: string
 
   success: string
   onSuccess: string
@@ -70,6 +75,9 @@ export interface NkScheme {
   /** Underveis-status (kopper i Sign): «tilbud sendt» o.l. Kun som tint — aldri knapp. */
   inflightSoft: string
   onInflightSoft: string
+  /** Dempet flate (mauve-tint i Sign): kategorier, tagger, utkast. */
+  mutedSoft: string
+  onMutedSoft: string
   warningSoft: string
   onWarningSoft: string
   errorSoft: string

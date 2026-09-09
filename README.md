@@ -148,6 +148,14 @@ import { productCss, signTheme } from '@nordikode/components/tokens'
 productCss(signTheme)
 ```
 
+Sign-paletten (SIGN-604, 2026-09-09) har engelske fargenavn og én jobb per
+farge: tar (blekk og mørk flate), plum (`textTitle`, overskrifter), berry
+(`primary`/`link` i lys modus), light berry (`primary` i mørk modus og merket),
+periwinkle (`frame` som hel markør, `surfaceSoftAccent`/`infoSoft`/`aiSoft`
+som tint), lime (`success*`), gold (`attention`/`warning*`) og mauve
+(`mutedSoft`). Rollene `frame`, `mutedSoft` og `textTitle` ble lagt til i
+0.30.0; time og backoffice har avledede verdier til de adopterer paletten.
+
 Kanoniske CSS-variabelnavn: `--nk-page` (sidebakgrunn) og `--nk-surface`
 (kort/flate) erstatter det tvetydige `--nk-bg-base`, som betydde forskjellige
 ting i ulike apper. Se `src/tokens/` for beslutningslogg (design-audit

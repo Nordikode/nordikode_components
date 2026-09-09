@@ -4,7 +4,7 @@ export * from './tokens'
 
 export type SharedLocale = 'en' | 'no' | 'sv' | 'fr' | 'pl'
 
-export type NkStatusChipTone = 'success' | 'inflight' | 'warning' | 'error' | 'info' | 'neutral'
+export type NkStatusChipTone = 'success' | 'inflight' | 'warning' | 'error' | 'info' | 'ai' | 'neutral'
 export type NkStatusChipSize = 'sm' | 'md'
 
 export const IdentityAvatar: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>

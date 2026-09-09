@@ -75,6 +75,11 @@ const props = withDefaults(defineProps<Props>(), {
   color: var(--nk-on-info-soft);
 }
 
+.nk-status-chip--ai {
+  background: var(--nk-ai-soft);
+  color: var(--nk-on-ai-soft);
+}
+
 .nk-status-chip--neutral {
   background: var(--nk-surface-soft);
   color: var(--nk-text-secondary);
