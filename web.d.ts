@@ -35,9 +35,10 @@ export type WebAppIconName =
 export const webAppIcons: Record<WebAppIconName, string[]>
 export const webAppFallbackIcon: string[]
 export function webAppIconFor(key: string): string[]
-/** Apper med egen merkevarelogo — vises stablet i app-velgeren (SIGN-655). */
-export const webAppBrands: Partial<Record<WebAppIconName, BrandKey>>
-export function webAppBrandFor(key: string): BrandKey | null
+/** Apper med eget appikon (iOS-ikonet, lys/mørk) — vises som flis i app-velgeren (SIGN-655). */
+export type WebAppTile = { light: string; dark: string }
+export const webAppTiles: Partial<Record<WebAppIconName, WebAppTile>>
+export function webAppTileFor(key: string): WebAppTile | null
 
 export type TenantSwitcherOption = {
   id: string

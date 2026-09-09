@@ -106,8 +106,9 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   the brand colour stays fixed (Sign: light berry). Sized by `height` on the
   host; `AppHeader` places it in front of `#brand-suffix` via `productSymbol`
 - `webAppIcons` / `webAppIconFor` — the canonical per-app icon registry;
-  `webAppBrandFor` names the apps with their own logo, which `AppLauncherMenu`
-  shows as the stacked `BrandWordmark` instead of the line icon (SIGN-655)
+  `webAppTileFor` names the apps with their own app icon (the iOS icon,
+  light/dark PNGs shipped in the package), which `AppLauncherMenu` shows as a
+  rounded tile instead of the line icon (SIGN-655)
 - `NkSignedOutDialog` — the «You are signed out» overlay (SIGN-509): shown by
   every first-party app when the shared platform session is gone (signed out in
   another tab/device, or expired). It never navigates away and cannot be
