@@ -78,6 +78,25 @@ export const MedSuffiksOgBredde: Story = {
   }),
 }
 
+/**
+ * Produktappene (SIGN-614): produktsymbolet står foran produktnavnet i
+ * `#brand-suffix` via `productSymbol` — samme kilde for alle appene, ingen
+ * lokal `<img>`. Tar-delen følger blekket (lys/mørk), light berry er fast.
+ */
+export const MedProduktsymbol: Story = {
+  name: 'Sign (produktsymbol + full)',
+  args: { labels, width: 'full', productSymbol: 'sign' },
+  render: (args) => ({
+    components: { AppHeader },
+    setup: () => ({ args }),
+    template: `
+      <AppHeader v-bind="args">
+        <template #brand-suffix>Sign</template>
+      </AppHeader>
+    `,
+  }),
+}
+
 export const MedMenyer: Story = {
   name: 'Med menyene i #menus',
   args: { labels, nav, currentPath: '/produkter' },

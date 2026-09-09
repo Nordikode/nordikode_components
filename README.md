@@ -50,7 +50,8 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 `--nk-chrome-accent-ink`, which the host app sets from its own theme.
 
 - `AppHeader` — the header shell itself: sticky 3.25rem bar with blur, brand
-  (wordmark + `#brand-suffix`), nav from a `nav` prop rendered both as desktop
+  (wordmark + `#brand-suffix`, optionally with the product's symbol in front of
+  the suffix via `productSymbol="sign"`, SIGN-614), nav from a `nav` prop rendered both as desktop
   nav (one dropdown level, active by `currentPath` prefix) and as the built-in
   burger drawer below 640px. Widths: `standard` (64rem), `wide` (72rem),
   `full`. The right side is consumer-composed in `#menus` in the standard
@@ -83,6 +84,10 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   host owns the actual switch request)
 - `BrandWordmark` — the Nordikode logo (`lockup` or `mark`), light/dark assets
   shipped in the package
+- `ProductSymbol` — the product's own symbol (`product="sign"`, SIGN-614),
+  rendered inline so the ink part follows `currentColor` (light/dark) while
+  the brand colour stays fixed (Sign: light berry). Sized by `height` on the
+  host; `AppHeader` places it in front of `#brand-suffix` via `productSymbol`
 - `webAppIcons` / `webAppIconFor` — the canonical per-app icon registry
 - `NkSignedOutDialog` — the «You are signed out» overlay (SIGN-509): shown by
   every first-party app when the shared platform session is gone (signed out in
