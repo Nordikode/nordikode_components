@@ -65,6 +65,36 @@ export interface NkScheme {
   mediumEmphasisOpacity: number
 }
 
+/** Lys-bare tokens for kundevendte dokumenter («papir», SIGN-610) — ingen mørk variant. */
+export interface NkDocumentScheme {
+  paper: string
+  paperSoft: string
+  border: string
+  borderSoft: string
+  ink: string
+  inkSoft: string
+  inkMuted: string
+  title: string
+  band: string
+  onBand: string
+  onBandMuted: string
+  accent: string
+  onAccent: string
+  accentSoft: string
+  onAccentSoft: string
+  accentBorder: string
+  attention: string
+  onAttention: string
+  attentionSoft: string
+  onAttentionSoft: string
+  attentionBorder: string
+  success: string
+  onSuccess: string
+  successSoft: string
+  onSuccessSoft: string
+  shadow: string
+}
+
 export interface NkProductTheme {
   product: string
   vuetifyThemeName: string
@@ -90,6 +120,7 @@ export declare const nkOpacity: {
 export declare function toVuetifyTheme(scheme: NkScheme, dark: boolean): ThemeDefinition
 export declare function buildVuetifyThemes(theme: NkProductTheme): Record<string, ThemeDefinition>
 export declare function cssVariables(scheme: NkScheme): Record<string, string>
+export declare function documentCssVariables(scheme?: NkDocumentScheme): Record<string, string>
 export interface NkStaticTokens {
   radius: { sm: string; md: string; lg: string; pill: string }
   spaceUnit: string
@@ -104,6 +135,7 @@ export declare function tailwindThemeVariables(scheme: NkScheme): Record<string,
 export declare function tailwindStaticVariables(statics?: NkStaticTokens): Record<string, string>
 export declare function tailwindThemeCss(theme: NkProductTheme, statics?: NkStaticTokens): string
 
+export declare const documentScheme: NkDocumentScheme
 export declare const signTheme: NkProductTheme
 export declare const timeTheme: NkProductTheme
 export declare const backofficeTheme: NkProductTheme

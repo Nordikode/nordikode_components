@@ -168,6 +168,15 @@ som tint), lime (`success*`), gold (`attention`/`warning*`) og mauve
 (`mutedSoft`). Rollene `frame`, `mutedSoft` og `textTitle` ble lagt til i
 0.30.0; time og backoffice har avledede verdier til de adopterer paletten.
 
+Kundevendte dokumenter (tilbudet i Sign) er «papir» og skal være lyse
+uansett appens fargemodus. De bruker derfor det lys-bare settet `--nk-doc-*`
+(`documentScheme` / `documentCssVariables()`, SIGN-610): arket (`paper`,
+`paperSoft`, `border`), blekk (`ink`, `inkSoft`, `inkMuted`, `title`), båndet
+(`band`/`onBand`), handling (`accent*`, berry), venter (`attention*`, gold) og
+fullført (`success*`). `productCss()` genererer dem i én `:root`-blokk uten
+`.nk-dark`-variant; verdiene leses fra lys Sign-palett, så de følger paletten.
+Bruk aldri vanlige `--nk-*`-variabler i et dokument — de bytter til mørk modus.
+
 Kanoniske CSS-variabelnavn: `--nk-page` (sidebakgrunn) og `--nk-surface`
 (kort/flate) erstatter det tvetydige `--nk-bg-base`, som betydde forskjellige
 ting i ulike apper. Se `src/tokens/` for beslutningslogg (design-audit
