@@ -61,6 +61,9 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 - `PageHeader` — the page-heading standard: hierarchical back link (always
   one level up, never browser history; top-level pages have none) → the
   page's single H1 → subtitle, with `#badge` (status chip) and `#actions`.
+  Scale is the app standard (1.5rem/800 title, 0.9rem secondary subtitle —
+  the same heading as Sign and backoffice); a link rendered in `#back` gets
+  the back-link style when it carries the `nk-page-header__back` class.
 - `ThemeToggle` + `useTheme` — the shared light/dark switch. Theme is the
   `dark` class on `<html>`; the OS preference is the default and an explicit
   choice is stored under `nordikode-theme` only while it differs from the OS

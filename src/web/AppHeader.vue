@@ -63,7 +63,7 @@ const props = withDefaults(
      * pakkas `ProductSymbol`, så alle apper viser sitt symbol fra samme kilde.
      */
     productSymbol?: ProductSymbolKey | null
-    /** Innholdsbredde: standard 64rem (nettsiden), wide 72rem (admin), full uten tak. */
+    /** Innholdsbredde: full uten tak (standard på alle flater, SIGN-620/643), standard 64rem, wide 72rem. */
     width?: 'standard' | 'wide' | 'full'
     /** Aktiv sti for aktiv-markering (f.eks. `location.pathname`). */
     currentPath?: string | null
@@ -73,7 +73,7 @@ const props = withDefaults(
     brandHref: '/',
     brandLabel: 'Nordikode',
     productSymbol: null,
-    width: 'standard',
+    width: 'full',
     currentPath: null,
   },
 )
