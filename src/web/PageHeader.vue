@@ -11,8 +11,13 @@
  *   aldri på nettleserhistorikken. Nivå 1-sider har ingen tilbakelenke.
  * - Ingen breadcrumbs — ett nivå opp + tydelig tittel dekker hierarkiet.
  *
+ * Skalaen er app-standarden (SIGN-643): tittel 1,5rem/800 på alle bredder —
+ * samme hode som Sign-visningene og backoffice — undertittel 0,9rem sekundær.
+ * Nettsidens offentlige sider bruker egne heroer, ikke denne.
+ *
  * SPA-/Inertia-konsumenter kan overstyre lenkerendringen via `#back`-sloten
- * (default er en vanlig `<a>`).
+ * (default er en vanlig `<a>`); gi lenken klassen `nk-page-header__back`, så
+ * får den samme stil som pakkas egen.
  */
 export type PageHeaderBack = {
   href: string
@@ -57,7 +62,10 @@ defineProps<{
   gap: 0.25rem;
 }
 
-.nk-page-header__back {
+/* :slotted() dekker lenker konsumentene rendrer selv i #back-sloten
+   (Inertia Link, RouterLink) — de får ikke pakkas scope-attributt. */
+.nk-page-header__back,
+:slotted(.nk-page-header__back) {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
@@ -69,7 +77,9 @@ defineProps<{
 }
 
 .nk-page-header__back:hover,
-.nk-page-header__back:focus-visible {
+.nk-page-header__back:focus-visible,
+:slotted(.nk-page-header__back:hover),
+:slotted(.nk-page-header__back:focus-visible) {
   color: var(--color-ink);
 }
 
@@ -84,8 +94,8 @@ defineProps<{
 .nk-page-header__title {
   margin: 0;
   font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.025em;
+  font-weight: 800;
+  letter-spacing: -0.015em;
   line-height: 1.2;
   color: var(--color-ink);
   text-wrap: balance;
@@ -108,19 +118,14 @@ defineProps<{
 
 .nk-page-header__subtitle {
   margin: 0;
-  font-size: 0.875rem;
-  color: var(--color-ink-tertiary);
+  font-size: 0.9rem;
+  color: var(--color-ink-secondary);
   max-width: 42rem;
 }
 
-@media (min-width: 640px) {
-  .nk-page-header__title {
-    font-size: 1.875rem;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .nk-page-header__back {
+  .nk-page-header__back,
+  :slotted(.nk-page-header__back) {
     transition: none;
   }
 }
