@@ -11,9 +11,13 @@
  * ulike per app) og kan overstyre lenkerendringen per punkt via `#nav-item`
  * (Inertia `Link`, `RouterLink`, …) — default er en vanlig `<a>`.
  *
- * Standard høyre-rekkefølge (dokumentert i design systemet):
- * `#actions` → ThemeToggle → AppLauncherMenu → TenantSwitcherMenu →
- * AccountIdentityMenu → burger.
+ * Standardrekkefølgen (dokumentert i design systemet):
+ * merkevare (+ produktsymbol/`#brand-suffix`) → tynn skillestrek →
+ * firmablokken i `#tenant` (`TenantSwitcherMenu variant="block"`: logo og
+ * fullt firmanavn, klikk åpner firmabyttet — SIGN-561) → navigasjon → …
+ * → `#actions` → ThemeToggle → NotificationBellMenu → AppLauncherMenu →
+ * AccountIdentityMenu → burger. Venstre side sier hvor brukeren er
+ * (merkevare, produkt, firma); høyre side er brukerens egne verktøy.
  *
  * Tema: verts-appens web-designtokens (`--color-*`, `--radius-*`) og
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
@@ -22,7 +26,7 @@
  * `var()` alene — i Chrome 152 ble den til 0, og innhold med `z-index: 0`
  * (kort, knapper) la seg over menypanelene (SIGN-442).
  */
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue'
 import BrandWordmark from './BrandWordmark.vue'
 import ProductSymbol from './ProductSymbol.vue'
 import type { ProductSymbolKey } from './ProductSymbol.vue'
@@ -92,6 +96,8 @@ function itemActive(item: AppHeaderNavItem): boolean {
   return isActive(item)
 }
 
+const slots = useSlots()
+
 /* Nedtrekk (desktop): ett åpent om gangen, lukkes utenfor/Escape. */
 const openDropdown = ref<string | null>(null)
 const navRoot = ref<HTMLElement | null>(null)
@@ -134,6 +140,8 @@ watch(
   () => void nextTick(closeAll),
 )
 
+const rootClass = computed(() => ['nk-header', slots.tenant ? 'nk-header--tenant' : null])
+
 const innerClass = computed(() => [
   'nk-header__inner',
   props.width === 'wide' ? 'nk-header__inner--wide' : null,
@@ -152,7 +160,7 @@ const drawerItems = computed(() =>
 </script>
 
 <template>
-  <header class="nk-header">
+  <header :class="rootClass">
     <div :class="innerClass">
       <slot name="brand" :close="closeAll">
         <a :href="brandHref" class="nk-header__brand">
@@ -164,6 +172,16 @@ const drawerItems = computed(() =>
           </span>
         </a>
       </slot>
+
+      <!-- Firmablokken (SIGN-561): hvilket firma brukeren opptrer for, rett
+           etter merkevaren og skilt med en tynn strek. Verts-appen legger sin
+           TenantSwitcherMenu-adapter her med variant="block". -->
+      <template v-if="$slots.tenant">
+        <span class="nk-header__divider" aria-hidden="true" />
+        <div class="nk-header__tenant">
+          <slot name="tenant" />
+        </div>
+      </template>
 
       <nav v-if="nav.length > 0" ref="navRoot" class="nk-header__nav" :aria-label="labels.navigation">
         <template v-for="item in nav" :key="item.key">
@@ -345,6 +363,28 @@ const drawerItems = computed(() =>
 .nk-header__brand-mark {
   height: 1.5rem;
   flex-shrink: 0;
+}
+
+/* Merkevaren holder sin bredde når firmablokken står ved siden av — det er
+   firmanavnet som trunkeres, ikke «Nordikode». */
+.nk-header--tenant .nk-header__brand {
+  flex-shrink: 0;
+}
+
+.nk-header__divider {
+  width: 1px;
+  height: 1.25rem;
+  flex-shrink: 0;
+  margin-inline: -0.25rem;
+  background: var(--color-line);
+}
+
+/* Blokken tar plassen som er ledig etter menyene og krymper først av alt. */
+.nk-header__tenant {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 0 1 auto;
 }
 
 .nk-header__brand-label {
@@ -531,16 +571,27 @@ const drawerItems = computed(() =>
   font-weight: 500;
 }
 
-/* Smale mobiler (SIGN-537): tettere rad, suffikset bort, tenant-velgeren
-   som ikon — så tema, app-velger, firma, konto og burger får plass på 360 px. */
+/* Smale mobiler (SIGN-537): tettere rad, suffikset bort, tenant-chipen
+   som ikon — så tema, app-velger, firma, konto og burger får plass på 360 px.
+   Med firmablokk (SIGN-561) viker også ordet «Nordikode» — merket står, og
+   plassen går til firmanavnet, som trunkeres med logoen intakt. */
 @media (max-width: 479px) {
   .nk-header__inner {
     gap: 0.75rem;
     padding-inline: 0.75rem;
   }
 
-  .nk-header__brand-suffix {
+  .nk-header__brand-suffix,
+  .nk-header--tenant .nk-header__brand-label {
     display: none;
+  }
+
+  .nk-header--tenant .nk-header__inner {
+    gap: 0.5rem;
+  }
+
+  .nk-header__divider {
+    margin-inline: 0;
   }
 
   .nk-header__end {
@@ -600,12 +651,21 @@ html {
   background: var(--color-surface-raised);
 }
 
-/* Tenant-velgeren i headeren viser bare avataren på smale mobiler (SIGN-537);
-   navnet står fortsatt øverst i panelet. Uscopet fordi triggeren er slot-innhold. */
+/* Tenant-chipen i #menus viser bare avataren på smale mobiler (SIGN-537);
+   navnet står fortsatt øverst i panelet. Firmablokken i #tenant beholder
+   navnet trunkert (SIGN-561). Uscopet fordi triggeren er slot-innhold. */
 @media (max-width: 479px) {
-  .nk-header .nk-tenant__trigger-name {
+  .nk-header .nk-tenant__trigger--chip .nk-tenant__trigger-name {
     display: none;
   }
+
+  .nk-header .nk-tenant__trigger--block .nk-tenant__trigger-name {
+    max-width: 9rem;
+  }
+}
+
+.dark .nk-header .nk-tenant__trigger--block:hover {
+  background: var(--color-surface-raised);
 }
 
 .dark .nk-header__dropdown-link:hover,

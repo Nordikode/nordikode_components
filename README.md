@@ -51,13 +51,16 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 
 - `AppHeader` — the header shell itself: sticky 3.25rem bar with blur, brand
   (wordmark + `#brand-suffix`, optionally with the product's symbol in front of
-  the suffix via `productSymbol="sign"`, SIGN-614), nav from a `nav` prop rendered both as desktop
+  the suffix via `productSymbol="sign"`, SIGN-614), the company block in
+  `#tenant` (SIGN-561, see below), nav from a `nav` prop rendered both as desktop
   nav (one dropdown level, active by `currentPath` prefix) and as the built-in
   burger drawer below 640px. Widths: `standard` (64rem), `wide` (72rem),
-  `full`. The right side is consumer-composed in `#menus` in the standard
-  order `#actions` → ThemeToggle → AppLauncherMenu → TenantSwitcherMenu →
-  AccountIdentityMenu → burger; `#nav-item` lets Inertia/SPA apps render
-  their own link component. z-index override: `--nk-chrome-z` (default 50).
+  `full`. **Standard order** on every signed-in surface: brand → thin divider →
+  `#tenant` → nav → … → `#actions` → ThemeToggle → NotificationBellMenu →
+  AppLauncherMenu → AccountIdentityMenu → burger. The left side says where the
+  user is (brand, product, company); the right side holds the user's own tools.
+  `#nav-item` lets Inertia/SPA apps render their own link component. z-index
+  override: `--nk-chrome-z` (default 50).
 - `PageHeader` — the page-heading standard: hierarchical back link (always
   one level up, never browser history; top-level pages have none) → the
   page's single H1 → subtitle, with `#badge` (status chip) and `#actions`.
@@ -84,7 +87,15 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 - `AccountIdentityMenu` — the avatar/account menu with service list
 - `TenantSwitcherMenu` — the company menu (tenant logo/initials, switch between
   the user's companies, optional personal context via the `personal` prop; the
-  host owns the actual switch request)
+  host owns the actual switch request). `variant="block"` is the **company
+  block** (SIGN-561): logo (initials when there is none or it fails to load) and
+  the full company name, placed in `AppHeader`'s `#tenant` slot right after the
+  brand — clicking it opens the company switch, so the small avatar on the right
+  is gone. The name truncates with an ellipsis when space is short (full name in
+  `title`), the logo always stays; below 480px the header hides the word
+  «Nordikode» (the mark stays) to give the company name room. The personal
+  context shows the user's name with the person marker. Data comes from the
+  session (`sessionTenant`/memberships: `name`, `logoUrl`) — never hardcoded.
 - `BrandWordmark` — the Nordikode logo (`lockup` or `mark`), light/dark assets
   shipped in the package
 - `ProductSymbol` — the product's own symbol (`product="sign"`, SIGN-614),
