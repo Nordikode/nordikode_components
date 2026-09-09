@@ -9,8 +9,7 @@
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
-import { webAppBrandFor, webAppIconFor } from './appIcons'
-import BrandWordmark from './BrandWordmark.vue'
+import { webAppIconFor, webAppTileFor } from './appIcons'
 
 export type AppLauncherItem = {
   key: string
@@ -180,17 +179,15 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
               class="nk-launcher__item"
               @click="close()"
             >
-              <span class="nk-launcher__chip">
+              <span class="nk-launcher__chip" :class="{ 'nk-launcher__chip--tile': webAppTileFor(app.key) }">
                 <span v-if="(app.badge ?? 0) > 0" class="nk-launcher__badge">{{ badgeText(app.badge!) }}</span>
-                <!-- Apper med egen logo (SIGN-655) viser den stablede logoen
-                     i stedet for strekikonet; lys/mørk følger .dark på rot. -->
-                <BrandWordmark
-                  v-if="webAppBrandFor(app.key)"
-                  :brand="webAppBrandFor(app.key)!"
-                  variant="stacked"
-                  alt=""
-                  class="nk-launcher__app-logo"
-                />
+                <!-- Apper med eget appikon (SIGN-655) viser iOS-ikonet som en
+                     avrundet flis i stedet for strekikonet; lys/mørk byttes
+                     via .dark på rot (uscopet blokk under). -->
+                <template v-if="webAppTileFor(app.key)">
+                  <img :src="webAppTileFor(app.key)!.light" alt="" class="nk-launcher__tile nk-launcher__tile--light" />
+                  <img :src="webAppTileFor(app.key)!.dark" alt="" class="nk-launcher__tile nk-launcher__tile--dark" aria-hidden="true" />
+                </template>
                 <svg
                   v-else
                   viewBox="0 0 24 24"
@@ -347,9 +344,26 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   height: 1.25rem;
 }
 
-/* Den stablede logoen fyller chipen (2.5rem) i høyden; bredden følger. */
-.nk-launcher__app-logo {
-  height: 2rem;
+/* Appikon-flisen (SIGN-655): samme 2.5rem som chipen, men avrundet kvadrat
+   som iOS-ikonet er tegnet for. Den lyse PNG-en er en hvit flis, så en tynn
+   linje skiller den fra panelet; i mørk modus får flisen hevet flate bak det
+   hvite symbolet. */
+.nk-launcher__chip--tile {
+  overflow: hidden;
+  border-radius: 0.625rem;
+  background: var(--color-surface-raised);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+
+.nk-launcher__tile {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nk-launcher__tile--dark {
+  display: none;
 }
 
 .nk-launcher__label {
@@ -390,6 +404,14 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
      LightningCSS-minifisering (selektoren `.dark .x` reduseres til `.dark`).
      Klassenavnene er nk-namespacet, så uscopede regler er trygge. -->
 <style>
+.dark .nk-launcher .nk-launcher__tile--light {
+  display: none;
+}
+
+.dark .nk-launcher .nk-launcher__tile--dark {
+  display: block;
+}
+
 .dark .nk-launcher .nk-launcher__trigger:hover {
   background: var(--color-surface-raised);
 }

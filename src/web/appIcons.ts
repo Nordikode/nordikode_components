@@ -7,8 +7,6 @@
  * web-designspråket. Nye apper får sin oppføring her, ikke lokale kopier.
  */
 
-import type { BrandKey } from './BrandWordmark.vue'
-
 export type WebAppIconName =
   | 'sign'
   | 'time'
@@ -61,14 +59,21 @@ export function webAppIconFor(key: string): string[] {
 }
 
 /**
- * Apper med egen merkevarelogo vises med den (stablet variant fra
- * `BrandWordmark`) i stedet for strekikonet (SIGN-655). Nye produktlogoer
- * registreres her når de finnes.
+ * Apper med eget appikon (iOS-ikonet fra merkevarefilene) vises som en
+ * avrundet flis i stedet for strekikonet (SIGN-655). Lys variant er en hvit
+ * flis med symbolet; mørk variant er symbolet i hvitt på gjennomsiktig bunn
+ * (flisen får mørk bakgrunn i `AppLauncherMenu`). Byttes via `.dark` på rot.
+ * Nye produktikoner registreres her når de finnes.
  */
-export const webAppBrands: Partial<Record<WebAppIconName, BrandKey>> = {
-  sign: 'sign',
+export type WebAppTile = { light: string; dark: string }
+
+export const webAppTiles: Partial<Record<WebAppIconName, WebAppTile>> = {
+  sign: {
+    light: new URL('./brand/sign-app-icon-light.png', import.meta.url).href,
+    dark: new URL('./brand/sign-app-icon-dark.png', import.meta.url).href,
+  },
 }
 
-export function webAppBrandFor(key: string): BrandKey | null {
-  return webAppBrands[key as WebAppIconName] ?? null
+export function webAppTileFor(key: string): WebAppTile | null {
+  return webAppTiles[key as WebAppIconName] ?? null
 }
