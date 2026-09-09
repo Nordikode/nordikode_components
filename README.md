@@ -16,6 +16,10 @@ chrome-komponenter (`AppTopHeader`, `AppSidebarRail`, `UserIdentityMenu`,
 flatene bruker `AppHeader` med de delte menyene.
 
 - `IdentityAvatar`
+- `NkEmptyState` — tom-tilstand (SIGN-447): sentrert ikon (valgfritt, `mdi-*`),
+  `title`, `description` og `actions`-slot; `size` `default` (primær-tonet ikonsirkel,
+  hele flater/paneler) eller `compact` (dempet sirkel, «ingen treff» etter søk/filter).
+  All tekst og alle handlinger kommer fra appen
 - `NkStatusChip` — statuschip med to størrelser (`sm`/`md`) og seks semantiske
   toner (`success`/`inflight`/`warning`/`error`/`info`/`neutral`) fra soft-tokenparene;
   teksten kommer alltid fra appens i18n
