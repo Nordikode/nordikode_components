@@ -72,8 +72,8 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 - `SectionNav` — the platform apps' section navigation (SIGN-656): the area's
   pages as a sticky 14rem side menu from 1280px up, and as a scrollable tab row
   under the page header below that. Items are links (`href`) or selections
-  (`select` event); client-side routers render the link in `#item` with the
-  `nk-section-nav__link` class. Standard for company, account and developer —
+  (`select` event); client-side routers pass their link component in
+  `linkComponent` (`hrefProp` = `href` for Inertia, `to` for RouterLink). Standard for company, account and developer —
   the header's nav slot stays empty in those apps.
 - `ThemeToggle` + `useTheme` — the shared light/dark switch. Theme is the
   `dark` class on `<html>`; the OS preference is the default and an explicit

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
+
 /**
  * Seksjonsnavigasjon for plattformappene (company, account, developer —
  * SIGN-656): områdets sider som sidemeny til venstre fra 1280px og opp, og
@@ -7,9 +9,9 @@
  *
  * Punktene kan være lenker (`href`) eller valg (`select`-hendelsen, for
  * seksjoner i samme visning som i kontoinnstillingene). Konsumenter med
- * klient-side ruting (Inertia Link, RouterLink) rendrer lenken selv via
- * `#item`-sloten og gir den klassen `nk-section-nav__link` (+ `--active`),
- * så den får samme stil som pakkas egen.
+ * klient-side ruting (Inertia Link, RouterLink) sender lenkekomponenten sin
+ * i `linkComponent` (og `hrefProp`: `href` for Inertia, `to` for RouterLink)
+ * — pakka rendrer ikon, etikett og badge som ellers, uten reload.
  *
  * Fargene er web-lagets CSS-var-kontrakt: aktiv markering bruker
  * `--nk-chrome-accent` (appens handlingsfarge) og `--color-surface-alt`.
@@ -25,18 +27,35 @@ export type SectionNavItem = {
   badge?: number | null
 }
 
-const props = defineProps<{
-  items: SectionNavItem[]
-  /** Nøkkelen til aktivt punkt (siden/seksjonen brukeren står i). */
-  activeKey?: string | null
-  /** Tilgjengelig navn på navigasjonen, f.eks. «Firma» eller «Innstillinger». */
-  label: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    items: SectionNavItem[]
+    /** Nøkkelen til aktivt punkt (siden/seksjonen brukeren står i). */
+    activeKey?: string | null
+    /** Tilgjengelig navn på navigasjonen, f.eks. «Firma» eller «Innstillinger». */
+    label: string
+    /** Lenkekomponent for klient-side ruting (Inertia `Link`, `RouterLink`). Standard: `<a>`. */
+    linkComponent?: Component | string | null
+    /** Prop-navnet lenkekomponenten tar målet i: `href` (Inertia) eller `to` (RouterLink). */
+    hrefProp?: string
+  }>(),
+  { activeKey: null, linkComponent: null, hrefProp: 'href' },
+)
 
 const emit = defineEmits<{ select: [key: string] }>()
 
 function isActive(item: SectionNavItem): boolean {
   return item.key === props.activeKey
+}
+
+function tag(item: SectionNavItem): Component | string {
+  if (!item.href) return 'button'
+  return props.linkComponent ?? 'a'
+}
+
+function linkAttrs(item: SectionNavItem): Record<string, unknown> {
+  if (!item.href) return { type: 'button' }
+  return { [props.hrefProp]: item.href }
 }
 
 function select(item: SectionNavItem): void {
@@ -50,9 +69,8 @@ function select(item: SectionNavItem): void {
       <li v-for="item in items" :key="item.key" class="nk-section-nav__item">
         <slot name="item" :item="item" :active="isActive(item)" :select="() => select(item)">
           <component
-            :is="item.href ? 'a' : 'button'"
-            :href="item.href"
-            :type="item.href ? undefined : 'button'"
+            :is="tag(item)"
+            v-bind="linkAttrs(item)"
             class="nk-section-nav__link"
             :class="{ 'nk-section-nav__link--active': isActive(item) }"
             :aria-current="isActive(item) ? 'page' : undefined"
