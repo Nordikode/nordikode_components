@@ -42,12 +42,12 @@ viser de samme parene live.
 | Tittel (plum) på side | `textTitle` / `page` | `#2f1220` på `#f3f3f5` — **15,4:1** | `#e9d3db` på `#050708` — **14,2:1** |
 | Sekundærtekst på kort | `textSecondary` / `surface` | `#5f6970` på `#ffffff` — **5,6:1** | `#98a2ab` på `#0e1216` — **7,2:1** |
 | Sekundærtekst på side | `textSecondary` / `page` | `#5f6970` på `#f3f3f5` — **5,1:1** | `#98a2ab` på `#050708` — **7,8:1** |
-| Løpende tekst på valgt rad | `textPrimary` / `surfaceSoftAccent` | `#0d1c26` på `#f0f1f2` — **15,3:1** | `#e6e9ee` på `#1b2026` — **13,5:1** |
+| Løpende tekst på valgt rad | `textPrimary` / `surfaceSoftAccent` | `#0d1c26` på `#e6eef6` — **14,8:1** | `#e6e9ee` på `#1a222b` — **13,2:1** |
 | Lenke på kort | `link` / `surface` | `#aa4c6e` på `#ffffff` — **5,3:1** | `#dc7499` på `#0e1216` — **6,3:1** |
 | Lenke på side | `link` / `page` | `#aa4c6e` på `#f3f3f5` — **4,8:1** | `#dc7499` på `#050708` — **6,7:1** |
-| Lenke på valgt rad | `link` / `surfaceSoftAccent` | `#aa4c6e` på `#f0f1f2` — **4,7:1** | `#dc7499` på `#1b2026` — **5,5:1** |
-| Sekundærtekst på valgt rad | `textSecondary` / `surfaceSoftAccent` | `#5f6970` på `#f0f1f2` — **5,0:1** | `#98a2ab` på `#1b2026` — **6,3:1** |
-| `secondary` som ikon på kort | `secondary` / `surface` | `#7e3852` på `#ffffff` — **8,2:1** | `#dc7499` på `#0e1216` — **6,3:1** |
+| Lenke på valgt rad | `link` / `surfaceSoftAccent` | `#aa4c6e` på `#e6eef6` — **4,5:1** | `#dc7499` på `#1a222b` — **5,3:1** |
+| Sekundærtekst på valgt rad | `textSecondary` / `surfaceSoftAccent` | `#5f6970` på `#e6eef6` — **4,8:1** | `#98a2ab` på `#1a222b` — **6,2:1** |
+| Fortjeneste (oliv / lime) på valgt rad | `success` / `surfaceSoftAccent` | `#5b7423` på `#e6eef6` — **4,5:1** | `#bfd75b` på `#1a222b` — **10,0:1** |
 
 Berry som tekst på nesten svart måler bare 3,1–3,8:1 — derfor er handling og
 lenke **light berry** (`#dc7499`) i mørk modus, med tar-etikett.
@@ -59,21 +59,22 @@ lenke **light berry** (`#dc7499`) i mørk modus, med tar-etikett.
 | Primærknapp (berry / light berry) | `onPrimary` / `primary` | `#ffffff` på `#aa4c6e` — **5,3:1** | `#0d1c26` på `#dc7499` — **5,8:1** |
 | Primærknapp hover | `onPrimary` / `primaryHover` | `#ffffff` på `#92415f` — **6,7:1** | `#0d1c26` på `#e38bab` — **7,1:1** |
 | Primærknapp press | `onPrimary` / `primaryPress` | `#ffffff` på `#7e3852` — **8,2:1** | `#0d1c26` på `#c9668a` — **4,8:1** |
-| Sekundær (dyp berry / light berry): avatarer, firmabrikker | `onSecondary` / `secondary` | `#ffffff` på `#7e3852` — **8,2:1** | `#0d1c26` på `#dc7499` — **5,8:1** |
+| Sekundær (mauve-tint): avatarer, firmabrikker | `onSecondary` / `secondary` | `#0d1c26` på `#efeaf0` — **14,6:1** | `#e6e9ee` på `#2a2430` — **12,4:1** |
 | Info (nøytral grå) | `onInfo` / `info` | `#ffffff` på `#5f6970` — **5,6:1** | `#0d1c26` på `#98a2ab` — **6,7:1** |
 | Oppmerksomhet (gold) | `onAttention` / `attention` | `#0d1c26` på `#cca427` — **7,4:1** | `#0d1c26` på `#cca427` — **7,4:1** |
-| Rammen (light berry), ikon på aktiv rail-knapp | `onFrame` / `frame` | `#0d1c26` på `#dc7499` — **5,8:1** | `#0d1c26` på `#dc7499` — **5,8:1** |
+| Rammen (løftet tar), ikon på aktiv rail-knapp | `onFrame` / `frame` | `#f6f2ea` på `#3d4951` — **8,3:1** | `#f6f2ea` på `#2a333b` — **11,5:1** |
 | Fullført (oliv / lime) | `onSuccess` / `success` | `#ffffff` på `#5b7423` — **5,3:1** | `#0d1c26` på `#bfd75b` — **10,8:1** |
 | Varsel (varsel-700 / gold) | `onWarning` / `warning` | `#ffffff` på `#8a5e0f` — **5,7:1** | `#0d1c26` på `#cca427` — **7,4:1** |
 | Feil | `onError` / `error` | `#ffffff` på `#b4392b` — **5,9:1** | `#3a1c17` på `#f2a093` — **7,5:1** |
 
 Gold tåler ikke hvit etikett (2,4:1 mot hvit) — derfor er `warning` i lys modus
 fortsatt varsel-700, mens gold bærer `attention` med tar-etikett i begge moduser.
-Rammen (`frame`) brukes bare som hel markør på den mørke railen (light berry
-mot tar: **5,8:1** lys / **6,9:1** mørk rail `#020304`) — som tekst på hvit
-måler den 2,6:1 og skal derfor aldri stå som knapp eller tekst der; handling er
-`primary`. Periwinkle er Nordikodes farge (`platformTheme`) og finnes i Sign kun
-som AI-tint.
+Rammen (`frame`) brukes bare som hel markør på den mørke railen: tar løftet med
+hvit 20 % (`#3d4951`, **1,9:1** mot railen `#0d1c26`; `#2a333b`, **1,6:1** mot
+mørk rail `#020304`) med lys ikon. Markøren er en flate, ikke tekst, og ikonet
+bærer kontrasten. Berry er handling (`primary`/`link`) og skal ikke ligge på
+faner, avatarer, beløp eller rail-markør (SIGN-690). Periwinkle er Nordikodes
+farge (`platformTheme`) og finnes i Sign kun som AI-tint.
 
 ### Tekst på myke flater (NkStatusChip og tonal-chips)
 
@@ -113,7 +114,7 @@ måler bare 2,2:1 på hvit, så handlingen i lys modus er mørk periwinkle
 | Primærknapp press | `onPrimary` / `primaryPress` | `#ffffff` på `#243b6e` — **10,9:1** | `#0d1c26` på `#7d9ee6` — **6,5:1** |
 | Lenke på kort | `link` / `surface` | `#35569f` på `#ffffff` — **7,0:1** | `#90afed` på `#0e1216` — **8,5:1** |
 | Lenke på side | `link` / `page` | `#35569f` på `#f3f3f5` — **6,4:1** | `#90afed` på `#050708` — **9,2:1** |
-| Lenke på valgt rad | `link` / `surfaceSoftAccent` | `#35569f` på `#e9effb` — **6,1:1** | `#90afed` på `#1b2026` — **7,4:1** |
+| Lenke på valgt rad | `link` / `surfaceSoftAccent` | `#35569f` på `#e6eef6` — **6,0:1** | `#90afed` på `#1a222b` — **7,3:1** |
 | Tekst på myk handlingsflate | `onPrimarySoft` / `primarySoft` | `#2f4d8f` på `#e2eafa` — **6,7:1** | `#a9c1f2` på `#1b2a45` — **7,9:1** |
 | Tittel (tar) på kort | `textTitle` / `surface` | `#0d1c26` på `#ffffff` — **17,3:1** | `#dbe5fb` på `#0e1216` — **14,9:1** |
 

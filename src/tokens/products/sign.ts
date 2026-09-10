@@ -19,10 +19,15 @@ import type { NkProductTheme } from '../types'
 // Verdier merket «avledet» finnes ikke som egen palettfarge.
 //
 // SIGN-679 (2026-09-10): blått er Nordikodes farge (logoen, platformTheme), så
-// Sign eier berry alene. Rammen (aktiv rail-knapp) er light berry, `secondary`
-// (avatarer, ikoner, firmabrikker) er dyp berry, markeringsflaten (valgt rad,
-// aktivt filter) er nøytral tar-tint, og `info` er nøytral grå med dempet tint.
-// Periwinkle står igjen ett sted: AI-tinten (aiSoft) — «maskinen snakker».
+// Sign eier berry alene; `info` er nøytral grå med dempet tint. Periwinkle står
+// igjen ett sted: AI-tinten (aiSoft) — «maskinen snakker».
+//
+// SIGN-690 (2026-09-10, laben «Berry-dose og markering»): berry kun på handling.
+// Knapper og lenker er berry; alt som bare viser noe er nøytralt: rammen (aktiv
+// rail-knapp) er tar løftet med hvit 20 %, `secondary` (avatarer, firmabrikker)
+// er mauve-tinten med tar-initial, og markeringsflaten (valgt rad, aktivt
+// filter) er en kald tar-tint som leser som tar, ikke grå — den kaldeste som
+// fortsatt holder 4,5:1 mot berry-lenker.
 export const signTheme: NkProductTheme = {
   product: 'sign',
   vuetifyThemeName: 'NordikodeSign',
@@ -30,7 +35,7 @@ export const signTheme: NkProductTheme = {
     page: '#f3f3f5', // nøytral kald side («hvit» papir fra laben)
     surface: '#ffffff',
     surfaceSoft: '#f5f5f7',
-    surfaceSoftAccent: '#f0f1f2', // avledet: tar 6 % over hvit — nøytral markering (valgt rad, aktivt filter), lenke 4,7:1
+    surfaceSoftAccent: '#e6eef6', // avledet: kald tar-tint (tars fargetone) — markering (valgt rad, aktivt filter); lenke 4,5:1, sekundærtekst 4,8:1, tar 14,8:1
     surfaceRail: '#0d1c26', // tar — flat rail, ingen gradient
     railStart: '#0d1c26',
     railEnd: '#0d1c26',
@@ -52,14 +57,14 @@ export const signTheme: NkProductTheme = {
     onPrimary: '#ffffff',
     link: '#aa4c6e', // berry — 5,3:1 på hvit, 4,8:1 på page
     linkHover: '#92415f',
-    secondary: '#7e3852', // avledet: dyp berry (= primaryPress) — avatarer, ikoner, firmabrikker; hvit etikett 8,2:1, som ikon 8,2:1 på hvit
-    onSecondary: '#ffffff',
+    secondary: '#efeaf0', // = mutedSoft (mauve 30 %) — nøytrale avatarer og firmabrikker; tar-initial 14,6:1. Dekorative ikoner bruker textSecondary, ikke denne
+    onSecondary: '#0d1c26',
     info: '#5f6970', // avledet: tar 66 % (= textSecondary) — nøytral informasjon, hvit etikett 5,6:1
     onInfo: '#ffffff',
     attention: '#cca427', // gold — tar-etikett 7,4:1
     onAttention: '#0d1c26',
-    frame: '#dc7499', // light berry (som i Sign-merket) — aktiv rail-knapp, tar-ikon 5,8:1 på tar
-    onFrame: '#0d1c26',
+    frame: '#3d4951', // avledet: hvit 20 % over tar — aktiv rail-knapp, 1,9:1 mot railen; lys ikon 8,3:1
+    onFrame: '#f6f2ea',
     success: '#5b7423', // avledet: mørk lime (oliv) — hvit etikett 5,3:1
     onSuccess: '#ffffff',
     warning: '#8a5e0f', // varsel-700 beholdt: gold tåler ikke hvit etikett
@@ -96,7 +101,7 @@ export const signTheme: NkProductTheme = {
     page: '#050708',
     surface: '#0e1216',
     surfaceSoft: '#080b0e',
-    surfaceSoftAccent: '#1b2026', // grå-svart markering: valgt rad, aktivt filter
+    surfaceSoftAccent: '#1a222b', // kald grå-svart markering: valgt rad, aktivt filter — tekst 13,2:1, light berry 5,3:1
     surfaceRail: '#020304',
     railStart: '#020304',
     railEnd: '#020304',
@@ -118,14 +123,14 @@ export const signTheme: NkProductTheme = {
     onPrimary: '#0d1c26',
     link: '#dc7499', // light berry — 6,2:1 på kort, 5,6:1 på markering
     linkHover: '#e795b3',
-    secondary: '#dc7499', // light berry — avatarer/ikoner, tar-etikett 5,8:1, som ikon 6,3:1 på kort
-    onSecondary: '#0d1c26',
+    secondary: '#2a2430', // = mutedSoft (mørk) — nøytrale avatarer og firmabrikker; lys initial 12,4:1
+    onSecondary: '#e6e9ee',
     info: '#98a2ab', // avledet: = textSecondary (mørk) — nøytral, tar-etikett 6,7:1
     onInfo: '#0d1c26',
     attention: '#cca427', // gold
     onAttention: '#0d1c26',
-    frame: '#dc7499', // light berry — aktiv rail-knapp, tar-ikon 6,9:1 på mørk rail
-    onFrame: '#0d1c26',
+    frame: '#2a333b', // avledet: løftet tar — aktiv rail-knapp, 1,6:1 mot mørk rail; lys ikon 11,5:1
+    onFrame: '#f6f2ea',
     success: '#bfd75b', // lime som fyll, tar-etikett 10,8:1
     onSuccess: '#0d1c26',
     warning: '#cca427', // gold som fyll, tar-etikett 7,4:1
