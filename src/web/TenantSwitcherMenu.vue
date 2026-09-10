@@ -20,15 +20,20 @@
  * firmalisten med person-markør i stedet for logo, og velges via samme
  * `select`-event med `personal.id`.
  *
+ * Smart logo-plassering (SIGN-676): komponenten velger visning etter hva
+ * slags logo firmaet har — se `tenantLogoPresentation`. Sirkelen er
+ * forbeholdt initialer (og person-markøren); ekte logoer vises uklippet.
+ *
  * Tema: verts-appens web-designtokens (`--color-*`, `--radius-*`) og
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { tenantLogoPresentation, type TenantLogoFacts, type TenantLogoPresentation } from './tenantLogoPresentation'
 
-export type TenantSwitcherOption = {
+/** Logo-fakta (`logoAspectRatio`, `logoContainsText`) — se tenantLogoPresentation.ts. */
+export type TenantSwitcherOption = TenantLogoFacts & {
   id: string
   name: string
-  logoUrl?: string | null
 }
 
 export type TenantSwitcherLabels = {
@@ -85,6 +90,14 @@ const logoFailed = (tenant: TenantSwitcherOption) => failedLogos.value.has(tenan
 function markLogoFailed(tenant: TenantSwitcherOption) {
   failedLogos.value = new Set(failedLogos.value).add(tenant.id)
 }
+
+const presentationOf = (tenant: TenantSwitcherOption): TenantLogoPresentation =>
+  tenantLogoPresentation(tenant, logoFailed(tenant))
+
+/** Person-markøren deler sirkelen med initialene. */
+const selectedPresentation = computed<TenantLogoPresentation>(() =>
+  personalSelected.value || !selected.value ? 'initials' : presentationOf(selected.value),
+)
 
 const CHEVRON = 'm6 9 6 6 6-6'
 
@@ -172,14 +185,17 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
       ref="trigger"
       type="button"
       class="nk-tenant__trigger"
-      :class="{ 'nk-tenant__trigger--chip': variant === 'chip', 'nk-tenant__trigger--block': variant === 'block' }"
+      :class="{
+        'nk-tenant__trigger--chip': variant === 'chip',
+        'nk-tenant__trigger--block': variant === 'block',
+      }"
       :aria-label="variant === 'block' ? undefined : labels.menu"
       :title="variant === 'block' ? selected.name : undefined"
       :aria-expanded="open"
       aria-haspopup="menu"
       @click="toggle"
     >
-      <span class="nk-tenant__avatar">
+      <span class="nk-tenant__avatar" :class="`nk-tenant__avatar--${selectedPresentation}`">
         <svg
           v-if="personalSelected"
           viewBox="0 0 24 24"
@@ -194,7 +210,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
           <path :d="PERSON_BODY" />
         </svg>
         <img
-          v-else-if="selected.logoUrl && !logoFailed(selected)"
+          v-else-if="selectedPresentation !== 'initials' && selected.logoUrl"
           :src="selected.logoUrl"
           alt=""
           class="nk-tenant__avatar-img"
@@ -204,7 +220,14 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
         <span v-else class="nk-tenant__initials">{{ initialsOf(selected.name) }}</span>
       </span>
       <span v-if="variant === 'block'" class="nk-sr-only">{{ labels.current }}: </span>
-      <span v-if="showsName" class="nk-tenant__trigger-name">{{ selected.name }}</span>
+      <!-- Ordmerket bærer navnet selv; teksten beholdes for skjermleseren. -->
+      <span
+        v-if="showsName"
+        class="nk-tenant__trigger-name"
+        :class="{ 'nk-sr-only': selectedPresentation === 'wordmark' }"
+      >
+        {{ selected.name }}
+      </span>
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -256,7 +279,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
           </template>
         </button>
 
-        <p v-if="tenants.length > 0" class="nk-tenant__section-label">{{ labels.companies }}</p>
+        <p v-if="tenants.length > 0" class="nk-tenant__section-label">
+          {{ labels.companies }}
+        </p>
         <button
           v-for="tenant in tenants"
           :key="tenant.id"
@@ -267,9 +292,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
           :disabled="switching"
           @click="choose(tenant)"
         >
-          <span class="nk-tenant__item-avatar">
+          <span class="nk-tenant__item-avatar" :class="`nk-tenant__item-avatar--${presentationOf(tenant)}`">
             <img
-              v-if="tenant.logoUrl && !logoFailed(tenant)"
+              v-if="presentationOf(tenant) !== 'initials' && tenant.logoUrl"
               :src="tenant.logoUrl"
               alt=""
               class="nk-tenant__avatar-img"
@@ -278,7 +303,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
             />
             <span v-else class="nk-tenant__item-initials">{{ initialsOf(tenant.name) }}</span>
           </span>
-          <span class="nk-tenant__item-label">{{ tenant.name }}</span>
+          <span class="nk-tenant__item-label" :class="{ 'nk-sr-only': presentationOf(tenant) === 'wordmark' }">
+            {{ tenant.name }}
+          </span>
           <template v-if="tenant.id === selectedId">
             <span class="nk-tenant__dot" aria-hidden="true" />
             <span class="nk-sr-only">{{ labels.current }}</span>
@@ -376,15 +403,67 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   flex-shrink: 0;
   width: 2rem;
   height: 2rem;
+}
+
+/* Sirkelen er forbeholdt initialer og person-markøren (SIGN-676). */
+.nk-tenant__avatar--initials,
+.nk-tenant__item-avatar--initials {
   border-radius: 9999px;
   background: color-mix(in srgb, var(--nk-chrome-accent, var(--color-ink-tertiary)) 12%, transparent);
   box-shadow: inset 0 0 0 1px var(--color-line);
 }
 
+/* Kvadratisk/høy logo: uklippet i en kvadratisk ramme med liten avrunding. */
+.nk-tenant__avatar--square,
+.nk-tenant__item-avatar--square {
+  border-radius: var(--radius-compact);
+}
+
+/* Bred logo uten tekst: høyden styrer, bredden holdes kort så navnet får
+   plass. Ordmerke (bred logo med tekst): logoen alene, litt mer bredde.
+   Dobbel klasse så regelen vinner over variantenes `.nk-tenant__trigger--x
+   .nk-tenant__avatar`-mål. */
+.nk-tenant__avatar.nk-tenant__avatar--wide,
+.nk-tenant__avatar.nk-tenant__avatar--wordmark,
+.nk-tenant__item-avatar.nk-tenant__item-avatar--wide,
+.nk-tenant__item-avatar.nk-tenant__item-avatar--wordmark {
+  width: auto;
+  border-radius: 0;
+}
+
+.nk-tenant__avatar.nk-tenant__avatar--wide {
+  max-width: 4.5rem;
+}
+
+.nk-tenant__avatar.nk-tenant__avatar--wordmark {
+  max-width: 10rem;
+}
+
+.nk-tenant__item-avatar.nk-tenant__item-avatar--wide {
+  max-width: 3.5rem;
+}
+
+.nk-tenant__item-avatar.nk-tenant__item-avatar--wordmark {
+  max-width: 8rem;
+}
+
 .nk-tenant__avatar-img {
+  display: block;
   height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.nk-tenant__avatar--square .nk-tenant__avatar-img,
+.nk-tenant__item-avatar--square .nk-tenant__avatar-img {
   width: 100%;
-  object-fit: cover;
+}
+
+@media (max-width: 479px) {
+  .nk-tenant__avatar.nk-tenant__avatar--wordmark {
+    max-width: 7rem;
+  }
 }
 
 .nk-tenant__initials {
@@ -520,9 +599,6 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   flex-shrink: 0;
   width: 1.5rem;
   height: 1.5rem;
-  border-radius: 9999px;
-  background: color-mix(in srgb, var(--nk-chrome-accent, var(--color-ink-tertiary)) 12%, transparent);
-  box-shadow: inset 0 0 0 1px var(--color-line);
 }
 
 .nk-tenant__item-initials {
@@ -542,6 +618,8 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   width: 0.375rem;
   height: 0.375rem;
   flex-shrink: 0;
+  /* Når etiketten er skjult (ordmerke) skal prikken fortsatt stå til høyre. */
+  margin-inline-start: auto;
   border-radius: 9999px;
   background: var(--nk-chrome-accent, var(--color-ink));
 }
@@ -559,11 +637,15 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 }
 
 .nk-pop-enter-active {
-  transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+  transition:
+    transform 0.1s ease-out,
+    opacity 0.1s ease-out;
 }
 
 .nk-pop-leave-active {
-  transition: transform 75ms ease-in, opacity 75ms ease-in;
+  transition:
+    transform 75ms ease-in,
+    opacity 75ms ease-in;
 }
 
 .nk-pop-enter-from,

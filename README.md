@@ -93,6 +93,11 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   `useNotificationStore` items to `{ id, title, body, timeLabel, read }`, translates
   `eventKey` + `params` itself and navigates on `select`
 - `AccountIdentityMenu` — the avatar/account menu with service list
+- `tenantLogoPresentation` (+ `TenantLogoPresentation`, `TenantLogoFacts`) —
+  the smart-logo rule (SIGN-676): `initials` (no logo → circle), `square`,
+  `wide` (wide logo without text, shown next to the name) or `wordmark` (wide
+  logo with text replaces the name). Fed by core's `logoAspectRatio` /
+  `logoContainsText` on the tenant.
 - `TenantSwitcherMenu` — the company menu (tenant logo/initials, switch between
   the user's companies, optional personal context via the `personal` prop; the
   host owns the actual switch request). `variant="block"` is the **company
