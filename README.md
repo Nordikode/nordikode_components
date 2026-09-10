@@ -196,9 +196,12 @@ farge: tar (blekk og mørk flate), plum (`textTitle`, overskrifter), berry
 (`primary`/`link` i lys modus), light berry (`primary` i mørk modus og merket),
 periwinkle (kun `aiSoft` — maskinen), lime (`success*`), gold
 (`attention`/`warning*`) og mauve (`mutedSoft`). Siden 0.43.0 (SIGN-679) er
-blått Nordikodes farge (`platformTheme`): i Sign er `frame` (aktiv rail-knapp)
-light berry, `secondary` (avatarer, ikoner) dyp berry, `surfaceSoftAccent`
-(valgt rad) nøytral tar-tint og `info`/`infoSoft` nøytral grå/dempet tint.
+blått Nordikodes farge (`platformTheme`) og `info`/`infoSoft` nøytral
+grå/dempet tint. Siden 0.45.0 (SIGN-690) er berry kun handling: `frame` (aktiv
+rail-knapp) er tar løftet med hvit 20 %, `secondary` (avatarer, firmabrikker)
+er mauve-tinten med tar-initial, og `surfaceSoftAccent` (valgt rad, aktivt
+filter) er en kald tar-tint. `IdentityAvatar` leser temaets on-farge for
+initialen.
 Rollene `frame`, `mutedSoft` og `textTitle` ble lagt til i 0.30.0; time og
 backoffice har avledede verdier til de adopterer paletten.
 

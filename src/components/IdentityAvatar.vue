@@ -26,7 +26,9 @@ const fallbackInitial = computed(() => (props.name?.trim()[0] ?? 'U').toUpperCas
 
 <style scoped>
 .avatar-fallback {
-  color: #fff;
+  /* Initialen følger temaets on-farge for avatarens fyll (v-avatar setter den),
+     så en lys `secondary` gir mørk initial og en mørk `primary` gir lys. */
+  color: inherit;
   font-weight: 700;
 }
 </style>
