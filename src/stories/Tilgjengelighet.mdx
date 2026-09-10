@@ -92,6 +92,25 @@ skal derfor aldri stå som knapp eller tekst der.
 | Aksent (lime) på invers flate | `onSurfaceInverseAccent` / `surfaceInverse` | `#bfd75b` på `#0d1c26` — **10,8:1** | `#bfd75b` på `#161d25` — **10,6:1** |
 | Sterkt rail-ikon på rail | `railIconStrong` / `surfaceRail` | `#f6f2ea` på `#0d1c26` — **15,5:1** | `#f6f2ea` på `#020304` — **18,5:1** |
 
+### Plattformappene (Nordikode-paletten, SIGN-657)
+
+Company, account og developer bruker `platformTheme` (`src/tokens/products/platform.ts`):
+samme nøytraler, status- og rammefarger som Sign, men handling, lenke og tittel
+er Nordikode-blått og tar i stedet for berry og plum. Periwinkle (`#90afed`)
+måler bare 2,2:1 på hvit, så handlingen i lys modus er mørk periwinkle
+(`#35569f`); i mørk modus er den periwinkle med tar-etikett.
+
+| Par | Tokens | Lys | Mørk |
+| --- | --- | --- | --- |
+| Primærknapp | `onPrimary` / `primary` | `#ffffff` på `#35569f` — **7,0:1** | `#0d1c26` på `#90afed` — **7,9:1** |
+| Primærknapp hover | `onPrimary` / `primaryHover` | `#ffffff` på `#2c4886` — **8,8:1** | `#0d1c26` på `#a9c1f2` — **9,6:1** |
+| Primærknapp press | `onPrimary` / `primaryPress` | `#ffffff` på `#243b6e` — **10,9:1** | `#0d1c26` på `#7d9ee6` — **6,5:1** |
+| Lenke på kort | `link` / `surface` | `#35569f` på `#ffffff` — **7,0:1** | `#90afed` på `#0e1216` — **8,5:1** |
+| Lenke på side | `link` / `page` | `#35569f` på `#f3f3f5` — **6,4:1** | `#90afed` på `#050708` — **9,2:1** |
+| Lenke på valgt rad | `link` / `surfaceSoftAccent` | `#35569f` på `#e9effb` — **6,1:1** | `#90afed` på `#1b2026` — **7,4:1** |
+| Tekst på myk handlingsflate | `onPrimarySoft` / `primarySoft` | `#2f4d8f` på `#e2eafa` — **6,7:1** | `#a9c1f2` på `#1b2a45` — **7,9:1** |
+| Tittel (tar) på kort | `textTitle` / `surface` | `#0d1c26` på `#ffffff` — **17,3:1** | `#dbe5fb` på `#0e1216` — **14,9:1** |
+
 ### Kundevendte dokumenter (papir, `--nk-doc-*`)
 
 Dokument-tokenene (SIGN-610) er lys-bare — tilbudsdokumentet i Sign er papir

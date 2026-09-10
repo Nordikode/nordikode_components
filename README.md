@@ -156,6 +156,9 @@ When a consuming app is linked locally, its `dev` and `build` scripts will autom
 
 ## Design tokens
 
+Produkttemaer: `signTheme` (Sign), `timeTheme`, `backofficeTheme` og `platformTheme`
+(Nordikode-paletten for plattformappene company, account og developer — SIGN-657).
+
 `@nordikode/components/tokens` er kilden til sannhet for farger, radius, spacing
 og typografi — per produkt (Sign, Time, Backoffice), light + dark.
 

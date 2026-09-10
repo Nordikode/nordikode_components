@@ -57,6 +57,7 @@ const preview: Preview = {
           { value: 'sign', title: 'Sign' },
           { value: 'time', title: 'Time' },
           { value: 'backoffice', title: 'Backoffice' },
+          { value: 'platform', title: 'Plattform (company/account/developer)' },
         ],
         dynamicTitle: true,
       },
