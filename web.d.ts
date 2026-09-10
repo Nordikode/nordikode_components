@@ -44,7 +44,17 @@ export type TenantSwitcherOption = {
   id: string
   name: string
   logoUrl?: string | null
+  /** Bredde/høyde for logoen; ukjent = kvadratisk (SIGN-676). */
+  logoAspectRatio?: number | null
+  /** Om logoen inneholder lesbar tekst; null = ikke analysert ennå (SIGN-676). */
+  logoContainsText?: boolean | null
 }
+
+/** Visningen firmavelgeren velger for ett firma (SIGN-676). */
+export type TenantLogoFacts = Pick<TenantSwitcherOption, 'logoUrl' | 'logoAspectRatio' | 'logoContainsText'>
+export type TenantLogoPresentation = 'initials' | 'square' | 'wide' | 'wordmark'
+export const WIDE_LOGO_ASPECT_RATIO: number
+export function tenantLogoPresentation(tenant: TenantLogoFacts, logoFailed?: boolean): TenantLogoPresentation
 
 export type TenantSwitcherLabels = {
   menu: string
