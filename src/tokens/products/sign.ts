@@ -8,7 +8,7 @@ import type { NkProductTheme } from '../types'
 //   plum        #2f1220  andre blekk: overskrifter og titler
 //   berry       #aa4c6e  handling i lys modus (knapper, lenker, aktiv fane)
 //   light berry #dc7499  merket (Sign-logoen) og handling i mørk modus
-//   periwinkle  #90afed  rammen og maskinen: hel på aktiv rail-knapp, ellers som lys tint
+//   periwinkle  #90afed  maskinen: AI-tinten (aiSoft) — eneste blå i Sign (SIGN-679)
 //   lime        #bfd75b  fullført-familien (vunnet, bud mottatt, fortjeneste)
 //   gold        #cca427  venter på noen (venter på kundesvar, ny sak, meldingsvarsler)
 //   mauve       #b19eb4  dempet (kategorier, tagger, utkast)
@@ -17,6 +17,12 @@ import type { NkProductTheme } from '../types'
 // palettfargen blandet over flaten (prosent i kommentaren) og alle tekst/flate-
 // par er målt til ≥ 4,5:1 i kjørende app (kontrastrevisjonen i SIGN-583).
 // Verdier merket «avledet» finnes ikke som egen palettfarge.
+//
+// SIGN-679 (2026-09-10): blått er Nordikodes farge (logoen, platformTheme), så
+// Sign eier berry alene. Rammen (aktiv rail-knapp) er light berry, `secondary`
+// (avatarer, ikoner, firmabrikker) er dyp berry, markeringsflaten (valgt rad,
+// aktivt filter) er nøytral tar-tint, og `info` er nøytral grå med dempet tint.
+// Periwinkle står igjen ett sted: AI-tinten (aiSoft) — «maskinen snakker».
 export const signTheme: NkProductTheme = {
   product: 'sign',
   vuetifyThemeName: 'NordikodeSign',
@@ -24,7 +30,7 @@ export const signTheme: NkProductTheme = {
     page: '#f3f3f5', // nøytral kald side («hvit» papir fra laben)
     surface: '#ffffff',
     surfaceSoft: '#f5f5f7',
-    surfaceSoftAccent: '#e9effb', // periwinkle 20 %: valgt rad, aktivt filter — berry-tekst 4,6:1
+    surfaceSoftAccent: '#f0f1f2', // avledet: tar 6 % over hvit — nøytral markering (valgt rad, aktivt filter), lenke 4,7:1
     surfaceRail: '#0d1c26', // tar — flat rail, ingen gradient
     railStart: '#0d1c26',
     railEnd: '#0d1c26',
@@ -46,13 +52,13 @@ export const signTheme: NkProductTheme = {
     onPrimary: '#ffffff',
     link: '#aa4c6e', // berry — 5,3:1 på hvit, 4,8:1 på page
     linkHover: '#92415f',
-    secondary: '#35569f', // avledet: mørk periwinkle som tekst/fyll — 7,0:1 på hvit
+    secondary: '#7e3852', // avledet: dyp berry (= primaryPress) — avatarer, ikoner, firmabrikker; hvit etikett 8,2:1, som ikon 8,2:1 på hvit
     onSecondary: '#ffffff',
-    info: '#35569f', // avledet, som secondary
+    info: '#5f6970', // avledet: tar 66 % (= textSecondary) — nøytral informasjon, hvit etikett 5,6:1
     onInfo: '#ffffff',
     attention: '#cca427', // gold — tar-etikett 7,4:1
     onAttention: '#0d1c26',
-    frame: '#90afed', // periwinkle — aktiv rail-knapp, tar-ikon 7,9:1
+    frame: '#dc7499', // light berry (som i Sign-merket) — aktiv rail-knapp, tar-ikon 5,8:1 på tar
     onFrame: '#0d1c26',
     success: '#5b7423', // avledet: mørk lime (oliv) — hvit etikett 5,3:1
     onSuccess: '#ffffff',
@@ -62,9 +68,9 @@ export const signTheme: NkProductTheme = {
     onError: '#ffffff',
     primarySoft: '#f1e2e8', // berry 16 %
     onPrimarySoft: '#7a374f', // avledet — 6,8:1 på primarySoft
-    infoSoft: '#e2eafa', // periwinkle 26 %
-    onInfoSoft: '#35569f', // 6,1:1 på infoSoft
-    aiSoft: '#e2eafa', // maskinen = periwinkle-tint (samme flate som info, egen rolle)
+    infoSoft: '#efeaf0', // = mutedSoft: info er nøytral, ikke maskinen
+    onInfoSoft: '#3d4951', // avledet: tar 80 % — 7,8:1 på infoSoft
+    aiSoft: '#e2eafa', // maskinen = periwinkle 26 % — eneste blå i Sign (SIGN-679)
     onAiSoft: '#35569f',
     successSoft: '#ecf3ce', // lime 30 %
     onSuccessSoft: '#4f6a1f', // avledet — 5,4:1 på successSoft
@@ -112,13 +118,13 @@ export const signTheme: NkProductTheme = {
     onPrimary: '#0d1c26',
     link: '#dc7499', // light berry — 6,2:1 på kort, 5,6:1 på markering
     linkHover: '#e795b3',
-    secondary: '#90afed', // periwinkle — 7,9:1 på tar
+    secondary: '#dc7499', // light berry — avatarer/ikoner, tar-etikett 5,8:1, som ikon 6,3:1 på kort
     onSecondary: '#0d1c26',
-    info: '#90afed',
+    info: '#98a2ab', // avledet: = textSecondary (mørk) — nøytral, tar-etikett 6,7:1
     onInfo: '#0d1c26',
     attention: '#cca427', // gold
     onAttention: '#0d1c26',
-    frame: '#90afed', // periwinkle — aktiv rail-knapp
+    frame: '#dc7499', // light berry — aktiv rail-knapp, tar-ikon 6,9:1 på mørk rail
     onFrame: '#0d1c26',
     success: '#bfd75b', // lime som fyll, tar-etikett 10,8:1
     onSuccess: '#0d1c26',
@@ -128,9 +134,9 @@ export const signTheme: NkProductTheme = {
     onError: '#3a1c17',
     primarySoft: '#3a1f2b', // berry dyp
     onPrimarySoft: '#e8b4c8', // 8,9:1
-    infoSoft: '#1b2026', // grå-svart flate, periwinkle tekst
-    onInfoSoft: '#90afed',
-    aiSoft: '#1b2026',
+    infoSoft: '#2a2430', // = mutedSoft (mørk): info er nøytral
+    onInfoSoft: '#e6e9ee', // 12,4:1
+    aiSoft: '#1b2026', // maskinen: grå-svart flate med periwinkle tekst — eneste blå i Sign
     onAiSoft: '#a9c1f2',
     successSoft: '#26300f', // lime dyp
     onSuccessSoft: '#c9dd75',

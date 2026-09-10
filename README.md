@@ -194,10 +194,13 @@ productCss(signTheme)
 Sign-paletten (SIGN-604, 2026-09-09) har engelske fargenavn og én jobb per
 farge: tar (blekk og mørk flate), plum (`textTitle`, overskrifter), berry
 (`primary`/`link` i lys modus), light berry (`primary` i mørk modus og merket),
-periwinkle (`frame` som hel markør, `surfaceSoftAccent`/`infoSoft`/`aiSoft`
-som tint), lime (`success*`), gold (`attention`/`warning*`) og mauve
-(`mutedSoft`). Rollene `frame`, `mutedSoft` og `textTitle` ble lagt til i
-0.30.0; time og backoffice har avledede verdier til de adopterer paletten.
+periwinkle (kun `aiSoft` — maskinen), lime (`success*`), gold
+(`attention`/`warning*`) og mauve (`mutedSoft`). Siden 0.43.0 (SIGN-679) er
+blått Nordikodes farge (`platformTheme`): i Sign er `frame` (aktiv rail-knapp)
+light berry, `secondary` (avatarer, ikoner) dyp berry, `surfaceSoftAccent`
+(valgt rad) nøytral tar-tint og `info`/`infoSoft` nøytral grå/dempet tint.
+Rollene `frame`, `mutedSoft` og `textTitle` ble lagt til i 0.30.0; time og
+backoffice har avledede verdier til de adopterer paletten.
 
 Kundevendte dokumenter (tilbudet i Sign) er «papir» og skal være lyse
 uansett appens fargemodus. De bruker derfor det lys-bare settet `--nk-doc-*`
