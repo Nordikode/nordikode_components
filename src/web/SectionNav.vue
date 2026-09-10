@@ -128,6 +128,9 @@ function select(item: SectionNavItem): void {
   font-size: 0.9rem;
   font-weight: 500;
   line-height: 1.2;
+  /* Knapp-varianten (valg i samme visning) arver ellers nettleserens
+     sentrerte knappetekst — punktene skal stå likt uansett element. */
+  text-align: start;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
