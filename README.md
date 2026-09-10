@@ -69,6 +69,12 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   Scale is the app standard (1.5rem/800 title, 0.9rem secondary subtitle —
   the same heading as Sign and backoffice); a link rendered in `#back` gets
   the back-link style when it carries the `nk-page-header__back` class.
+- `SectionNav` — the platform apps' section navigation (SIGN-656): the area's
+  pages as a sticky 14rem side menu from 1280px up, and as a scrollable tab row
+  under the page header below that. Items are links (`href`) or selections
+  (`select` event); client-side routers render the link in `#item` with the
+  `nk-section-nav__link` class. Standard for company, account and developer —
+  the header's nav slot stays empty in those apps.
 - `ThemeToggle` + `useTheme` — the shared light/dark switch. Theme is the
   `dark` class on `<html>`; the OS preference is the default and an explicit
   choice is stored under `nordikode-theme` only while it differs from the OS

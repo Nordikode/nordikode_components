@@ -75,6 +75,15 @@ export type PageHeaderBack = {
   label: string
 }
 
+/** Ett punkt i seksjonsnavigasjonen (SIGN-656). */
+export type SectionNavItem = {
+  key: string
+  label: string
+  href?: string
+  icon?: string
+  badge?: number | null
+}
+
 export type ThemeToggleLabels = {
   toLight: string
   toDark: string
@@ -128,6 +137,7 @@ export type ProductSymbolKey = 'sign'
 export const ProductSymbol: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AppHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PageHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const SectionNav: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const ThemeToggle: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NotificationBellMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkSignedOutDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
