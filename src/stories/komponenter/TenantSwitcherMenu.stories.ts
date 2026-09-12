@@ -93,6 +93,25 @@ export const Firmablokk: Story = {
   ],
 }
 
+/**
+ * Firmablokken ved høyre kant (`align="end"`, SIGN-683) — Signs plassering i
+ * `#menus` rett før kontomenyen: panelet henger høyrejustert under blokken,
+ * så det holder seg innenfor skjermen. Klikk for å se panelet.
+ */
+export const FirmablokkHoyre: Story = {
+  name: 'Firmablokk – ved høyre kant',
+  args: {
+    selectedId: 't-1',
+    labels,
+    variant: 'block',
+    align: 'end',
+    tenants: [
+      { id: 't-1', name: 'Bygg og Anlegg AS', logoUrl: null },
+      { id: 't-2', name: 'Håndverkspartner Sørvest AS', logoUrl: null },
+    ],
+  },
+}
+
 export const FirmablokkPersonlig: Story = {
   name: 'Firmablokk – personlig kontekst',
   args: {

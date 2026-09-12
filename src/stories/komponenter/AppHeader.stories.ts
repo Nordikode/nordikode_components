@@ -211,6 +211,45 @@ export const FirmablokkMedLogo: Story = {
   }),
 }
 
+/**
+ * Signs oppsett (SIGN-683): firmablokken på høyresiden i `#menus`, rett før
+ * kontomenyen (`align="end"`), så firma og bruker står sammen ved høyre kant.
+ * `#tenant` står tom. På smale mobiler viker firmanavnet — logoen står.
+ */
+export const FirmablokkHoyre: Story = {
+  name: 'Firmablokk – ved høyre kant (Sign)',
+  args: { labels, width: 'full', brand: 'sign' },
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu },
+    setup: () => ({
+      args,
+      toggleLabels,
+      tenants: [
+        { id: 't-1', name: 'Bygg og Anlegg AS', logoUrl: demoLogo },
+        { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
+      ],
+      tenantLabels,
+      accountLabels,
+      services,
+    }),
+    template: `
+      <AppHeader v-bind="args">
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" align="end" />
+          <AccountIdentityMenu
+            name="Kari Nordmann"
+            email="kari@example.com"
+            :services="services"
+            current-service-key="sign"
+            :labels="accountLabels"
+          />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}
+
 /** Uten logo (eller når logoen feiler å laste) står initialene i samme rute. */
 export const FirmablokkUtenLogo: Story = {
   name: 'Firmablokk – uten logo (initialer)',
