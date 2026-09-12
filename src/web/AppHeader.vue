@@ -19,6 +19,9 @@
  * → `#actions` → ThemeToggle → NotificationBellMenu → AppLauncherMenu →
  * AccountIdentityMenu → burger. Venstre side sier hvor brukeren er
  * (merkevare, produkt, firma); høyre side er brukerens egne verktøy.
+ * Et produkt kan i stedet legge firmablokken i `#menus` rett før
+ * kontomenyen (`align="end"`, Sign — SIGN-683): firma og bruker står da
+ * sammen ved høyre kant, og `#tenant` står tom.
  *
  * Tema: verts-appens web-designtokens (`--color-*`, `--radius-*`) og
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
@@ -609,16 +612,21 @@ const drawerItems = computed(() =>
     display: none;
   }
 
-  /* Med firmablokk viker ordmerket for firmanavnet — symbolet står. */
-  .nk-header--tenant .nk-header__brand-logo--full {
+  /* Med firmablokk viker ordmerket for firmanavnet — symbolet står. Gjelder
+     også blokken ved høyre kant i #menus (`align="end"`, SIGN-683): en bred
+     ordmerke-logo trenger plassen, og headeren ser blokken via :has(). */
+  .nk-header--tenant .nk-header__brand-logo--full,
+  .nk-header:has(.nk-tenant--end) .nk-header__brand-logo--full {
     display: none;
   }
 
-  .nk-header--tenant .nk-header__brand-logo--compact {
+  .nk-header--tenant .nk-header__brand-logo--compact,
+  .nk-header:has(.nk-tenant--end) .nk-header__brand-logo--compact {
     display: inline-flex;
   }
 
-  .nk-header--tenant .nk-header__inner {
+  .nk-header--tenant .nk-header__inner,
+  .nk-header:has(.nk-tenant--end) .nk-header__inner {
     gap: 0.5rem;
   }
 
@@ -685,9 +693,12 @@ html {
 
 /* Tenant-chipen i #menus viser bare avataren på smale mobiler (SIGN-537);
    navnet står fortsatt øverst i panelet. Firmablokken i #tenant beholder
-   navnet trunkert (SIGN-561). Uscopet fordi triggeren er slot-innhold. */
+   navnet trunkert (SIGN-561); firmablokken ved høyre kant (`align="end"`,
+   SIGN-683) viker navnet som chipen, så kontomenyen får plass.
+   Uscopet fordi triggeren er slot-innhold. */
 @media (max-width: 479px) {
-  .nk-header .nk-tenant__trigger--chip .nk-tenant__trigger-name {
+  .nk-header .nk-tenant__trigger--chip .nk-tenant__trigger-name,
+  .nk-header .nk-tenant--end .nk-tenant__trigger--block .nk-tenant__trigger-name {
     display: none;
   }
 

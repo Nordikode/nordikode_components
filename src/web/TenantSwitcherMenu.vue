@@ -5,10 +5,13 @@
  * bytte mellom firmaene sine. Samme visuelle språk og meny-mekanikk som
  * AccountIdentityMenu.
  *
- * Standardplasseringen er firmablokken i `AppHeader`s `#tenant`-slot
- * (SIGN-561): `variant="block"` viser logo og fullt firmanavn til venstre
- * ved merkevaren, og hele blokken er utløseren for firmabyttet — den lille
- * avataren til høyre i `#menus` er dermed borte fra alle innloggede flater.
+ * Standardplasseringen er firmablokken (SIGN-561): `variant="block"` viser
+ * logo og fullt firmanavn, og hele blokken er utløseren for firmabyttet —
+ * den lille avataren alene er dermed borte fra alle innloggede flater.
+ * Blokken står enten i `AppHeader`s `#tenant`-slot ved merkevaren
+ * (`align="start"`, standard) eller på høyresiden i `#menus` rett før
+ * kontomenyen (`align="end"`, Sign — SIGN-683): da henger panelet
+ * høyrejustert under blokken, så det ikke går ut av skjermkanten.
  *
  * Ren presentasjon: tenants, valgt id og etiketter kommer som props; et
  * `select`-event går ut når brukeren velger et ANNET firma enn det valgte
@@ -61,6 +64,14 @@ const props = defineProps<{
    * med firmanavnet synlig. Default er nettsidens rene avatar+chevron.
    */
   variant?: 'plain' | 'chip' | 'block'
+  /**
+   * Hvilken kant av headeren blokken står ved (SIGN-683). 'start' (standard):
+   * blokken ved merkevaren, panelet venstrejustert. 'end': blokken i `#menus`
+   * ved høyre kant, panelet høyrejustert — og på smale mobiler viker navnet
+   * (bare logo/initialer), slik chip-varianten gjør, så kontomenyen får plass.
+   * Kun for `variant="block"`.
+   */
+  align?: 'start' | 'end'
 }>()
 
 const emit = defineEmits<{ select: [tenantId: string] }>()
@@ -178,7 +189,12 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 </script>
 
 <template>
-  <div v-if="selected" ref="root" class="nk-tenant" :class="{ 'nk-tenant--block': variant === 'block' }">
+  <div
+    v-if="selected"
+    ref="root"
+    class="nk-tenant"
+    :class="{ 'nk-tenant--block': variant === 'block', 'nk-tenant--end': variant === 'block' && align === 'end' }"
+  >
     <!-- Blokken har navnet som synlig tekst: skjermleseren får «Valgt firma:
          <navn>» i stedet for en aria-label som ville skjult navnet. -->
     <button
@@ -509,7 +525,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   transform-origin: top right;
 }
 
-/* Panelet henger under blokken, venstrejustert som blokken selv. */
+/* Panelet henger under blokken, venstrejustert som blokken selv (`align="start"`). */
 .nk-tenant--block .nk-tenant__panel {
   inset-inline-end: auto;
   inset-inline-start: 0;
@@ -521,6 +537,14 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   box-shadow:
     0 10px 15px -3px rgb(0 0 0 / 0.1),
     0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Blokken ved høyre kant (`align="end"`, SIGN-683): panelet høyrejustert,
+   så det holder seg innenfor skjermen ved siden av kontomenyen. */
+.nk-tenant--block.nk-tenant--end .nk-tenant__panel {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  transform-origin: top right;
 }
 
 .nk-tenant__header {
