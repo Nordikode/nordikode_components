@@ -197,8 +197,9 @@ farge: tar (blekk og mørk flate), plum (`textTitle`, overskrifter), berry
 lime (`success*`), gold
 (`attention`/`warning*`) og mauve (`mutedSoft`). Siden 0.43.0 (SIGN-679) er
 blått Nordikodes farge (`platformTheme`) og `info`/`infoSoft` nøytral
-grå/dempet tint. Siden 0.45.0 (SIGN-690) er berry kun handling: `frame` (aktiv
-rail-knapp) er tar løftet med hvit 20 %, `secondary` (avatarer, firmabrikker)
+grå/dempet tint. Siden 0.45.0 (SIGN-690) er berry handling, og siden 0.48.0
+(SIGN-752) også railen: `surfaceRail` er ren berry i begge moduser, `frame`
+(aktiv rail-knapp) er berry løftet med hvit 20 %, `secondary` (avatarer, firmabrikker)
 er mauve-tinten med tar-initial, og `surfaceSoftAccent` (valgt rad, aktivt
 filter) er en kald tar-tint. `IdentityAvatar` leser temaets on-farge for
 initialen.

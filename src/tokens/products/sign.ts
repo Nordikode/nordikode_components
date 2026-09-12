@@ -4,9 +4,9 @@ import type { NkProductTheme } from '../types'
 // SIGN-604 (2026-09-09): ny palett vedtatt av teamet etter utforskingen i
 // SIGN-583 (lab + forslagsside med skjermbilder og målt kontrast). Fargene
 // har engelske navn:
-//   tar         #0d1c26  blekk (løpende tekst) og mørk flate (rail, bånd, løftet panel)
+//   tar         #0d1c26  blekk (løpende tekst) og mørk flate (bånd, løftet panel)
 //   plum        #2f1220  andre blekk: overskrifter og titler
-//   berry       #aa4c6e  handling i lys modus (knapper, lenker, aktiv fane)
+//   berry       #aa4c6e  handling i lys modus (knapper, lenker) og railen (SIGN-752)
 //   light berry #dc7499  merket (Sign-logoen) og handling i mørk modus
 //   (periwinkle #90afed er Nordikodes blå og brukes ikke i Sign — SIGN-750)
 //   lime        #bfd75b  fullført-familien (vunnet, bud mottatt, fortjeneste)
@@ -26,6 +26,11 @@ import type { NkProductTheme } from '../types'
 // (surfaceSoftAccent) med tar-tekst; det som skiller maskinens flater fra en
 // valgt rad er «AI»-merket, ikke fargen. Blått finnes bare i platformTheme.
 //
+// SIGN-752 (2026-09-12): railen er ren berry i begge moduser (valgt i rail-laben).
+// Berry bærer dermed to jobber: handling og rail. Rail-ikonene er krem 80 %
+// (55 % holder ikke 3:1 på berry), og rammen (aktiv rail-knapp) er berry løftet
+// med hvit 20 %. Tar er fortsatt blekk, bånd og løftet panel.
+//
 // SIGN-690 (2026-09-10, laben «Berry-dose og markering»): berry kun på handling.
 // Knapper og lenker er berry; alt som bare viser noe er nøytralt: rammen (aktiv
 // rail-knapp) er tar løftet med hvit 20 %, `secondary` (avatarer, firmabrikker)
@@ -40,11 +45,11 @@ export const signTheme: NkProductTheme = {
     surface: '#ffffff',
     surfaceSoft: '#f5f5f7',
     surfaceSoftAccent: '#e6eef6', // avledet: kald tar-tint (tars fargetone) — markering (valgt rad, aktivt filter); lenke 4,5:1, sekundærtekst 4,8:1, tar 14,8:1
-    surfaceRail: '#0d1c26', // tar — flat rail, ingen gradient
-    railStart: '#0d1c26',
-    railEnd: '#0d1c26',
-    railIcon: 'rgba(246, 242, 234, 0.55)',
-    railIconStrong: '#f6f2ea',
+    surfaceRail: '#aa4c6e', // berry — flat rail, ingen gradient (SIGN-752)
+    railStart: '#aa4c6e',
+    railEnd: '#aa4c6e',
+    railIcon: 'rgba(246, 242, 234, 0.8)', // krem 80 % — 3,6:1 på berry (55 % gir 2,5:1)
+    railIconStrong: '#f6f2ea', // 4,7:1 på berry
     surfaceBorder: 'rgba(13, 28, 38, 0.12)', // avledet: tar-hairline over hvit
     surfaceGlass: 'rgba(255, 255, 255, 0.72)', // avledet
     surfaceSubtle: 'rgba(255, 255, 255, 0.62)', // avledet
@@ -67,7 +72,7 @@ export const signTheme: NkProductTheme = {
     onInfo: '#ffffff',
     attention: '#cca427', // gold — tar-etikett 7,4:1
     onAttention: '#0d1c26',
-    frame: '#3d4951', // avledet: hvit 20 % over tar — aktiv rail-knapp, 1,9:1 mot railen; lys ikon 8,3:1
+    frame: '#bb708b', // avledet: hvit 20 % over berry — aktiv rail-knapp, 1,5:1 mot railen; krem ikon 3,2:1
     onFrame: '#f6f2ea',
     success: '#5b7423', // avledet: mørk lime (oliv) — hvit etikett 5,3:1
     onSuccess: '#ffffff',
@@ -106,10 +111,10 @@ export const signTheme: NkProductTheme = {
     surface: '#0e1216',
     surfaceSoft: '#080b0e',
     surfaceSoftAccent: '#1a222b', // kald grå-svart markering: valgt rad, aktivt filter — tekst 13,2:1, light berry 5,3:1
-    surfaceRail: '#020304',
-    railStart: '#020304',
-    railEnd: '#020304',
-    railIcon: 'rgba(246, 242, 234, 0.55)', // som light — railen er mørk i begge
+    surfaceRail: '#aa4c6e', // berry — samme rail i begge moduser (SIGN-752)
+    railStart: '#aa4c6e',
+    railEnd: '#aa4c6e',
+    railIcon: 'rgba(246, 242, 234, 0.8)', // som light — 3,6:1 på berry
     railIconStrong: '#f6f2ea',
     surfaceBorder: 'rgba(255, 255, 255, 0.09)',
     surfaceGlass: 'rgba(14, 18, 22, 0.72)', // avledet
@@ -133,7 +138,7 @@ export const signTheme: NkProductTheme = {
     onInfo: '#0d1c26',
     attention: '#cca427', // gold
     onAttention: '#0d1c26',
-    frame: '#2a333b', // avledet: løftet tar — aktiv rail-knapp, 1,6:1 mot mørk rail; lys ikon 11,5:1
+    frame: '#bb708b', // avledet: hvit 20 % over berry — som light; krem ikon 3,2:1
     onFrame: '#f6f2ea',
     success: '#bfd75b', // lime som fyll, tar-etikett 10,8:1
     onSuccess: '#0d1c26',

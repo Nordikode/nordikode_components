@@ -25,7 +25,7 @@ løsninger rettet mot allmennheten).
 
 Paletten fra SIGN-583/604 (tar, plum, berry, light berry, lime, gold, mauve) er tokens i `src/tokens/products/sign.ts`. Tallene under er
 WCAG 2.1-kontrast regnet fra token-verdiene (`signTheme.light` og
-`signTheme.dark`, versjon 0.47.0 etter SIGN-679/690/750: blått er Nordikodes
+`signTheme.dark`, versjon 0.48.0 etter SIGN-679/690/750/752: blått er Nordikodes
 farge, så rammen, `secondary`, markeringen og AI-tinten er nøytral tar, og
 periwinkle finnes ikke i Sign). Alle tekst/flate-par holder AA (≥ 4,5:1); laveste er lenke
 på valgt rad (4,7:1) og lenke på sidebakgrunn i lys modus (4,8:1). Endres en token, skal tabellen regnes på nytt — theme lab i Sign
@@ -68,11 +68,13 @@ lenke **light berry** (`#dc7499`) i mørk modus, med tar-etikett.
 
 Gold tåler ikke hvit etikett (2,4:1 mot hvit) — derfor er `warning` i lys modus
 fortsatt varsel-700, mens gold bærer `attention` med tar-etikett i begge moduser.
-Rammen (`frame`) brukes bare som hel markør på den mørke railen: tar løftet med
-hvit 20 % (`#3d4951`, **1,9:1** mot railen `#0d1c26`; `#2a333b`, **1,6:1** mot
-mørk rail `#020304`) med lys ikon. Markøren er en flate, ikke tekst, og ikonet
-bærer kontrasten. Berry er handling (`primary`/`link`) og skal ikke ligge på
-faner, avatarer, beløp eller rail-markør (SIGN-690). Periwinkle er Nordikodes
+Railen er ren berry `#aa4c6e` i begge moduser (SIGN-752). Rail-ikonene er krem
+med 80 % dekning (**3,6:1** på berry; 55 % ga bare 2,5:1) og krem `#f6f2ea` ved
+hover/aktiv (**4,7:1**). Rammen (`frame`) brukes bare som hel markør på railen:
+berry løftet med hvit 20 % (`#bb708b`, **1,5:1** mot railen) med krem ikon
+(**3,2:1**). Markøren er en flate, ikke tekst, og ikonet bærer kontrasten. Berry
+er handling (`primary`/`link`) og railen, og skal ikke ligge på faner, avatarer
+eller beløp (SIGN-690). Periwinkle er Nordikodes
 farge (`platformTheme`) og finnes ikke i Sign (SIGN-750): AI-tinten er den
 kalde tar-tinten, og «AI»-merket bærer betydningen.
 
