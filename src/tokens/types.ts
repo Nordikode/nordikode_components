@@ -50,7 +50,7 @@ export interface NkScheme {
   /** Gul oppmerksomhetsfarge (badge/varsling), ikke det samme som warning. */
   attention: string
   onAttention: string
-  /** Rammen (periwinkle i Sign): aktiv rail-knapp og andre hele markører — aldri knapp, aldri tekst. */
+  /** Rammen (løftet tar i Sign): aktiv rail-knapp og andre hele markører — aldri knapp, aldri tekst. */
   frame: string
   onFrame: string
 

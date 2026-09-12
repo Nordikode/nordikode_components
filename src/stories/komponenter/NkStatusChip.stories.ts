@@ -6,8 +6,8 @@ import type { NkStatusChipTone } from '../../types/NkStatusChipTone'
 // Statuschipen (SIGN-309): TO størrelser, sju semantiske toner (ai fra SIGN-604).
 // sm = lister/tabeller (sakslisten), md = hoder/kort (sakshodets «TILBUD SENDT»).
 // Tonene følger designsystemets fargeroller (SIGN-604): fullført = lime-tint,
-// underveis = kopper-tint, venter = gold-tint, feil, info = periwinkle-tint,
-// ai = maskinen (periwinkle-tint, egen rolle), nøytral.
+// underveis = kopper-tint, venter = gold-tint, feil, info = nøytral dempet tint,
+// ai = maskinen (kald tar-tint, egen rolle — SIGN-750), nøytral.
 // Teksten kommer alltid fra appens i18n — komponenten eier ingen strenger.
 
 const meta: Meta<typeof NkStatusChip> = {
@@ -28,8 +28,8 @@ const EKSEMPLER: Array<{ tone: NkStatusChipTone; label: string; rolle: string }>
   { tone: 'inflight', label: 'Tilbud sendt', rolle: 'underveis (kopper-tint)' },
   { tone: 'warning', label: 'Venter på kunde', rolle: 'venter på noen (gold-tint)' },
   { tone: 'error', label: 'Avvist', rolle: 'feil' },
-  { tone: 'info', label: 'I melding', rolle: 'informasjon (periwinkle-tint)' },
-  { tone: 'ai', label: 'AI-foreslått', rolle: 'maskinen (periwinkle-tint, egen rolle)' },
+  { tone: 'info', label: 'I melding', rolle: 'informasjon (nøytral dempet tint)' },
+  { tone: 'ai', label: 'AI-foreslått', rolle: 'maskinen (kald tar-tint, egen rolle)' },
   { tone: 'neutral', label: 'Utkast', rolle: 'nøytral' },
 ]
 

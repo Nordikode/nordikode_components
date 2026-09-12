@@ -23,12 +23,11 @@ løsninger rettet mot allmennheten).
 
 ## Målt kontrast i Sign-paletten (SIGN-604)
 
-Paletten fra SIGN-583/604 (tar, plum, berry, light berry, periwinkle, lime,
-gold, mauve) er tokens i `src/tokens/products/sign.ts`. Tallene under er
+Paletten fra SIGN-583/604 (tar, plum, berry, light berry, lime, gold, mauve) er tokens i `src/tokens/products/sign.ts`. Tallene under er
 WCAG 2.1-kontrast regnet fra token-verdiene (`signTheme.light` og
-`signTheme.dark`, versjon 0.43.0 etter SIGN-679: blått er Nordikodes farge, så
-rammen, `secondary` og markeringen er berry/nøytral og periwinkle står igjen
-bare på AI-tinten). Alle tekst/flate-par holder AA (≥ 4,5:1); laveste er lenke
+`signTheme.dark`, versjon 0.47.0 etter SIGN-679/690/750: blått er Nordikodes
+farge, så rammen, `secondary`, markeringen og AI-tinten er nøytral tar, og
+periwinkle finnes ikke i Sign). Alle tekst/flate-par holder AA (≥ 4,5:1); laveste er lenke
 på valgt rad (4,7:1) og lenke på sidebakgrunn i lys modus (4,8:1). Endres en token, skal tabellen regnes på nytt — theme lab i Sign
 viser de samme parene live.
 
@@ -74,7 +73,8 @@ hvit 20 % (`#3d4951`, **1,9:1** mot railen `#0d1c26`; `#2a333b`, **1,6:1** mot
 mørk rail `#020304`) med lys ikon. Markøren er en flate, ikke tekst, og ikonet
 bærer kontrasten. Berry er handling (`primary`/`link`) og skal ikke ligge på
 faner, avatarer, beløp eller rail-markør (SIGN-690). Periwinkle er Nordikodes
-farge (`platformTheme`) og finnes i Sign kun som AI-tint.
+farge (`platformTheme`) og finnes ikke i Sign (SIGN-750): AI-tinten er den
+kalde tar-tinten, og «AI»-merket bærer betydningen.
 
 ### Tekst på myke flater (NkStatusChip og tonal-chips)
 
@@ -82,7 +82,7 @@ farge (`platformTheme`) og finnes i Sign kun som AI-tint.
 | --- | --- | --- | --- |
 | Primær-tint (berry 16 %) | `onPrimarySoft` / `primarySoft` | `#7a374f` på `#f1e2e8` — **6,7:1** | `#e8b4c8` på `#3a1f2b` — **8,4:1** |
 | `info` (nøytral, = dempet tint) | `onInfoSoft` / `infoSoft` | `#3d4951` på `#efeaf0` — **7,8:1** | `#e6e9ee` på `#2a2430` — **12,4:1** |
-| `ai` — maskinen (periwinkle-tint, eneste blå i Sign) | `onAiSoft` / `aiSoft` | `#35569f` på `#e2eafa` — **5,8:1** | `#a9c1f2` på `#1b2026` — **9,1:1** |
+| `ai` — maskinen (kald tar-tint, = markeringen) | `onAiSoft` / `aiSoft` | `#3d4951` på `#e6eef6` — **7,9:1** | `#e6e9ee` på `#1a222b` — **13,2:1** |
 | `success` — fullført (lime 30 %) | `onSuccessSoft` / `successSoft` | `#4f6a1f` på `#ecf3ce` — **5,4:1** | `#c9dd75` på `#26300f` — **9,3:1** |
 | `inflight` — underveis (kopper-tint) | `onInflightSoft` / `inflightSoft` | `#7c5322` på `#f3e6d8` — **5,5:1** | `#dfb073` på `#33260f` — **7,4:1** |
 | `neutral` (myk flate, sekundærtekst) | `textSecondary` / `surfaceSoft` | `#5f6970` på `#f5f5f7` — **5,2:1** | `#98a2ab` på `#080b0e` — **7,6:1** |
