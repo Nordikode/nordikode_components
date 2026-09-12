@@ -8,7 +8,7 @@ import type { NkProductTheme } from '../types'
 //   plum        #2f1220  andre blekk: overskrifter og titler
 //   berry       #aa4c6e  handling i lys modus (knapper, lenker, aktiv fane)
 //   light berry #dc7499  merket (Sign-logoen) og handling i mørk modus
-//   periwinkle  #90afed  maskinen: AI-tinten (aiSoft) — eneste blå i Sign (SIGN-679)
+//   (periwinkle #90afed er Nordikodes blå og brukes ikke i Sign — SIGN-750)
 //   lime        #bfd75b  fullført-familien (vunnet, bud mottatt, fortjeneste)
 //   gold        #cca427  venter på noen (venter på kundesvar, ny sak, meldingsvarsler)
 //   mauve       #b19eb4  dempet (kategorier, tagger, utkast)
@@ -19,8 +19,12 @@ import type { NkProductTheme } from '../types'
 // Verdier merket «avledet» finnes ikke som egen palettfarge.
 //
 // SIGN-679 (2026-09-10): blått er Nordikodes farge (logoen, platformTheme), så
-// Sign eier berry alene; `info` er nøytral grå med dempet tint. Periwinkle står
-// igjen ett sted: AI-tinten (aiSoft) — «maskinen snakker».
+// Sign eier berry alene; `info` er nøytral grå med dempet tint.
+//
+// SIGN-750 (2026-09-12): periwinkle er helt ute av Sign. AI-tinten (aiSoft,
+// «maskinen snakker») er den samme kalde tar-tinten som markeringen
+// (surfaceSoftAccent) med tar-tekst; det som skiller maskinens flater fra en
+// valgt rad er «AI»-merket, ikke fargen. Blått finnes bare i platformTheme.
 //
 // SIGN-690 (2026-09-10, laben «Berry-dose og markering»): berry kun på handling.
 // Knapper og lenker er berry; alt som bare viser noe er nøytralt: rammen (aktiv
@@ -75,8 +79,8 @@ export const signTheme: NkProductTheme = {
     onPrimarySoft: '#7a374f', // avledet — 6,8:1 på primarySoft
     infoSoft: '#efeaf0', // = mutedSoft: info er nøytral, ikke maskinen
     onInfoSoft: '#3d4951', // avledet: tar 80 % — 7,8:1 på infoSoft
-    aiSoft: '#e2eafa', // maskinen = periwinkle 26 % — eneste blå i Sign (SIGN-679)
-    onAiSoft: '#35569f',
+    aiSoft: '#e6eef6', // maskinen = kald tar-tint (= surfaceSoftAccent) — ingen periwinkle i Sign (SIGN-750)
+    onAiSoft: '#3d4951', // avledet: tar 80 % — 7,9:1 på aiSoft
     successSoft: '#ecf3ce', // lime 30 %
     onSuccessSoft: '#4f6a1f', // avledet — 5,4:1 på successSoft
     inflightSoft: '#f3e6d8', // kopper-tint beholdt (underveis)
@@ -141,8 +145,8 @@ export const signTheme: NkProductTheme = {
     onPrimarySoft: '#e8b4c8', // 8,9:1
     infoSoft: '#2a2430', // = mutedSoft (mørk): info er nøytral
     onInfoSoft: '#e6e9ee', // 12,4:1
-    aiSoft: '#1b2026', // maskinen: grå-svart flate med periwinkle tekst — eneste blå i Sign
-    onAiSoft: '#a9c1f2',
+    aiSoft: '#1a222b', // maskinen: kald grå-svart flate (= surfaceSoftAccent) — ingen periwinkle i Sign (SIGN-750)
+    onAiSoft: '#e6e9ee', // = textPrimary (mørk) — 13,2:1 på aiSoft
     successSoft: '#26300f', // lime dyp
     onSuccessSoft: '#c9dd75',
     inflightSoft: '#33260f', // kopper dyp beholdt
