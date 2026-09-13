@@ -352,8 +352,11 @@ const drawerItems = computed(() =>
   /* Kun standard-egenskapen: LightningCSS slår sammen prefikset+uprefikset
      og lar siste vinne — en manuell -webkit-linje ville strippet denne. */
   backdrop-filter: saturate(180%) blur(20px);
-  /* Siste vern (SIGN-537): headeren skal aldri gi siden horisontal scroll. */
-  overflow-x: clip;
+  /* Ingen overflow-klipping her (SIGN-754): menypanelene er absolutt-
+     posisjonerte etterkommere, og WebKit klipper også y-aksen ved
+     `overflow-x: clip` (Apple-forum 745729) — på iPhone forsvant alle
+     menyene. Horisontal-vernet fra SIGN-537 er flex-reglene under
+     (merkevaren krymper, menyraden ikke), ikke overflow. */
 }
 
 .nk-header__inner {
