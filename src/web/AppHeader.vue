@@ -714,6 +714,38 @@ html {
   background: var(--color-surface-raised);
 }
 
+/* Mobil (SIGN-756): menypanelene forankres til headeren, ikke til sin egen
+   knapp. Panelene er 16–22 rem brede og høyrejustert mot knappen; bjellen
+   og app-velgeren står et stykke inn fra høyre kant, så på 360–414 px
+   startet panelet utenfor skjermen til venstre. Under burger-bruddpunktet
+   gjøres menyrøttene uposisjonerte — nærmeste posisjonerte forelder er da
+   `.nk-header` (sticky), og panelene legger seg inntil skjermkanten under
+   headeren: høyrejusterte til høyre, firmapanelet til venstre. Uscopet
+   fordi menyene er slot-innhold. Dobbelklassen gir høyere spesifisitet enn
+   menyenes egne scopede regler (`.nk-tenant--block .nk-tenant__panel`). */
+@media (max-width: 639px) {
+  .nk-header .nk-account.nk-account,
+  .nk-header .nk-launcher.nk-launcher,
+  .nk-header .nk-bell.nk-bell,
+  .nk-header .nk-tenant.nk-tenant {
+    position: static;
+  }
+
+  .nk-header .nk-account.nk-account .nk-account__panel,
+  .nk-header .nk-launcher.nk-launcher .nk-launcher__panel,
+  .nk-header .nk-bell.nk-bell .nk-bell__panel {
+    inset-inline-end: 0.5rem;
+    inset-inline-start: auto;
+    max-width: calc(100% - 1rem);
+  }
+
+  .nk-header .nk-tenant.nk-tenant .nk-tenant__panel {
+    inset-inline-start: 0.5rem;
+    inset-inline-end: auto;
+    max-width: calc(100% - 1rem);
+  }
+}
+
 .dark .nk-header__dropdown-link:hover,
 .dark .nk-header__dropdown-link:focus-visible,
 .dark .nk-header__drawer-link:hover,

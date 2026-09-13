@@ -3,6 +3,8 @@ import AppHeader from '../../web/AppHeader.vue'
 import ThemeToggle from '../../web/ThemeToggle.vue'
 import TenantSwitcherMenu from '../../web/TenantSwitcherMenu.vue'
 import AccountIdentityMenu from '../../web/AccountIdentityMenu.vue'
+import AppLauncherMenu from '../../web/AppLauncherMenu.vue'
+import NotificationBellMenu from '../../web/NotificationBellMenu.vue'
 
 /**
  * Verts-appen eier web-designtokenene; dekoratøren mapper dem fra `--nk-*`
@@ -386,6 +388,75 @@ export const SmalMobil: Story = {
             email="kari@example.com"
             :services="services"
             current-service-key="company"
+            :labels="accountLabels"
+          />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}
+
+/**
+ * Smal mobil med alle menyene (SIGN-756): under 640 px forankres panelene
+ * til headeren i stedet for knappen, så bjelle- og app-velgerpanelet ikke
+ * starter utenfor skjermen til venstre. Rammen markerer 360 px-viewporten
+ * uten å klippe (panelene skal holde seg innenfor den).
+ */
+export const SmalMobilAlleMenyer: Story = {
+  name: 'Smal mobil (360 px) – alle menyene',
+  args: { labels, nav, currentPath: '/produkter' },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+  decorators: [
+    () => ({
+      template: `<div style="width: 360px; max-width: 100%; min-height: 520px; outline: 1px dashed #c00;"><story /></div>`,
+    }),
+  ],
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu, AppLauncherMenu, NotificationBellMenu },
+    setup: () => ({
+      args,
+      toggleLabels,
+      tenants: [
+        { id: 't-1', name: 'Håndverkspartner Sørvest AS', logoUrl: demoLogo },
+        { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
+      ],
+      tenantLabels,
+      accountLabels,
+      services,
+      apps: [
+        { key: 'sign', label: 'Sign', url: '#', group: 'products' },
+        { key: 'time', label: 'Time', url: '#', group: 'products' },
+        { key: 'website', label: 'Nettsiden', url: '#', group: 'services' },
+        { key: 'developer', label: 'Utvikler', url: '#', group: 'services' },
+      ],
+      groupLabels: { products: 'Produkter', services: 'Tjenester' },
+      bellLabels: {
+        menu: 'Varsler',
+        menuWithUnread: 'Varsler, {count} uleste',
+        title: 'Varsler',
+        empty: 'Ingen varsler ennå.',
+        markAllRead: 'Merk alle som lest',
+        unread: 'ulest',
+      },
+      notifications: [
+        { id: '1', title: 'Kunden har akseptert tilbudet i «Bad Bergen»', timeLabel: '2 min siden', read: false },
+        { id: '2', title: 'Ola Nordmann har sendt en melding i «Kjøkken Voss»', body: 'Kan dere komme tirsdag i stedet?', timeLabel: '1 t siden', read: false },
+      ],
+    }),
+    template: `
+      <AppHeader v-bind="args">
+        <template #tenant>
+          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" />
+        </template>
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <NotificationBellMenu :items="notifications" :unread-count="2" :labels="bellLabels" />
+          <AppLauncherMenu :apps="apps" :group-labels="groupLabels" label="Nordikode-apper" />
+          <AccountIdentityMenu
+            name="Kari Nordmann"
+            email="kari@example.com"
+            :services="services"
+            current-service-key="account"
             :labels="accountLabels"
           />
         </template>
