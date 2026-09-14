@@ -20,6 +20,7 @@ export { default as ThemeToggle } from './ThemeToggle.vue'
 export { default as NotificationBellMenu } from './NotificationBellMenu.vue'
 export { default as NkSignedOutDialog } from './NkSignedOutDialog.vue'
 export { useTheme } from './useTheme'
+export { setEnvironmentLabel, useEnvironmentLabel } from './environmentLabel'
 
 export type { AppLauncherItem } from './AppLauncherMenu.vue'
 export type { AccountMenuService, AccountMenuLabels } from './AccountIdentityMenu.vue'

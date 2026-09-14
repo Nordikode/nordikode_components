@@ -135,6 +135,14 @@ export function useTheme(): {
   applyPreference: (preference: ThemePreference) => void
 }
 
+/**
+ * Miljømerket (SIGN-773): kort tekst («BETA») som `BrandWordmark` — og dermed
+ * `AppHeader` og innloggingssidene — tegner inntil logoen. Settes én gang av
+ * appen fra env; tom = ingen merke (prod).
+ */
+export declare function setEnvironmentLabel(label: string | null | undefined): void
+export declare function useEnvironmentLabel(): import('vue').Ref<string>
+
 export const AppLauncherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const AccountIdentityMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const TenantSwitcherMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
