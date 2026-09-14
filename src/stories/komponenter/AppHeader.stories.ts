@@ -464,3 +464,56 @@ export const SmalMobilAlleMenyer: Story = {
     `,
   }),
 }
+
+/**
+ * Nettsidens oppsett på smal mobil (SIGN-757): standardvarianten av
+ * firmamenyen (avatar + chevron) i `#menus` sammen med app-velger og konto.
+ * Panelet skal ha flate (ramme, bakgrunn, skygge) og legge seg inntil høyre
+ * kant under headeren, på samme side som knappen.
+ */
+export const SmalMobilNettsidensFirmameny: Story = {
+  name: 'Smal mobil (360 px) – nettsidens firmameny',
+  args: { labels, nav, currentPath: '/produkter' },
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+  decorators: [
+    () => ({
+      template: `<div style="width: 360px; max-width: 100%; min-height: 520px; outline: 1px dashed #c00;"><story /></div>`,
+    }),
+  ],
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu, AppLauncherMenu },
+    setup: () => ({
+      args,
+      toggleLabels,
+      tenants: [
+        { id: 't-1', name: 'Byggmester Handeland AS', logoUrl: demoLogo },
+        { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
+      ],
+      personal: { id: 'personal', name: 'Personlig' },
+      tenantLabels,
+      accountLabels,
+      services,
+      apps: [
+        { key: 'sign', label: 'Sign', url: '#', group: 'products' },
+        { key: 'time', label: 'Time', url: '#', group: 'products' },
+      ],
+      groupLabels: { products: 'Produkter' },
+    }),
+    template: `
+      <AppHeader v-bind="args">
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <AppLauncherMenu :apps="apps" :group-labels="groupLabels" label="Nordikode-apper" />
+          <TenantSwitcherMenu :tenants="tenants" :personal="personal" selected-id="t-1" :labels="tenantLabels" />
+          <AccountIdentityMenu
+            name="Kari Nordmann"
+            email="kari@example.com"
+            :services="services"
+            current-service-key="website"
+            :labels="accountLabels"
+          />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}

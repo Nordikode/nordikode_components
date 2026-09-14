@@ -739,10 +739,18 @@ html {
     max-width: calc(100% - 1rem);
   }
 
+  /* Firmapanelet følger knappens side (SIGN-757): høyre for standardvarianten
+     i #menus (nettsiden) og for blokken med align="end" (Sign); venstre kun
+     for blokken i #tenant-sloten (align="start": Time, company). */
   .nk-header .nk-tenant.nk-tenant .nk-tenant__panel {
+    inset-inline-end: 0.5rem;
+    inset-inline-start: auto;
+    max-width: calc(100% - 1rem);
+  }
+
+  .nk-header .nk-tenant.nk-tenant--block:not(.nk-tenant--end) .nk-tenant__panel {
     inset-inline-start: 0.5rem;
     inset-inline-end: auto;
-    max-width: calc(100% - 1rem);
   }
 }
 
