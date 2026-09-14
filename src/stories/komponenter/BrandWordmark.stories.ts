@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import BrandWordmark from '../../web/BrandWordmark.vue'
+import { setEnvironmentLabel } from '../../web/environmentLabel'
 
 /**
  * Merkevarelogoen (SIGN-641): Nordikode (periwinkle) og Sign (berry), som hel
@@ -103,3 +104,22 @@ export const IHeaderstørrelse: Story = {
     `,
   }),
 }
+
+/**
+ * Miljømerket (SIGN-773): appene setter `setEnvironmentLabel('BETA')` fra env
+ * ved oppstart; tomt i prod. Merket følger logoen overalt — header,
+ * innloggingssider, vilkårssider.
+ */
+export const MedMiljomerke: Story = {
+  name: 'Med miljømerke (beta)',
+  render: (args) => ({
+    components: { BrandWordmark },
+    setup: () => {
+      setEnvironmentLabel('BETA')
+      return { args }
+    },
+    template: sideBySide('48px'),
+  }),
+  args: { brand: 'sign', variant: 'lockup' },
+}
+

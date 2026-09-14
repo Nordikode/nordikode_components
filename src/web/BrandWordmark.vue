@@ -12,6 +12,8 @@
  * Størrelse settes av verts-appen (f.eks. `class="h-7"` eller en height-stil)
  * — bildet skalerer proporsjonalt.
  */
+import { useEnvironmentLabel } from './environmentLabel'
+
 export type BrandKey = 'nordikode' | 'sign'
 export type BrandVariant = 'lockup' | 'stacked' | 'mark'
 
@@ -59,6 +61,9 @@ const assets: Record<BrandKey, Record<BrandVariant, { light: string; dark: strin
 }
 
 const defaultAlt: Record<BrandKey, string> = { nordikode: 'Nordikode', sign: 'Nordikode Sign' }
+
+// Miljømerket (SIGN-773) settes av verts-appen fra env; tomt i prod.
+const environmentLabel = useEnvironmentLabel()
 </script>
 
 <template>
@@ -74,6 +79,7 @@ const defaultAlt: Record<BrandKey, string> = { nordikode: 'Nordikode', sign: 'No
       alt=""
       aria-hidden="true"
     />
+    <span v-if="environmentLabel" class="nk-brand__env" :data-env="environmentLabel">{{ environmentLabel }}</span>
   </span>
 </template>
 
@@ -81,6 +87,7 @@ const defaultAlt: Record<BrandKey, string> = { nordikode: 'Nordikode', sign: 'No
 /* Høyden settes av verts-appen (f.eks. `class="h-7"`); bildet følger den. */
 .nk-brand {
   display: inline-flex;
+  align-items: flex-start;
 }
 
 .nk-brand__img {
@@ -93,6 +100,26 @@ const defaultAlt: Record<BrandKey, string> = { nordikode: 'Nordikode', sign: 'No
 
 .nk-brand__img--dark {
   display: none;
+}
+
+/* Miljømerket: en liten, høykontrast chip i attention-fargen fra tokenene,
+   plassert øverst inntil logoen. Fast liten skrift så den ser lik ut i
+   headeren (logo ~28 px) og på innloggingssidene (logo ~48 px). */
+.nk-brand__env {
+  align-self: flex-start;
+  margin-left: 0.4rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: var(--nk-attention);
+  color: var(--nk-on-attention);
+  font-family: var(--nk-font-family, inherit);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
 }
 </style>
 
