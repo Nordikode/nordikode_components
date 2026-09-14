@@ -515,6 +515,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   transform: rotate(180deg);
 }
 
+/* Flaten (ramme, bakgrunn, skygge) gjelder alle varianter — SIGN-561 flyttet
+   den ved et uhell inn i blokkvarianten, så standardvarianten (nettsiden)
+   rendret panelet som løs tekst (SIGN-757). */
 .nk-tenant__panel {
   position: absolute;
   inset-inline-end: 0;
@@ -523,13 +526,6 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   margin-top: 0.5rem;
   width: 16rem;
   transform-origin: top right;
-}
-
-/* Panelet henger under blokken, venstrejustert som blokken selv (`align="start"`). */
-.nk-tenant--block .nk-tenant__panel {
-  inset-inline-end: auto;
-  inset-inline-start: 0;
-  transform-origin: top left;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-standard);
   background: var(--color-surface-raised);
@@ -537,6 +533,13 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   box-shadow:
     0 10px 15px -3px rgb(0 0 0 / 0.1),
     0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Panelet henger under blokken, venstrejustert som blokken selv (`align="start"`). */
+.nk-tenant--block .nk-tenant__panel {
+  inset-inline-end: auto;
+  inset-inline-start: 0;
+  transform-origin: top left;
 }
 
 /* Blokken ved høyre kant (`align="end"`, SIGN-683): panelet høyrejustert,
