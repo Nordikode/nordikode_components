@@ -7,7 +7,7 @@ import type { NkProductTheme } from '../types'
 //   tar         #0d1c26  blekk (løpende tekst) og mørk flate (bånd, løftet panel)
 //   plum        #2f1220  andre blekk: overskrifter og titler
 //   berry       #aa4c6e  handling i lys modus (knapper, lenker) og railen (SIGN-752)
-//   light berry #dc7499  merket (Sign-logoen) og handling i mørk modus
+//   light berry #dc7499  handling i mørk modus, og Sign-merket på mørk flate (på lys flate er merket berry — SIGN-763)
 //   (periwinkle #90afed er Nordikodes blå og brukes ikke i Sign — SIGN-750)
 //   lime        #bfd75b  fullført-familien (vunnet, bud mottatt, fortjeneste)
 //   gold        #cca427  venter på noen (venter på kundesvar, ny sak, meldingsvarsler)
