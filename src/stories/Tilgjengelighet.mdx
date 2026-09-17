@@ -160,12 +160,90 @@ holdt AA.
 - Storyen «Design system/Tokens/Farger» viser hvert on-par oppå sin basisfarge,
   så paret kan leses direkte i valgt produkt og modus.
 
-## Kjente hull (fra design-auditen 2026-08-18)
+## Gjennomgangen (axe) og hva som er fikset (SIGN-21)
 
-- Fokusmarkering er ikke gjennomgått systematisk i noen av appene.
-- Ikonknapper i rails/toppheadere må verifiseres for aria-labels.
-- Full a11y-gjennomgang (axe) av appene er ikke gjort ennå — egen task når
-  design systemet ruller ut.
-- Time og backoffice har avledede verdier for de nye rollene (`frame`,
-  `mutedSoft`, `textTitle`) til de adopterer paletten; kontrasten der er ikke
-  målt i denne tabellen.
+Design-auditen 2026-08-18 pekte på fire hull. Den fulle a11y-gjennomgangen
+ble gjort **19.08.2026** med axe på alle fire frontendene — sign-web (inkludert
+kunde- og UE-portalen), time-web, portal (siden avviklet, SIGN-248) og
+backoffice — 52 sider pluss en tastaturprobe. Funnene ligger på SIGN-21.
+
+De kritiske og høye avvikene ble utbedret 05.–17.09.2026:
+
+- toaster annonseres for skjermleser,
+- filterchips kan betjenes med tastatur,
+- ikonknapper i rails og toppheadere har navn (`aria-label`) — verifisert
+  og fikset,
+- fokusmarkering er gjennomgått (regelen under),
+- skip-lenke til hovedinnholdet, `<html lang>` satt og sidetitler per rute,
+- felt som bare hadde placeholder har fått `aria-label`.
+
+## Fokusmarkering
+
+Regelen etter gjennomgangen: **`outline: none` er bare lov når samme regel
+gir en synlig erstatning** — en `:focus-visible`-ring, en `box-shadow` eller
+en bakgrunnsendring som holder 3:1 mot omgivelsene. En regel som fjerner
+outline uten å legge noe i stedet, er et brudd på WCAG 2.4.7, ikke en stil.
+
+Anbefalt ringmønster (brukt i intake i Sign, `intake.css`, og på
+skip-lenken i `App.vue`):
+
+```css
+.knapp:focus-visible {
+  outline: 3px solid var(--nk-color-primary-light);
+  outline-offset: 2px; /* 3–4px på runde flater, -4px innenfor en fylt flate */
+}
+```
+
+- Ringen bruker en token (`--nk-color-primary-light`, `rgb(var(--v-theme-on-primary))`
+  på fylt primærflate, `--color-*` på Tailwind-siden), aldri en hex.
+- `outline-offset` tilpasses formen: 2px på piller, 3–4px på runde knapper,
+  negativ når ringen skal ligge innenfor en fylt flate (skip-lenken).
+- Bare `:focus-visible`, aldri `:focus` — musebrukere skal ikke få ringen.
+- Menyelementene i `AppHeader`/`AccountIdentityMenu`/`TenantSwitcherMenu`/
+  `NotificationBellMenu`/`AppLauncherMenu` her i biblioteket setter
+  `outline: none` og gir hover-bakgrunnen (`--color-surface-alt`) på
+  `:focus-visible` i samme komponent — det er den synlige erstatningen.
+  Vuetify-komponentene beholder sin egen fokusstil.
+
+## Automatisk sjekk i CI
+
+Alle frontend-repoene kjører `scripts/check-a11y.mjs` (SIGN-21) — ESLint over
+alle Vue-filer med det anbefalte regelsettet fra
+`eslint-plugin-vuejs-accessibility` (`form-control-has-label`,
+`click-events-have-key-events`, `no-static-element-interactions`, `alt-text`,
+`aria-props`, `aria-role`, `role-has-required-aria-props`, `label-has-for`
+med nesting *eller* `for`/`id`, `no-autofocus`, `tabindex-no-positive`,
+`media-has-caption`, `mouse-events-have-key-events`, `heading-has-content`,
+`anchor-has-content`, `iframe-has-title`, `interactive-supports-focus`).
+
+Sjekken er en **ratchet** mot `scripts/a11y-baseline.json`, ikke «null feil»:
+
+- flere brudd enn baselinen (per fil/regel eller per regel totalt) stopper CI
+  med liste over hvor de nye er;
+- færre brudd gir grønt og beskjed om å stramme baselinen
+  (`node scripts/check-a11y.mjs --update-baseline`) — terskelen går bare én vei;
+- ingen baseline skrives ved første kjøring.
+
+Kilden er `nordikode_dev/frontend/scripts/check-a11y.mjs`; kopien i hver app
+legges ut av `pull-a11y-check.mjs`, så rediger aldri kopien.
+
+## Gjenstående hull
+
+- Time og backoffice har avledede verdier for rollene `frame`, `mutedSoft`
+  og `textTitle` til de adopterer paletten; kontrasten der er ikke målt i
+  tabellene over.
+- Ingen felles dialog-wrapper med `aria-labelledby`: over hundre rå
+  `v-dialog` på tvers av appene (105 ved tellingen i SIGN-21) gir dialogen
+  navn hver for seg eller ikke i det hele tatt — egen task under SIGN-22.
+- Touch-target-størrelser (24×24, helst 44×44) er ikke verifisert per
+  komponent.
+- `no-autofocus`-brudd ligger bevisst i baselinen: dialoger setter fokus i
+  første felt med vilje. De skal ikke fikses, og baselinen holder dem.
+
+## Tilgjengelighetserklæringen
+
+nordikode.com har en tilgjengelighetserklæring som systemside i fem språk
+(`/{market}/tilgjengelighet`, `/accessibility`, `/tillganglighet`,
+`/accessibilite`, `/dostepnosc`; SIGN-21). Erklæringen bygger på denne siden:
+endres status, gjenstående hull eller CI-gaten her, skal erklæringen
+oppdateres i samme leveranse.
