@@ -20,6 +20,16 @@ flatene bruker `AppHeader` med de delte menyene.
   `title`, `description` og `actions`-slot; `size` `default` (primær-tonet ikonsirkel,
   hele flater/paneler) eller `compact` (dempet sirkel, «ingen treff» etter søk/filter).
   All tekst og alle handlinger kommer fra appen
+- `NkSheet` — det delte dialogskallet (SIGN-733): `v-dialog` + kort med hode
+  (`title`, `subtitle`, `#badge`, eller hele hodet i `#head`), rullende kropp
+  (`default`) og festet handlingsrad (`#actions`). Bare kroppen ruller; den har
+  luft nok til Vuetifys flytende etiketter og fokusrammer, så ingenting klippes
+  ved rulleposisjon 0. Under `smAndDown` er sheetet fullskjerm med safe-area
+  på handlingsraden (`fullscreenOnMobile`, standard på). Åpen/lukket via
+  `v-model` eller `open` + `close`; `maxWidth` (standard 560) og `eager`
+  sendes til dialogen. Sekundær handling til venstre: `class="me-auto"` på
+  knappen. Erstatter app-kopiene av `.nk-sheet*`-CSS-en — konsumentene har
+  ingen egen dialog-CSS; navnet på konsumentens komponent er fortsatt `*Dialog`
 - `NkStatusChip` — statuschip med to størrelser (`sm`/`md`) og seks semantiske
   toner (`success`/`inflight`/`warning`/`error`/`info`/`neutral`) fra soft-tokenparene;
   teksten kommer alltid fra appens i18n
