@@ -1,5 +1,6 @@
 export { default as IdentityAvatar } from './components/IdentityAvatar.vue'
 export { default as NkEmptyState } from './components/NkEmptyState.vue'
+export { default as NkSheet } from './components/NkSheet.vue'
 export { default as NkStatusChip } from './components/NkStatusChip.vue'
 export { default as PhoneNumberInput } from './components/PhoneNumberInput.vue'
 

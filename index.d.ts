@@ -11,6 +11,13 @@ export type NkEmptyStateSize = 'default' | 'compact'
 
 export const IdentityAvatar: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkEmptyState: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkSheet (SIGN-733): det delte dialogskallet — hode, rullende kropp og festet
+ * handlingsrad, fullskjerm under `smAndDown`. Props: `modelValue`/`open`, `title`,
+ * `subtitle`, `maxWidth`, `fullscreenOnMobile`, `eager`; slots `default`, `actions`,
+ * `head`, `badge`; emits `update:modelValue` og `close`.
+ */
+export const NkSheet: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkStatusChip: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PhoneNumberInput: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 
