@@ -62,3 +62,43 @@ export const Valg: Story = {
     label: 'Innstillinger',
   },
 }
+
+const groupedItems = [
+  { key: 'intake', label: 'Intake', href: '#intake', icon: mdiDomain, group: 'inn' },
+  { key: 'kontaktskjema', label: 'Kontaktskjema', href: '#kontaktskjema', icon: mdiAccountMultipleOutline, group: 'inn' },
+  { key: 'sakstyper', label: 'Sakstyper', href: '#sakstyper', icon: mdiSitemapOutline, group: 'inn' },
+  { key: 'tilbud', label: 'Tilbud', href: '#tilbud', icon: mdiShieldAccountOutline, group: 'tilbud' },
+  { key: 'underleverandorer', label: 'Underleverandører', href: '#underleverandorer', icon: mdiAccountMultipleOutline, group: 'tilbud' },
+  { key: 'varslinger', label: 'Varslinger', href: '#varslinger', icon: mdiDomain, badge: 2, group: 'firma' },
+  { key: 'utvidelser', label: 'Utvidelser', href: '#utvidelser', icon: mdiPuzzleOutline, group: 'firma' },
+]
+
+/** `layout="side"`: alltid sidemeny, med luft mellom gruppene (Sign-innstillingene, SIGN-417). */
+export const FastSidemeny: Story = {
+  args: { items: groupedItems, activeKey: 'intake', label: 'Innstillinger', layout: 'side' },
+  render: (args) => ({
+    components: { SectionNav },
+    setup: () => ({ args }),
+    template: `
+      <div style="display:flex; gap:2rem; align-items:flex-start;">
+        <SectionNav v-bind="args" />
+        <div style="flex:1; min-width:0; padding:1rem; border:1px dashed var(--color-line); border-radius: var(--radius-compact); color: var(--color-ink-secondary)">Innholdet i valgt seksjon</div>
+      </div>
+    `,
+  }),
+}
+
+/** `layout="list"`: menyen som egen skjerm på telefon — ett kort per gruppe, pil på hver rad. */
+export const Liste: Story = {
+  args: { items: groupedItems, activeKey: null, label: 'Innstillinger', layout: 'list' },
+  render: (args) => ({
+    components: { SectionNav },
+    setup: () => ({ args }),
+    template: `<div style="max-width: 24rem"><SectionNav v-bind="args" /></div>`,
+  }),
+}
+
+/** `layout="tabs"`: alltid fanerad, uansett bredde. */
+export const Fanerad: Story = {
+  args: { items: groupedItems, activeKey: 'tilbud', label: 'Innstillinger', layout: 'tabs' },
+}

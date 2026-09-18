@@ -30,7 +30,7 @@ export type { AppHeaderNavItem, AppHeaderNavChild, AppHeaderLabels } from './App
 export type { ProductSymbolKey } from './ProductSymbol.vue'
 export type { BrandKey, BrandVariant } from './BrandWordmark.vue'
 export type { PageHeaderBack } from './PageHeader.vue'
-export type { SectionNavItem } from './SectionNav.vue'
+export type { SectionNavItem, SectionNavLayout } from './SectionNav.vue'
 export type { ThemeToggleLabels } from './ThemeToggle.vue'
 export type { NotificationBellItem, NotificationBellLabels } from './NotificationBellMenu.vue'
 export type { NkSignedOutDialogLabels, NkSignedOutReason } from './NkSignedOutDialog.vue'
