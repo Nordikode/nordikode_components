@@ -92,7 +92,12 @@ export type SectionNavItem = {
   href?: string
   icon?: string
   badge?: number | null
+  /** Gruppenøkkel: punkter med samme gruppe står sammen (SIGN-417). */
+  group?: string
 }
+
+/** Formen på seksjonsnavigasjonen: `auto` bytter selv på 1280px; resten er faste (SIGN-417). */
+export type SectionNavLayout = 'auto' | 'side' | 'tabs' | 'list'
 
 export type ThemeToggleLabels = {
   toLight: string
