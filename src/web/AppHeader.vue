@@ -24,7 +24,11 @@
  * sammen ved høyre kant, og `#tenant` står tom.
  *
  * Tema: verts-appens web-designtokens (`--color-*`, `--radius-*`) og
- * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
+ * aksentkontrakten (SIGN-904): `--nk-chrome-accent` er aksentfargen (fylte
+ * flater, 12 %-tinter, ulest-prikk), `--nk-chrome-accent-ink` er aksenten
+ * brukt som tekst/ikon på lys tint (menyene — verts-appene setter den lik
+ * aksenten), og `--nk-chrome-on-accent` er teksten på en fylt aksentflate
+ * (knappen i NkSignedOutDialog). Aldri bruk `-ink` på fylt aksent.
  * z-index styres av `--nk-chrome-z`: pakka setter 50 på `html` (uscopet
  * blokk under), verts-appen overstyrer på `:root`. Ikke stol på fallbacken i
  * `var()` alene — i Chrome 152 ble den til 0, og innhold med `z-index: 0`

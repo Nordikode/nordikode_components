@@ -9,7 +9,10 @@
  * Kan ikke lukkes av brukeren (ingen lukkeknapp, Escape gjør ingenting):
  * det finnes ingen meningsfull tilstand «uinnlogget, men fortsett».
  * Vuetify-fri, styles mot web-tokenene (`--color-*`, `--radius-*`) og
- * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
+ * aksentkontrakten: `--nk-chrome-accent` fyller knappen og tinter ikonet,
+ * `--nk-chrome-on-accent` er teksten på den fylte knappen (SIGN-904).
+ * `--nk-chrome-accent-ink` brukes IKKE her — den er aksenten som tekst på
+ * lys tint (menyene), og verts-appene setter den lik aksenten selv.
  * Etikettene kommer som props: pakka er i18n-fri, verts-appen eier språket.
  * z-index: `--nk-overlay-z` (default 60 — over headeren (50) og toasts).
  */
@@ -199,7 +202,7 @@ onBeforeUnmount(() => {
   border: 0;
   border-radius: var(--radius-compact);
   background: var(--nk-chrome-accent, var(--color-ink));
-  color: var(--nk-chrome-accent-ink, var(--color-surface));
+  color: var(--nk-chrome-on-accent, var(--color-surface));
   font: inherit;
   font-size: 0.9375rem;
   font-weight: 600;

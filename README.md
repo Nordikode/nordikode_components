@@ -57,7 +57,8 @@ and for the product apps' chrome (Sign, Time use the same `AppHeader` and
 menus, SIGN-442) — no Vuetify anywhere in its import graph, styled with plain scoped CSS against
 the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 `--color-line`, `--radius-*`) plus the accent contract `--nk-chrome-accent` /
-`--nk-chrome-accent-ink`, which the host app sets from its own theme.
+`--nk-chrome-accent-ink` / `--nk-chrome-on-accent`, which the host app sets
+from its own theme (see below).
 
 - `AppHeader` — the header shell itself: sticky 3.25rem bar with blur, brand
   (the full brand logo via `brand="nordikode" | "sign"` (SIGN-641), plus
@@ -145,10 +146,22 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
   (`title`, `revoked`, `expired`, `signInAgain`, `waiting`); z-index from
   `--nk-overlay-z` (default 60).
 
-The accent contract is mandatory in both themes: hosts must define both
-`--nk-chrome-accent` and `--nk-chrome-accent-ink` in light mode *and* in
-`.dark` — overriding only one of them in dark mode makes the chrome pick up
-mismatched colors.
+The accent contract has three variables, and they mean different things
+(SIGN-904):
+
+- `--nk-chrome-accent` — the accent color itself: filled surfaces, 12 % tints,
+  the unread dot, focus rings.
+- `--nk-chrome-accent-ink` — the accent used *as text or icon on a light
+  tint* (active company, selected app, section nav). Hosts set it to the
+  accent color; it is never text on a filled accent.
+- `--nk-chrome-on-accent` — text on a *filled* accent surface (the button in
+  `NkSignedOutDialog`). Hosts set it to their on-primary token
+  (`--nk-on-action-primary` in the product apps); the fallback is
+  `--color-surface`.
+
+The contract is mandatory in both themes: hosts must define all three in light
+mode *and* in `.dark` — overriding only some of them in dark mode makes the
+chrome pick up mismatched colors.
 
 Import styles once (`@nordikode/components/style.css`) — it carries the scoped
 CSS for these components too.

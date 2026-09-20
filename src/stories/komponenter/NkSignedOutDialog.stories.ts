@@ -1,19 +1,25 @@
+import { onBeforeUnmount, onMounted } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import NkSignedOutDialog from '../../web/NkSignedOutDialog.vue'
 
-const webTokens = [
-  '--color-surface: #ffffff',
-  '--color-surface-alt: #f5f7f9',
-  '--color-surface-raised: #ffffff',
-  '--color-ink: #1d1d1f',
-  '--color-ink-secondary: #52525b',
-  '--color-ink-tertiary: #71717a',
-  '--color-line: #e4e4e7',
-  '--radius-standard: 1rem',
-  '--radius-compact: 0.5rem',
-  '--nk-chrome-accent: #0f766e',
-  '--nk-chrome-accent-ink: #ffffff',
-].join(';')
+// Web-kontrakten mappet fra produkt-tokenene slik Sign gjør det i style.css
+// (SIGN-442/679/904) — ingen hexverdier, og Modus-velgeren flipper begge temaer.
+// Merk: `-ink` er aksenten selv (tekst på lys tint), teksten på fylt aksent er
+// `--nk-chrome-on-accent`. Å sette `-ink` på knappen ga berry på berry (SIGN-904).
+const webTokens: Record<string, string> = {
+  '--color-surface': 'var(--nk-surface)',
+  '--color-surface-alt': 'var(--nk-surface-soft)',
+  '--color-surface-raised': 'var(--nk-surface)',
+  '--color-ink': 'var(--nk-text-primary)',
+  '--color-ink-secondary': 'var(--nk-text-secondary)',
+  '--color-ink-tertiary': 'var(--nk-text-secondary)',
+  '--color-line': 'var(--nk-surface-border)',
+  '--radius-standard': 'var(--nk-radius-lg)',
+  '--radius-compact': 'var(--nk-radius-sm)',
+  '--nk-chrome-accent': 'var(--nk-link)',
+  '--nk-chrome-accent-ink': 'var(--nk-link)',
+  '--nk-chrome-on-accent': 'var(--nk-on-action-primary)',
+}
 
 const labels = {
   title: 'Du er logget ut',
@@ -28,7 +34,18 @@ const meta: Meta<typeof NkSignedOutDialog> = {
   component: NkSignedOutDialog,
   decorators: [
     () => ({
-      template: `<div style="min-height: 24rem; padding: 1rem; ${webTokens}">
+      // Overlegget teleporteres til <body>, så kontrakten må stå på :root
+      // — slik verts-appene setter den — ikke på en wrapper rundt historien.
+      setup() {
+        const root = document.documentElement.style
+        onMounted(() => {
+          for (const [name, value] of Object.entries(webTokens)) root.setProperty(name, value)
+        })
+        onBeforeUnmount(() => {
+          for (const name of Object.keys(webTokens)) root.removeProperty(name)
+        })
+      },
+      template: `<div style="min-height: 24rem; padding: 1rem;">
         <p>Skjermbildet bak overlegget: ulagret skjematilstand beholdes.</p>
         <story />
       </div>`,
