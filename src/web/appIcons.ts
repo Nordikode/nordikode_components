@@ -17,6 +17,7 @@ export type WebAppIconName =
   | 'developer'
   | 'admin'
   | 'review'
+  | 'expo'
 
 export const webAppIcons: Record<WebAppIconName, string[]> = {
   sign: ['m14.5 5 4.5 4.5L8.5 20H4v-4.5L14.5 5Z', 'm12.5 7 4.5 4.5'],
@@ -45,6 +46,8 @@ export const webAppIcons: Record<WebAppIconName, string[]> = {
     'M12.5 6H16a2 2 0 0 1 2 2v7.75',
     'M18 20.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z',
   ],
+  // Messe-appen (SIGN-898): en standflagg-vimpel på stang.
+  expo: ['M6 20.5V3.75', 'M6 4.5h12.5l-3 4 3 4H6', 'M4 20.5h4'],
 }
 
 /** Ukjent app-nøkkel (nye apper før registeret er oppdatert). */
