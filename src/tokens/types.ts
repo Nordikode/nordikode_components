@@ -30,6 +30,24 @@ export interface NkScheme {
   /** Positiv aksent (økonomi o.l.) på invers flate. */
   onSurfaceInverseAccent: string
 
+  /**
+   * Løftet panel (SIGN-968): ett mørkt, heldekkende kort som skal skille seg
+   * fra kortflaten uten å være tar-svart — Tilbudssammendraget. Lik verdi i
+   * begge moduser (blekket + 20 % hvitt), så kortet ser likt ut uansett tema.
+   * Rollene på panelet er egne fordi palettens rene farger (gold, light
+   * berry, sekundærtekst) ikke holder 4,5:1 på en mellomgrå flate.
+   */
+  surfacePanel: string
+  onSurfacePanel: string
+  /** Dempet tekst (etiketter) på panelet. */
+  onSurfacePanelMuted: string
+  /** Positiv aksent (fortjeneste, margin) på panelet. */
+  onSurfacePanelAccent: string
+  /** Varsel på panelet (gold lysnet). */
+  onSurfacePanelWarning: string
+  /** Lenke/handling på panelet (handlingsfargen lysnet). */
+  onSurfacePanelLink: string
+
   textPrimary: string
   textSecondary: string
   /** Andre blekk: overskrifter og titler (plum i Sign) — løpende tekst står i textPrimary. */

@@ -101,6 +101,20 @@ kalde tar-tinten, og «AI»-merket bærer betydningen.
 | Aksent (lime) på invers flate | `onSurfaceInverseAccent` / `surfaceInverse` | `#bfd75b` på `#0d1c26` — **10,8:1** | `#bfd75b` på `#161d25` — **10,6:1** |
 | Sterkt rail-ikon på rail | `railIconStrong` / `surfaceRail` | `#f6f2ea` på `#0d1c26` — **15,5:1** | `#f6f2ea` på `#020304` — **18,5:1** |
 
+### Løftet panel (SIGN-968 — Tilbudssammendraget)
+
+Panelet er tar + 20 % hvitt (`#3d4951`) i begge moduser. Palettens rene farger holder ikke på en mellomgrå flate (gold 3,9:1, light berry 3,1:1, `onSurfaceInverseMuted` 3,8:1), derfor har panelet egne roller.
+
+| Par | Tokens | Lys og mørk |
+| --- | --- | --- |
+| Tekst på panel | `onSurfacePanel` / `surfacePanel` | `#f6f2ea` på `#3d4951` — **8,3:1** |
+| Dempet tekst (etiketter) på panel | `onSurfacePanelMuted` / `surfacePanel` | `#b8c1c8` på `#3d4951` — **5,1:1** |
+| Aksent (lime) på panel | `onSurfacePanelAccent` / `surfacePanel` | `#bfd75b` på `#3d4951` — **5,8:1** |
+| Varsel på panel | `onSurfacePanelWarning` / `surfacePanel` | `#e0c65a` på `#3d4951` — **5,5:1** |
+| Lenke på panel | `onSurfacePanelLink` / `surfacePanel` | `#e8b4c8` på `#3d4951` — **5,2:1** |
+| Margin-sporet (grafikk, krav 3:1) | `color-mix(onSurfacePanel 24 %, surfacePanel)` | spor `#697276`: fyll lime mot spor **3,1:1**, fyll mot panel 5,8:1 |
+
+
 ### Plattformappene (Nordikode-paletten, SIGN-657)
 
 Company, account og developer bruker `platformTheme` (`src/tokens/products/platform.ts`):

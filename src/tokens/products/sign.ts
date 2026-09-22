@@ -57,6 +57,15 @@ export const signTheme: NkProductTheme = {
     onSurfaceInverse: '#f6f2ea', // 15,5:1 på inverse
     onSurfaceInverseMuted: '#9aa7ad', // avledet, 7,0:1 på inverse
     onSurfaceInverseAccent: '#bfd75b', // lime — 10,8:1 på inverse
+    // Løftet panel (SIGN-968, lab 22.09.2026: «M2»): tar + 20 % hvitt, lik i begge
+    // moduser — samme verdi som onAiSoft-teksten. Målt: krem 8,3:1, etikett 5,1:1,
+    // lime 5,8:1, gold lysnet 5,5:1 (ren gold 3,9), light berry lysnet 5,2:1 (ren 3,1).
+    surfacePanel: '#3d4951', // avledet: tar + 20 % hvitt
+    onSurfacePanel: '#f6f2ea', // krem — 8,3:1
+    onSurfacePanelMuted: '#b8c1c8', // avledet: tar-grå lysnet — 5,1:1
+    onSurfacePanelAccent: '#bfd75b', // lime — 5,8:1
+    onSurfacePanelWarning: '#e0c65a', // avledet: gold lysnet — 5,5:1
+    onSurfacePanelLink: '#e8b4c8', // avledet: light berry lysnet (= onPrimarySoft mørk) — 5,2:1
     textPrimary: '#0d1c26', // tar
     textSecondary: '#5f6970', // avledet: tar 66 % over hvit — 5,6:1
     textTitle: '#2f1220', // plum — 17:1
@@ -123,6 +132,15 @@ export const signTheme: NkProductTheme = {
     onSurfaceInverse: '#e6e9ee',
     onSurfaceInverseMuted: '#98a2ab',
     onSurfaceInverseAccent: '#bfd75b', // lime
+    // Løftet panel (SIGN-968, lab 22.09.2026: «M2»): tar + 20 % hvitt, lik i begge
+    // moduser — samme verdi som onAiSoft-teksten. Målt: krem 8,3:1, etikett 5,1:1,
+    // lime 5,8:1, gold lysnet 5,5:1 (ren gold 3,9), light berry lysnet 5,2:1 (ren 3,1).
+    surfacePanel: '#3d4951', // avledet: tar + 20 % hvitt
+    onSurfacePanel: '#f6f2ea', // krem — 8,3:1
+    onSurfacePanelMuted: '#b8c1c8', // avledet: tar-grå lysnet — 5,1:1
+    onSurfacePanelAccent: '#bfd75b', // lime — 5,8:1
+    onSurfacePanelWarning: '#e0c65a', // avledet: gold lysnet — 5,5:1
+    onSurfacePanelLink: '#e8b4c8', // avledet: light berry lysnet (= onPrimarySoft mørk) — 5,2:1
     textPrimary: '#e6e9ee',
     textSecondary: '#98a2ab', // 5,6:1 på kort
     textTitle: '#e9d3db', // plum lysnet — overskrifter på mørkt

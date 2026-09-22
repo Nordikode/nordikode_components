@@ -23,6 +23,12 @@ export const timeTheme: NkProductTheme = {
     onSurfaceInverse: '#f1e9dd', // avledet: = dark.textPrimary — 13,9:1 på inverse
     onSurfaceInverseMuted: '#b3a893', // avledet: = dark.textSecondary — 7,1:1
     onSurfaceInverseAccent: '#4cb583', // avledet: = dark.onSuccessSoft — 6,6:1
+    surfacePanel: '#565046', // avledet: textPrimary (lys) + 20 % hvitt — løftet panel (SIGN-968), lik i begge moduser
+    onSurfacePanel: '#f1e9dd', // avledet: = dark.textPrimary — 6,6:1 på panel
+    onSurfacePanelMuted: '#cac3b4', // avledet: dark.textSecondary lysnet — 4,6:1
+    onSurfacePanelAccent: '#92d1b3', // avledet: onSuccessSoft lysnet — 4,6:1
+    onSurfacePanelWarning: '#e0bf7b', // avledet: attention lysnet — 4,5:1
+    onSurfacePanelLink: '#ecbb87', // avledet: dark.link lysnet — 4,6:1
     textPrimary: '#2c2418',
     textSecondary: '#7d715f',
     textTitle: '#2c2418', // avledet: = textPrimary til produktet adopterer ny palett
@@ -82,6 +88,12 @@ export const timeTheme: NkProductTheme = {
     onSurfaceInverse: '#f1e9dd', // avledet: = textPrimary — 13,0:1 på inverse
     onSurfaceInverseMuted: '#b3a893', // avledet: = textSecondary — 6,7:1
     onSurfaceInverseAccent: '#4cb583', // avledet: = onSuccessSoft — 6,2:1
+    surfacePanel: '#565046', // avledet: textPrimary (lys) + 20 % hvitt — løftet panel (SIGN-968), lik i begge moduser
+    onSurfacePanel: '#f1e9dd', // avledet: = dark.textPrimary — 6,6:1 på panel
+    onSurfacePanelMuted: '#cac3b4', // avledet: dark.textSecondary lysnet — 4,6:1
+    onSurfacePanelAccent: '#92d1b3', // avledet: onSuccessSoft lysnet — 4,6:1
+    onSurfacePanelWarning: '#e0bf7b', // avledet: attention lysnet — 4,5:1
+    onSurfacePanelLink: '#ecbb87', // avledet: dark.link lysnet — 4,6:1
     textPrimary: '#f1e9dd',
     textSecondary: '#b3a893',
     textTitle: '#f1e9dd', // avledet: = textPrimary til produktet adopterer ny palett
