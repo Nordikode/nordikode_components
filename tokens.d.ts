@@ -19,6 +19,12 @@ export interface NkScheme {
   onSurfaceInverse: string
   onSurfaceInverseMuted: string
   onSurfaceInverseAccent: string
+  surfacePanel: string
+  onSurfacePanel: string
+  onSurfacePanelMuted: string
+  onSurfacePanelAccent: string
+  onSurfacePanelWarning: string
+  onSurfacePanelLink: string
   textPrimary: string
   textSecondary: string
   textTitle: string

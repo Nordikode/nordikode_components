@@ -6,7 +6,7 @@ import type { NkScheme } from '../../tokens'
 // Fargene leses live fra token-pakka for produktet/modusen valgt i toolbaren.
 
 const GROUPS: Array<{ title: string; keys: Array<keyof NkScheme> }> = [
-  { title: 'Flater', keys: ['page', 'surface', 'surfaceSoft', 'surfaceSoftAccent', 'surfaceRail', 'railStart', 'railEnd', 'surfaceInverse', 'onSurfaceInverse', 'onSurfaceInverseMuted', 'onSurfaceInverseAccent'] },
+  { title: 'Flater', keys: ['page', 'surface', 'surfaceSoft', 'surfaceSoftAccent', 'surfaceRail', 'railStart', 'railEnd', 'surfaceInverse', 'onSurfaceInverse', 'onSurfaceInverseMuted', 'onSurfaceInverseAccent', 'surfacePanel', 'onSurfacePanel', 'onSurfacePanelMuted', 'onSurfacePanelAccent', 'onSurfacePanelWarning', 'onSurfacePanelLink'] },
   { title: 'Tekst', keys: ['textPrimary', 'textSecondary', 'textTitle'] },
   { title: 'Handling og merkevare', keys: ['primary', 'primaryHover', 'primaryPress', 'onPrimary', 'link', 'linkHover', 'secondary', 'onSecondary', 'info', 'onInfo', 'attention', 'onAttention', 'frame', 'onFrame'] },
   { title: 'Status', keys: ['success', 'onSuccess', 'warning', 'onWarning', 'error', 'onError'] },
