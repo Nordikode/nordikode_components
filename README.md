@@ -249,6 +249,14 @@ Kanoniske CSS-variabelnavn: `--nk-page` (sidebakgrunn) og `--nk-surface`
 ting i ulike apper. Se `src/tokens/` for beslutningslogg (design-audit
 2026-08-18).
 
+Monospace: `--nk-font-mono` (`nkFontMono`, siden 0.57.0 — SIGN-1193) er fonten
+for tekst som leses tegn for tegn: ID-er, IP-adresser, koder, nøkler og JSON.
+Verdien er systemets egne fonter (`ui-monospace`, SF Mono, Menlo, Consolas,
+Liberation Mono), så ingenting lastes ned. Tokenet er bare fontfamilien;
+størrelse, vekt og farge arves. Bruk `font-family: var(--nk-font-mono)` — aldri
+en håndskrevet fontliste, og aldri en reserveverdi (`var(--nk-font-mono, …)`):
+variabelen genereres av `cssStaticVariables()`/`productCss()` og finnes alltid.
+
 Layout-token for flytende handlinger: `--nk-fab-reserve` (88px) er plassen
 bunnhandlinger til høyre (send, lagre) holder unna en flytende figur/FAB nede
 til høyre (SIGN-466). Bruk `padding-right: var(--nk-fab-reserve)` på raden.
