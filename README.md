@@ -45,6 +45,15 @@ flatene bruker `AppHeader` med de delte menyene.
   bes om eksplisitt med `maximumFractionDigits: 0`. Ingen app skal ha sin egen
   `Intl.NumberFormat(..., { style: 'currency' })`, `toFixed(2)` eller «kr»-tekst.
   Eksporteres også fra `@nordikode/components/web`.
+- `configureLocales(locales)` — fyller tabellen bak `toBcp47` fra språkregisteret
+  (core `platformLocales` / `schemas/locales.json`, SIGN-1157/1164): radene
+  `{ code, bcp47, aliases }` erstatter tabellen, så `toBcp47('de')` gir `de-DE`
+  den dagen registeret har språket — uten endring her. Dagens språk ligger inne
+  som startverdi og gjelder til funksjonen kalles; en tom liste setter tabellen
+  tilbake. i18n-motoren i `@nordikode/app-core` (`createNordikodeI18n`) kaller
+  den ved oppstart og når registeret hentes på nytt — appene kaller den ikke
+  selv. `SharedLocale` er `string`: hvilke språk som finnes, er data.
+  Eksporteres også fra `@nordikode/components/web`.
 
 `style.css` contains only this package's own component styles. Vuetify (JS and styles)
 and `libphonenumber-js` are externalized — the consuming app owns the Vuetify setup,
