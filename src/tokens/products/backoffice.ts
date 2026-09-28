@@ -53,6 +53,8 @@ export const backofficeTheme: NkProductTheme = {
     ...nkStatusLight,
     // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
+    // Statusteksten (success/warning/error) er mørkere enn statusfargen selv
+    // (SIGN-1158): statusfargen som tekst holdt ikke 4,5:1 på sin egen tint.
     primarySoft: '#f3e6e7',
     onPrimarySoft: '#9f2f3b',
     infoSoft: '#efe5e6', // avledet: 12 %-blend av info over surface (som de andre soft-flatene)
@@ -60,15 +62,15 @@ export const backofficeTheme: NkProductTheme = {
     aiSoft: '#efe5e6', // avledet: = infoSoft til produktet adopterer ny palett
     onAiSoft: '#7d2431', // avledet
     successSoft: '#e4f1eb',
-    onSuccessSoft: '#1f8a55',
+    onSuccessSoft: '#176840', // avledet: success mørknet 25 % mot svart — 5,9:1 på successSoft (success selv 3,7:1)
     inflightSoft: '#f3e6d8', // avledet: felles kopper-tint (ny palett) til produktet adopterer den
     onInflightSoft: '#7c5322', // avledet: 5,5:1 på inflightSoft
     mutedSoft: '#f7ebec', // avledet: = surfaceSoft til produktet adopterer ny palett
     onMutedSoft: '#35171b', // avledet
     warningSoft: '#f9f3e6',
-    onWarningSoft: '#c99a2e',
+    onWarningSoft: '#795c1c', // avledet: warning mørknet 40 % mot svart — 5,7:1 på warningSoft (warning selv 2,3:1)
     errorSoft: '#f7eaea',
-    onErrorSoft: '#c0504d',
+    onErrorSoft: '#9a403e', // avledet: error mørknet 20 % mot svart — 5,6:1 på errorSoft (error selv 4,0:1)
     shadowSoft: 'rgba(53, 23, 27, 0.14)',
     shadowStrong: 'rgba(53, 23, 27, 0.2)',
     borderColor: '#35171b', // avledet (ingen variables-blokk i appen)
