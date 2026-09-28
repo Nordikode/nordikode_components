@@ -1,4 +1,4 @@
-import { nkFontFamily, nkRadius, nkSpaceUnit, nkSpacing, nkTypography } from './base'
+import { nkFontFamily, nkFontMono, nkRadius, nkSpaceUnit, nkSpacing, nkTypography } from './base'
 import { documentScheme } from './document'
 import type { NkDocumentScheme, NkProductTheme, NkScheme } from './types'
 
@@ -124,6 +124,7 @@ export interface NkStaticTokens {
   spacing: { cardPadding: string; sectionGap: string; inlineGap: string; fabReserve: string }
   typography: { rootSize: string; heading: string; body: string; label: string; button: string }
   fontFamily: string
+  fontMono: string
 }
 
 /** Dagens base-verdier som redigerbart objekt (f.eks. for theme lab). */
@@ -134,6 +135,7 @@ export function defaultStaticTokens(): NkStaticTokens {
     spacing: { ...nkSpacing },
     typography: { ...nkTypography },
     fontFamily: nkFontFamily,
+    fontMono: nkFontMono,
   }
 }
 
@@ -155,6 +157,7 @@ export function cssStaticVariables(statics: NkStaticTokens = defaultStaticTokens
     '--nk-text-label': statics.typography.label,
     '--nk-text-button': statics.typography.button,
     '--nk-font-family': statics.fontFamily,
+    '--nk-font-mono': statics.fontMono ?? nkFontMono,
   }
 }
 

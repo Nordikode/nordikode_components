@@ -70,7 +70,7 @@ export type AppHeaderNavChild = {
   active?: boolean
 }
 
-export type AppHeaderNavItem = AppHeaderNavChild & {
+export type AppHeaderNavItem = Omit<AppHeaderNavChild, 'href'> & {
   href?: string
   children?: AppHeaderNavChild[]
 }
@@ -182,6 +182,17 @@ export interface FormatMoneyOptions {
   currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code' | 'name'
   signDisplay?: 'auto' | 'never' | 'always' | 'exceptZero'
 }
+/** Det `configureLocales` trenger fra en rad i språkregisteret (SIGN-1164). */
+export interface LocaleRegistryEntry {
+  code: string
+  bcp47: string
+  aliases?: ReadonlyArray<string> | null
+}
+/**
+ * Erstatter tabellen bak `toBcp47` med språkregisteret (core `platformLocales`).
+ * En tom liste setter tabellen tilbake til startverdien.
+ */
+export declare function configureLocales(locales: ReadonlyArray<LocaleRegistryEntry>): void
 export declare function toBcp47(locale: string | null | undefined): string
 export declare function formatMoney(
   amount: number,

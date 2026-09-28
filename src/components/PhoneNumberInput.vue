@@ -101,10 +101,13 @@ const filteredCountryOptions = computed(() => {
 })
 
 const normalizedNumberRules = computed(() => {
-  const rules = []
+  // Meldingene kan være null. Vuetify godtar bare true, false eller tekst fra
+  // en regel — null blir ignorert, og feltet regnes som gyldig. Uten melding
+  // er feltet fortsatt ugyldig (false), bare uten tekst (SIGN-1195).
+  const rules: Array<(value: string) => string | boolean> = []
 
   if (props.required) {
-    rules.push((value: string) => value.trim().length > 0 || props.requiredMessage)
+    rules.push((value: string) => value.trim().length > 0 || (props.requiredMessage ?? false))
   }
 
   rules.push((value: string) => {
@@ -113,7 +116,7 @@ const normalizedNumberRules = computed(() => {
       return true
     }
 
-    return isValidPhoneNumber(trimmed, selectedCountry.value) || props.invalidMessage
+    return isValidPhoneNumber(trimmed, selectedCountry.value) || (props.invalidMessage ?? false)
   })
 
   return rules
