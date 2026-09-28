@@ -60,6 +60,8 @@ export type TenantSwitcherLabels = {
   menu: string
   current: string
   companies: string
+  /** «Nytt firma»-raden (SIGN-1196) — vises bare sammen med `createHref`. */
+  create?: string
 }
 
 export type AppHeaderNavChild = {
