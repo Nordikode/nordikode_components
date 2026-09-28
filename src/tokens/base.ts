@@ -40,6 +40,17 @@ export const nkSpacing = {
 export const nkFontFamily = "'Inter', 'Segoe UI', sans-serif"
 
 /**
+ * Monospace for tekst som leses tegn for tegn: ID-er, IP-adresser, koder,
+ * nøkler, JSON (SIGN-1193). Systemets egne fonter — ingen webfont, ingen
+ * nedlasting: SF Mono på Apple, Consolas på Windows, Liberation Mono på Linux.
+ */
+// avledet: samme stack som developer-appen allerede brukte (`--dev-font-mono`);
+// de håndskrevne listene i backoffice, Sign og account var delmengder av den.
+// Fontvalget er et designvedtak (UX) og venter på godkjenning i SIGN-1193.
+export const nkFontMono =
+  "ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace"
+
+/**
  * Typografi-skala. rootSize er den globale bryteren (html font-size) — alle
  * rem-baserte størrelser (inkl. Vuetify-klassene) skalerer med den. Rollene
  * er i rem og matcher dagens de facto-bruk i appene.

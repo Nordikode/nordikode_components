@@ -134,6 +134,26 @@ måler bare 2,2:1 på hvit, så handlingen i lys modus er mørk periwinkle
 | Tekst på myk handlingsflate | `onPrimarySoft` / `primarySoft` | `#2f4d8f` på `#e2eafa` — **6,7:1** | `#a9c1f2` på `#1b2a45` — **7,9:1** |
 | Tittel (tar) på kort | `textTitle` / `surface` | `#0d1c26` på `#ffffff` — **17,3:1** | `#dbe5fb` på `#0e1216` — **14,9:1** |
 
+### Time og backoffice (felles statuspalett, SIGN-1158)
+
+Time og backoffice har ikke adoptert Sign-paletten; de bruker den felles
+statuspaletten (`nkStatusLight`/`nkStatusDark` i `src/tokens/base.ts`) med egne
+myke flater. Statusfargen selv holdt ikke som tekst på sin egen tint i lys
+modus (grønn 3,7:1, gul 2,3:1, rød 4,0:1), så statusteksten er siden 0.58.0
+statusfargen mørknet mot svart (25 %, 40 % og 20 %). Flatene er uendret.
+Tallene gjelder `NkStatusChip` og tonal-chips (`productCss()`).
+
+| Tone | Tokens | Lys (Time og backoffice) | Mørk, backoffice | Mørk, Time |
+| --- | --- | --- | --- | --- |
+| `success` — fullført | `onSuccessSoft` / `successSoft` | `#176840` på `#e4f1eb` — **5,9:1** | `#4cb583` på `#2b2d2a` — **5,5:1** | `#4cb583` på `#282f23` — **5,4:1** |
+| `warning` — varsel | `onWarningSoft` / `warningSoft` | `#795c1c` på `#f9f3e6` — **5,7:1** | `#d9ad55` på `#3c2c25` — **6,4:1** | `#d9ad55` på `#392e1e` — **6,4:1** |
+| `error` — feil | `onErrorSoft` / `errorSoft` | `#9a403e` på `#f7eaea` — **5,6:1** | `#d97b78` på `#3c2629` — **4,7:1** | `#d97b78` på `#392822` — **4,7:1** |
+| `inflight` — underveis (kopper-tint) | `onInflightSoft` / `inflightSoft` | `#7c5322` på `#f3e6d8` — **5,5:1** | `#dfb073` på `#33260f` — **7,4:1** | `#dfb073` på `#33260f` — **7,4:1** |
+
+Statusteksten holder også på de andre flatene i backoffice: side `#fcf6f6`
+(6,4 / 5,9 / 6,2:1), myk flate `#f7ebec` (5,8 / 5,4 / 5,7:1) og valgt rad
+`#f2d7db` (5,0 / 4,6 / 4,9:1).
+
 ### Kundevendte dokumenter (papir, `--nk-doc-*`)
 
 Dokument-tokenene (SIGN-610) er lys-bare — tilbudsdokumentet i Sign er papir
@@ -246,6 +266,15 @@ legges ut av `pull-a11y-check.mjs`, så rediger aldri kopien.
 - Time og backoffice har avledede verdier for rollene `frame`, `mutedSoft`
   og `textTitle` til de adopterer paletten; kontrasten der er ikke målt i
   tabellene over.
+- Den felles statuspaletten (Time og backoffice) holder ikke overalt ennå
+  (SIGN-1158). Statusteksten på myke flater er rettet, men statusfargen selv
+  er uendret: som tekst på kort måler grønn 4,4:1 og gul 2,6:1 i lys modus
+  (rød 4,7:1), hvit etikett på fylt gul 2,6:1, og i mørk modus hvit etikett på
+  fylt grønn 2,5:1 og rød 3,0:1. Bruk `on*Soft`-verdien når status skal være
+  tekst.
+- Andre par under 4,5:1: `onPrimarySoft` i mørk backoffice (4,3:1), og i lys
+  Time `onPrimarySoft`/`onInfoSoft`/`onAiSoft` (4,3:1) og `neutral`-merket
+  (4,4:1).
 - Ingen felles dialog-wrapper med `aria-labelledby`: over hundre rå
   `v-dialog` på tvers av appene (105 ved tellingen i SIGN-21) gir dialogen
   navn hver for seg eller ikke i det hele tatt — egen task under SIGN-22.

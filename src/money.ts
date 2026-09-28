@@ -18,14 +18,72 @@
  * company-appen) bruker nøyaktig samme implementasjon som produktappene.
  */
 
-const BCP47: Record<string, string> = {
-  en: 'en-GB',
+/** Kildespråket: reserven overalt, og det eneste språket koden kan navngi. */
+const SOURCE_LOCALE = 'en'
+const SOURCE_BCP47 = 'en-GB'
+
+/**
+ * Startverdien for tabellen bak `toBcp47`: slik den var før språkregisteret
+ * (SIGN-1157). Den gjelder til appen kaller `configureLocales()` med
+ * registeret — i18n-motoren i `@nordikode/app-core` gjør det ved oppstart og
+ * hver gang registeret hentes på nytt. Et nytt språk legges aldri til her;
+ * det er en rad i registeret.
+ */
+const BUILT_IN_BCP47: Readonly<Record<string, string>> = {
+  [SOURCE_LOCALE]: SOURCE_BCP47,
   no: 'nb-NO',
   nb: 'nb-NO',
   nn: 'nn-NO',
   sv: 'sv-SE',
   fr: 'fr-FR',
   pl: 'pl-PL',
+}
+
+let bcp47Table: Record<string, string> = { ...BUILT_IN_BCP47 }
+
+/** Det `configureLocales` trenger fra en rad i språkregisteret. */
+export interface LocaleRegistryEntry {
+  /** Plattformens språkkode (`no`, `de`, `pt-BR`). */
+  code: string
+  /** Full BCP-47-tag for Intl (`nb-NO`, `de-DE`). */
+  bcp47: string
+  /** Koder som løses til dette språket (`nb`, `nn` → `no`). */
+  aliases?: ReadonlyArray<string> | null
+}
+
+/**
+ * Erstatter tabellen bak `toBcp47` med språkregisteret (core
+ * `platformLocales` / `schemas/locales.json`). En kode vinner over et annet
+ * språks alias, slik registeret selv løser koder. Kildespråket finnes alltid,
+ * også når registeret ikke nevner det. En tom liste setter tabellen tilbake
+ * til startverdien.
+ */
+export const configureLocales = (locales: ReadonlyArray<LocaleRegistryEntry>): void => {
+  const entries = locales.filter((entry) => entry.code.trim() !== '' && entry.bcp47.trim() !== '')
+
+  if (entries.length === 0) {
+    bcp47Table = { ...BUILT_IN_BCP47 }
+
+    return
+  }
+
+  const table: Record<string, string> = { [SOURCE_LOCALE]: SOURCE_BCP47 }
+
+  for (const entry of entries) {
+    for (const alias of entry.aliases ?? []) {
+      const key = alias.trim().toLowerCase()
+
+      if (key !== '' && key !== SOURCE_LOCALE && table[key] === undefined) {
+        table[key] = entry.bcp47.trim()
+      }
+    }
+  }
+
+  for (const entry of entries) {
+    table[entry.code.trim().toLowerCase()] = entry.bcp47.trim()
+  }
+
+  bcp47Table = table
 }
 
 /**
@@ -39,10 +97,10 @@ export const toBcp47 = (locale: string | null | undefined): string => {
   const trimmed = (locale ?? '').trim()
 
   if (trimmed === '') {
-    return BCP47.en
+    return bcp47Table[SOURCE_LOCALE] ?? SOURCE_BCP47
   }
 
-  return BCP47[trimmed.toLowerCase()] ?? trimmed
+  return bcp47Table[trimmed.toLowerCase()] ?? trimmed
 }
 
 export interface FormatMoneyOptions {
