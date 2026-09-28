@@ -45,6 +45,15 @@ flatene bruker `AppHeader` med de delte menyene.
   bes om eksplisitt med `maximumFractionDigits: 0`. Ingen app skal ha sin egen
   `Intl.NumberFormat(..., { style: 'currency' })`, `toFixed(2)` eller «kr»-tekst.
   Eksporteres også fra `@nordikode/components/web`.
+- `configureLocales(locales)` — fyller tabellen bak `toBcp47` fra språkregisteret
+  (core `platformLocales` / `schemas/locales.json`, SIGN-1157/1164): radene
+  `{ code, bcp47, aliases }` erstatter tabellen, så `toBcp47('de')` gir `de-DE`
+  den dagen registeret har språket — uten endring her. Dagens språk ligger inne
+  som startverdi og gjelder til funksjonen kalles; en tom liste setter tabellen
+  tilbake. i18n-motoren i `@nordikode/app-core` (`createNordikodeI18n`) kaller
+  den ved oppstart og når registeret hentes på nytt — appene kaller den ikke
+  selv. `SharedLocale` er `string`: hvilke språk som finnes, er data.
+  Eksporteres også fra `@nordikode/components/web`.
 
 `style.css` contains only this package's own component styles. Vuetify (JS and styles)
 and `libphonenumber-js` are externalized — the consuming app owns the Vuetify setup,
@@ -194,6 +203,18 @@ import '@nordikode/components/style.css'
 ```
 
 When a consuming app is linked locally, its `dev` and `build` scripts will automatically rebuild the linked component package first.
+
+## Checks before a pull request
+
+```bash
+npm run type-check      # vue-tsc over src/ (components and stories); also a CI step
+npm run build
+npm run build-storybook
+```
+
+`index.d.ts`, `web.d.ts` and `tokens.d.ts` are written by hand, and they are where
+consuming apps get their types from. The type check does not read them: a type
+changed in `src/` must be changed in the matching `.d.ts` in the same pull request.
 
 ## Design tokens
 
