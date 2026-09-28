@@ -240,3 +240,20 @@ export const SmartLogoUnderAnalyse: Story = {
   },
   decorators: [blockDecorator],
 }
+
+/**
+ * «Nytt firma» (SIGN-1196): med `createHref` og `labels.create` får panelet en
+ * lenkerad under firmalisten til veiviseren som oppretter et firma til.
+ */
+export const MedNyttFirma: Story = {
+  args: {
+    selectedId: 't-1',
+    labels: { ...labels, create: 'Nytt firma' },
+    variant: 'block',
+    createHref: '#kom-i-gang',
+    tenants: [
+      { id: 't-1', name: 'Bygg og Anlegg AS', logoUrl: null },
+      { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
+    ],
+  },
+}

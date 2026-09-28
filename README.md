@@ -126,7 +126,8 @@ from its own theme (see below).
   `logoContainsText` on the tenant.
 - `TenantSwitcherMenu` — the company menu (tenant logo/initials, switch between
   the user's companies, optional personal context via the `personal` prop; the
-  host owns the actual switch request). `variant="block"` is the **company
+  host owns the actual switch request; `createHref` + `labels.create` add a
+  «New company» link row to the create-company wizard, SIGN-1196). `variant="block"` is the **company
   block** (SIGN-561): logo (initials when there is none or it fails to load) and
   the full company name, placed in `AppHeader`'s `#tenant` slot right after the
   brand — clicking it opens the company switch, so the small avatar on the right

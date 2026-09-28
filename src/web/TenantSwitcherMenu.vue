@@ -27,6 +27,11 @@
  * slags logo firmaet har — se `tenantLogoPresentation`. Sirkelen er
  * forbeholdt initialer (og person-markøren); ekte logoer vises uklippet.
  *
+ * «Nytt firma» (SIGN-1196): sender verts-appen `createHref` (og
+ * `labels.create`), får panelet en lenkerad under firmalisten til veiviseren
+ * som oppretter et firma til — nettsidens «Bli kunde» (`/kom-i-gang`). Raden
+ * er en vanlig lenke; verts-appen eier adressen.
+ *
  * Tema: verts-appens web-designtokens (`--color-*`, `--radius-*`) og
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
  */
@@ -46,6 +51,8 @@ export type TenantSwitcherLabels = {
   current: string
   /** Overskrift for firmalisten. */
   companies: string
+  /** Teksten på «Nytt firma»-raden — vises bare sammen med `createHref`. */
+  create?: string
 }
 
 const props = defineProps<{
@@ -72,6 +79,8 @@ const props = defineProps<{
    * Kun for `variant="block"`.
    */
   align?: 'start' | 'end'
+  /** Adressen til veiviseren som oppretter et nytt firma (SIGN-1196). Uten den vises ikke raden. */
+  createHref?: string | null
 }>()
 
 const emit = defineEmits<{ select: [tenantId: string] }>()
@@ -111,6 +120,10 @@ const selectedPresentation = computed<TenantLogoPresentation>(() =>
 )
 
 const CHEVRON = 'm6 9 6 6 6-6'
+
+const PLUS = 'M12 5v14M5 12h14'
+
+const showsCreate = computed(() => Boolean(props.createHref && props.labels.create))
 
 /** Person-markøren for personlig-raden (hode + skuldre, samme strekspråk som chevronen). */
 const PERSON_HEAD = 'M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z'
@@ -328,7 +341,30 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
           </template>
         </button>
 
-        <!-- Ekstra rader (f.eks. «opprett nytt firma», firma-innstillinger). -->
+        <a
+          v-if="showsCreate"
+          :href="createHref ?? undefined"
+          role="menuitem"
+          class="nk-tenant__item nk-tenant__item--create"
+          @click="close()"
+        >
+          <span class="nk-tenant__item-avatar nk-tenant__item-avatar--create">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              class="nk-tenant__plus"
+              aria-hidden="true"
+            >
+              <path :d="PLUS" />
+            </svg>
+          </span>
+          <span class="nk-tenant__item-label">{{ labels.create }}</span>
+        </a>
+
+        <!-- Ekstra rader (f.eks. firma-innstillinger). -->
         <slot name="footer" />
       </div>
     </Transition>
@@ -632,6 +668,24 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   font-size: 0.625rem;
   font-weight: 600;
   color: var(--nk-chrome-accent-ink, var(--nk-chrome-accent, var(--color-ink-secondary)));
+}
+
+/* «Nytt firma»: lenkeraden får samme uttrykk som firmaradene, med et
+   pluss i en stiplet sirkel der logoen ellers står. */
+.nk-tenant__item--create {
+  text-decoration: none;
+}
+
+.nk-tenant__item-avatar--create {
+  border-radius: 9999px;
+  border: 1px dashed var(--color-ink-tertiary);
+  box-sizing: border-box;
+  color: var(--color-ink-secondary);
+}
+
+.nk-tenant__plus {
+  width: 0.75rem;
+  height: 0.75rem;
 }
 
 .nk-tenant__item-label {
