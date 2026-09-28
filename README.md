@@ -194,6 +194,18 @@ import '@nordikode/components/style.css'
 
 When a consuming app is linked locally, its `dev` and `build` scripts will automatically rebuild the linked component package first.
 
+## Checks before a pull request
+
+```bash
+npm run type-check      # vue-tsc over src/ (components and stories); also a CI step
+npm run build
+npm run build-storybook
+```
+
+`index.d.ts`, `web.d.ts` and `tokens.d.ts` are written by hand, and they are where
+consuming apps get their types from. The type check does not read them: a type
+changed in `src/` must be changed in the matching `.d.ts` in the same pull request.
+
 ## Design tokens
 
 Produkttemaer: `signTheme` (Sign), `timeTheme`, `backofficeTheme` og `platformTheme`

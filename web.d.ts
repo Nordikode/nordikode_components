@@ -70,7 +70,7 @@ export type AppHeaderNavChild = {
   active?: boolean
 }
 
-export type AppHeaderNavItem = AppHeaderNavChild & {
+export type AppHeaderNavItem = Omit<AppHeaderNavChild, 'href'> & {
   href?: string
   children?: AppHeaderNavChild[]
 }

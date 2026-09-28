@@ -50,7 +50,9 @@ export type AppHeaderNavChild = {
   active?: boolean
 }
 
-export type AppHeaderNavItem = AppHeaderNavChild & {
+// Omit: et snitt med `href?: string` alene gjør ikke `href` valgfri — kravet
+// fra AppHeaderNavChild vinner, og punkter med children ble avvist (SIGN-1195).
+export type AppHeaderNavItem = Omit<AppHeaderNavChild, 'href'> & {
   href?: string
   /** Ett nedtrekksnivå. Punkter med children ignorerer `href`. */
   children?: AppHeaderNavChild[]

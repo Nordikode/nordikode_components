@@ -1,6 +1,6 @@
 {
   "name": "@nordikode/components",
-  "version": "0.58.0",
+  "version": "0.60.0",
   "private": false,
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
   },
   "scripts": {
     "build": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.app.json",
     "dev": "vite build --watch",
     "prepare": "npm run build",
     "storybook": "storybook dev -p 6006",

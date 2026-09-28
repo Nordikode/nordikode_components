@@ -10,7 +10,12 @@ const webTokens = [
   '--radius-compact: 8px',
 ].join(';')
 
-const meta: Meta<typeof PageHeader> = {
+// PageHeader har både en prop og en slot som heter `back`. Storybook slår
+// props og slots sammen til én args-type, og da kan `back` ikke settes.
+// Args er derfor komponentens props alene (SIGN-1195).
+type PageHeaderArgs = InstanceType<typeof PageHeader>['$props']
+
+const meta: Meta<PageHeaderArgs> = {
   title: 'Komponenter/Web/PageHeader',
   component: PageHeader,
   decorators: [
@@ -21,7 +26,7 @@ const meta: Meta<typeof PageHeader> = {
 }
 
 export default meta
-type Story = StoryObj<typeof PageHeader>
+type Story = StoryObj<PageHeaderArgs>
 
 /** Nivå 1-side: tittel + undertittel, ingen tilbakelenke. */
 export const Standard: Story = {
