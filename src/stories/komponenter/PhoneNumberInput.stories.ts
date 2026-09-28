@@ -32,3 +32,11 @@ export const Påkrevd: Story = {
     required: true,
   },
 }
+
+export const UtenLand: Story = {
+  args: {
+    modelValue: '',
+    defaultCountryCode: null,
+    locale: 'no',
+  },
+}

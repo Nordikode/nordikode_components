@@ -24,6 +24,10 @@ interface Props {
   requiredMessage?: string | null
   invalidMessage?: string | null
   noResultsMessage?: string | null
+  hint?: string | null
+  persistentHint?: boolean
+  density?: 'default' | 'comfortable' | 'compact'
+  variant?: 'outlined' | 'filled' | 'underlined' | 'plain' | 'solo' | 'solo-filled' | 'solo-inverted'
 }
 
 interface CountryOption {
@@ -47,16 +51,28 @@ const props = withDefaults(defineProps<Props>(), {
   requiredMessage: 'Phone number is required.',
   invalidMessage: 'Enter a valid phone number.',
   noResultsMessage: 'No matching country code.',
+  hint: null,
+  persistentHint: false,
+  density: undefined,
+  variant: undefined,
 })
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-const fallbackCountryCode: CountryCode = 'NO'
-const selectedCountry = ref<CountryCode>(resolveCountryCode(props.defaultCountryCode) ?? fallbackCountryCode)
+// Landet kommer alltid fra den som bruker komponenten (brukerens, firmaets
+// eller markedets land). Uten land står velgeren tom — aldri et fast land.
+const selectedCountry = ref<CountryCode | null>(resolveCountryCode(props.defaultCountryCode))
+// Når brukeren selv har valgt land (i menyen eller ved å skrive +landkode),
+// skal et senere bytte av standardlandet ikke overstyre valget.
+const countryChosenByUser = ref(false)
 const nationalInput = ref('')
 const applyingExternalValue = ref(false)
+// Teksten feltet fikk fra modelValue. Watcheren på nationalInput kjører etter
+// at synken er ferdig, så uten denne ville et eldre nummer uten landkode blitt
+// sendt tilbake normalisert og gjort skjemaet «endret» uten at noen rørte det.
+let lastSyncedNational: string | null = null
 const countryMenuOpen = ref(false)
 const countrySearch = ref('')
 
@@ -125,7 +141,7 @@ const normalizedNumberRules = computed(() => {
 watch(
   () => props.defaultCountryCode,
   (value) => {
-    if (props.modelValue?.trim()) {
+    if (countryChosenByUser.value || props.modelValue?.trim() || nationalInput.value.trim()) {
       return
     }
 
@@ -152,11 +168,18 @@ watch(selectedCountry, () => {
 })
 
 watch(nationalInput, (value) => {
+  const fromSync = value === lastSyncedNational
+  lastSyncedNational = null
+  if (fromSync) {
+    return
+  }
+
   const trimmed = value.trim()
   if (trimmed.startsWith('+')) {
     const parsed = parsePhoneNumberFromString(trimmed)
     if (parsed?.country) {
       selectedCountry.value = parsed.country
+      countryChosenByUser.value = true
       nationalInput.value = formatNationalNumber(parsed.nationalNumber, parsed.country)
       return
     }
@@ -170,20 +193,24 @@ function syncFromModelValue(value: string): void {
 
   if (trimmed === '') {
     nationalInput.value = ''
+    lastSyncedNational = ''
     return
   }
 
-  const parsed = parsePhoneNumberFromString(trimmed)
+  // Eldre numre kan være lagret uten landkode; tolk dem i valgt land.
+  const parsed = parsePhoneNumberFromString(trimmed, selectedCountry.value ?? undefined)
   if (parsed) {
     if (parsed.country) {
       selectedCountry.value = parsed.country
     }
 
     nationalInput.value = formatNationalNumber(parsed.nationalNumber, parsed.country ?? selectedCountry.value)
+    lastSyncedNational = nationalInput.value
     return
   }
 
   nationalInput.value = trimmed
+  lastSyncedNational = trimmed
 }
 
 function emitNormalizedValue(): void {
@@ -203,7 +230,7 @@ function emitNormalizedValue(): void {
     return
   }
 
-  const parsed = parsePhoneNumberFromString(trimmed, selectedCountry.value)
+  const parsed = parsePhoneNumberFromString(trimmed, selectedCountry.value ?? undefined)
   if (parsed) {
     emit('update:modelValue', parsed.number)
     return
@@ -212,6 +239,13 @@ function emitNormalizedValue(): void {
   const digits = trimmed.replace(/[^\d]/g, '')
   if (digits === '') {
     emit('update:modelValue', '')
+    return
+  }
+
+  if (!selectedCountry.value) {
+    // Uten land kan nummeret ikke gjøres om til E.164; valideringen ber
+    // brukeren velge land eller skrive +landkode.
+    emit('update:modelValue', trimmed)
     return
   }
 
@@ -235,12 +269,12 @@ function countryCodeToFlag(countryCode: string): string {
     .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
 }
 
-function formatNationalNumber(value: string, countryCode: CountryCode): string {
-  return new AsYouType(countryCode).input(value)
+function formatNationalNumber(value: string, countryCode: CountryCode | null): string {
+  return new AsYouType(countryCode ?? undefined).input(value)
 }
 
-function isValidPhoneNumber(value: string, countryCode: CountryCode): boolean {
-  const parsed = value.startsWith('+')
+function isValidPhoneNumber(value: string, countryCode: CountryCode | null): boolean {
+  const parsed = value.startsWith('+') || !countryCode
     ? parsePhoneNumberFromString(value)
     : parsePhoneNumberFromString(value, countryCode)
 
@@ -279,6 +313,7 @@ function getItemFlag(item: unknown): string {
 
 function selectCountry(countryCode: CountryCode): void {
   selectedCountry.value = countryCode
+  countryChosenByUser.value = true
   countryMenuOpen.value = false
   countrySearch.value = ''
 }
@@ -289,7 +324,11 @@ function selectCountry(countryCode: CountryCode): void {
     <v-text-field
       v-model="nationalInput"
       class="phone-input-number"
+      :density="density"
       :disabled="disabled"
+      :hint="hint ?? undefined"
+      :persistent-hint="persistentHint"
+      :variant="variant"
       :label="numberLabel ?? undefined"
       :placeholder="placeholder ?? undefined"
       :rules="normalizedNumberRules"
@@ -309,8 +348,8 @@ function selectCountry(countryCode: CountryCode): void {
                 class="phone-input-country-trigger"
                 type="button"
               >
-                <span class="phone-input-selected-flag">{{ selectedCountryOption?.flag ?? '' }}</span>
-                <span class="phone-input-selected-code">{{ selectedCountryOption?.title ?? '' }}</span>
+                <span v-if="selectedCountryOption" class="phone-input-selected-flag">{{ selectedCountryOption.flag }}</span>
+                <span class="phone-input-selected-code">{{ selectedCountryOption?.title ?? '+' }}</span>
                 <v-icon icon="mdi-chevron-down" size="18" />
               </button>
             </template>
