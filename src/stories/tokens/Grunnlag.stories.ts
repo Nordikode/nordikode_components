@@ -1,6 +1,6 @@
 import { h } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { nkFontFamily, nkRadius, nkSpaceUnit, nkSpacing, nkTypography } from '../../tokens'
+import { nkFontFamily, nkFontMono, nkRadius, nkSpaceUnit, nkSpacing, nkTypography } from '../../tokens'
 
 const meta: Meta = {
   title: 'Design system/Tokens/Grunnlag',
@@ -77,5 +77,30 @@ export const Typografi: Story = {
         `Etikett 600 · label ${nkTypography.label}`),
       h('div', { style: `font-size:${nkTypography.button};font-weight:600;` },
         `Knappetekst 600 · button ${nkTypography.button}`),
+    ]),
+}
+
+const MONO_EKSEMPLER: Array<[string, string]> = [
+  ['IP-adresse', '203.0.113.42'],
+  ['ID', '0198c7e2-4b1a-7c3d-9f20-5a6b8e1d2c34'],
+  ['Gjenopprettingskode', 'K7QX-2M9P-0OIL'],
+  ['Varenummer', '48210567'],
+]
+
+export const Monospace: Story = {
+  render: () =>
+    h('div', { style: `font-family:${nkFontFamily};display:flex;flex-direction:column;gap:12px;` }, [
+      h('div', { style: 'font-size:0.75rem;opacity:0.7;max-width:70ch;' },
+        `--nk-font-mono: ${nkFontMono} — for tekst som leses tegn for tegn (ID-er, IP-adresser, koder, nøkler, JSON). Systemets egne fonter, ingen nedlasting. Tokenet er bare fontfamilien; størrelse, vekt og farge arves fra konteksten. Bruk alltid var(--nk-font-mono), aldri en håndskrevet fontliste og aldri en reserveverdi.`),
+      ...MONO_EKSEMPLER.map(([etikett, verdi]) =>
+        h('div', { key: etikett, style: 'display:flex;align-items:baseline;gap:12px;' }, [
+          h('div', { style: `width:180px;font-size:${nkTypography.label};font-weight:600;opacity:0.7;` }, etikett),
+          h('div', { style: `font-family:${nkFontMono};font-size:${nkTypography.body};` }, verdi),
+        ]),
+      ),
+      h('div', { style: 'display:flex;align-items:baseline;gap:12px;' }, [
+        h('div', { style: `width:180px;font-size:${nkTypography.label};font-weight:600;opacity:0.7;` }, 'Tegn som ligner'),
+        h('div', { style: `font-family:${nkFontMono};font-size:${nkTypography.body};` }, '0O 1lI 5S 8B'),
+      ]),
     ]),
 }

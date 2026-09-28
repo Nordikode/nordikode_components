@@ -113,6 +113,7 @@ export declare const nkSpaceUnit: string
 export declare const nkSpacing: { cardPadding: string; sectionGap: string; inlineGap: string; fabReserve: string }
 export declare const nkTypography: { rootSize: string; heading: string; body: string; label: string; button: string }
 export declare const nkFontFamily: string
+export declare const nkFontMono: string
 export declare const nkFontHref: string
 export declare const nkStatusLight: { readonly success: string; readonly warning: string; readonly error: string }
 export declare const nkStatusDark: { readonly success: string; readonly warning: string; readonly error: string }
@@ -133,6 +134,7 @@ export interface NkStaticTokens {
   spacing: { cardPadding: string; sectionGap: string; inlineGap: string; fabReserve: string }
   typography: { rootSize: string; heading: string; body: string; label: string; button: string }
   fontFamily: string
+  fontMono: string
 }
 export declare function defaultStaticTokens(): NkStaticTokens
 export declare function cssStaticVariables(statics?: NkStaticTokens): Record<string, string>
