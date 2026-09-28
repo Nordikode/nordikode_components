@@ -39,6 +39,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Bygget (vite) sjekker ikke typer. Uten dette steget kom sju typefeil
+      # inn på main uten at noe stoppet dem (SIGN-1195).
+      - name: Type check
+        run: npm run type-check
+
       - name: Build
         run: npm run build
 
