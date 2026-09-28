@@ -24,6 +24,14 @@ export function tailwindThemeVariables(scheme: NkScheme): Record<string, string>
     '--color-ink-inverse': scheme.onSurfaceInverse,
     '--color-ink-inverse-muted': scheme.onSurfaceInverseMuted,
     '--color-line': scheme.surfaceBorder,
+    // Løftet panel (SIGN-968): Tilbudssammendragets mellomgrå flate med
+    // krem tekst — nettsiden tegner Sign-utsnitt med den (SIGN-1054).
+    '--color-surface-panel': scheme.surfacePanel,
+    '--color-on-surface-panel': scheme.onSurfacePanel,
+    '--color-on-surface-panel-muted': scheme.onSurfacePanelMuted,
+    '--color-on-surface-panel-accent': scheme.onSurfacePanelAccent,
+    '--color-on-surface-panel-warning': scheme.onSurfacePanelWarning,
+    '--color-on-surface-panel-link': scheme.onSurfacePanelLink,
     // Handling (petrol): fyll, hover/press, tekst-varianten og den myke flaten
     '--color-action': scheme.primary,
     '--color-action-hover': scheme.primaryHover,
