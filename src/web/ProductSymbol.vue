@@ -7,7 +7,7 @@
  * Symbolet rendres inline slik at den mørke delen («tar», blekket i paletten)
  * følger tekstfargen (`currentColor`) og dermed lys/mørk modus, mens
  * merkefargen er fast: merkefarger er brand-assets, ikke tema-tokens
- * (Sign: berry på lys flate, light berry på mørk — SIGN-763).
+ * (Sign: light berry i begge moduser — merkevarefilene, SIGN-1264).
  *
  * Størrelse settes av verts-komponenten via `height` (bildet skalerer
  * proporsjonalt); `AppHeader` gjør det for headeren.
@@ -21,7 +21,7 @@ defineProps<{
 
 <template>
   <span class="nk-product-symbol" :class="`nk-product-symbol--${product}`" aria-hidden="true">
-    <!-- Sign: kalligrafisk S — tar (currentColor) med berry som merkefarge (light berry i mørk modus). -->
+    <!-- Sign: kalligrafisk S — tar (currentColor) med light berry som merkefarge. -->
     <svg
       v-if="product === 'sign'"
       class="nk-product-symbol__svg"
@@ -63,16 +63,17 @@ defineProps<{
 }
 
 /* Merkefargen er brand-asset (fast hex, som logo-SVG-ene i BrandWordmark),
-   ikke en tema-token: Sign = berry på lys flate (SIGN-763), light berry på
-   mørk (under). Kan overstyres av verten med --nk-product-symbol-brand om et
-   annet uttrykk vedtas. */
+   ikke en tema-token: Sign = light berry i begge moduser (merkevarefilene
+   29.09.2026, SIGN-1264 — snur SIGN-763). Kan overstyres av verten med
+   --nk-product-symbol-brand om et annet uttrykk vedtas. */
 .nk-product-symbol--sign .nk-product-symbol__brand {
-  fill: var(--nk-product-symbol-brand, #aa4c6e);
+  fill: var(--nk-product-symbol-brand, #dc7499);
 }
 </style>
 
 <style>
-/* Mørk modus byttes via `.dark` på rot-elementet, som i BrandWordmark. */
+/* Mørk modus byttes via `.dark` på rot-elementet, som i BrandWordmark.
+   Samme merkefarge; regelen står så en vert kan overstyre per modus. */
 .dark .nk-product-symbol--sign .nk-product-symbol__brand {
   fill: var(--nk-product-symbol-brand, #dc7499);
 }
