@@ -12,7 +12,8 @@ import type { NkScheme } from '../../tokens'
 // Oppslagsside for Tailwind v4-flatene (nettsiden): `@theme`-variablene
 // tailwindThemeCss genererer fra samme NkScheme som --nk-*-variablene, med
 // verdiene for produktet/modusen valgt i toolbaren — og den ferdige CSS-en
-// nettsiden importerer (SIGN-519).
+// nettsiden importerer (SIGN-519). Nettsiden bruker `platform` (SIGN-834):
+// blått er Nordikode, berry er Sign.
 
 const isColor = (value: string) => value.startsWith('#') || value.startsWith('rgba(')
 
