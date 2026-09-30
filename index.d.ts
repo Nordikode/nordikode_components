@@ -25,6 +25,20 @@ export interface NkConversationEntry {
   at: string
   /** Liten linje under boblen, f.eks. «Lest 14:03». */
   receipt?: string
+  /** Filene i meldingen (SIGN-1317): bilder i boblen, andre filer som lenker. */
+  attachments?: NkConversationAttachment[]
+}
+/**
+ * En fil i et innslag (SIGN-1317). `url` er den signerte, kortlevde lenken fra
+ * svaret (null når den ikke kunne signeres); `sizeLabel` er størrelsen ferdig
+ * formatert på brukerens språk (`formatFileSize`).
+ */
+export interface NkConversationAttachment {
+  id: string
+  name: string
+  url: string | null
+  isImage: boolean
+  sizeLabel: string
 }
 export interface NkConversationLabels {
   /** Navnet på meldingslisten for skjermlesere. */
@@ -37,6 +51,20 @@ export interface NkMessageComposerLabels {
   field: string
   /** Send-knappens navn. */
   send: string
+  /** Legg ved-knappens navn (SIGN-1317). Uten teksten vises ingen knapp. */
+  attach?: string
+  /** Fjern-knappen på et valgt vedlegg; filnavnet legges til av komponenten. */
+  removeAttachment?: string
+}
+/**
+ * Vedlegg i NkMessageComposer (SIGN-1317). `validate` får hver valgt fil og hvor
+ * mange som alt er valgt, og svarer med appens ferdig oversatte feilmelding — eller
+ * null når filen kan legges ved.
+ */
+export interface NkMessageComposerAttachments {
+  accept?: string
+  multiple?: boolean
+  validate: (file: File, selectedCount: number) => string | null
 }
 export interface NkConversationDay {
   /** `YYYY-MM-DD` i tidssonen som brukes. */
@@ -62,8 +90,10 @@ export const NkConversationListItem: DefineComponent<Record<string, unknown>, Re
 export const NkEmptyState: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /**
  * NkMessageComposer (SIGN-1313): skrivefelt som vokser, med send-knapp. Props:
- * `send(text) => Promise<boolean>` (true tømmer feltet), `labels`, `modelValue`,
- * `disabled`, `maxLength`, `error`; slots `attachments` og `prepend`; eksponerer `focus()`.
+ * `send(text, files) => Promise<boolean>` (true tømmer feltet og filene), `labels`,
+ * `modelValue`, `disabled`, `maxLength`, `error`, `attachments`
+ * (`NkMessageComposerAttachments`, SIGN-1317) og `locale` for størrelsen på valgte
+ * filer; slots `attachments` og `prepend`; eksponerer `focus()`.
  */
 export const NkMessageComposer: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /**
@@ -118,6 +148,8 @@ export declare function groupConversationEntries(
   now?: Date,
   timeZone?: string,
 ): NkConversationDay[]
+/** Filstørrelse fra Intl på brukerens språk («48 kB», «1,3 MB») — SIGN-1317. */
+export declare function formatFileSize(bytes: number, locale: string): string
 export declare function formatMoney(
   amount: number,
   currency: string | null | undefined,
