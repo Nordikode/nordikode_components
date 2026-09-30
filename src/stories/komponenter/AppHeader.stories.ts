@@ -23,6 +23,8 @@ const webTokens = [
   '--radius-standard: var(--nk-radius-lg)',
   '--nk-chrome-accent: var(--nk-on-info-soft)',
   '--nk-chrome-accent-ink: var(--nk-on-info-soft)',
+  '--nk-chrome-badge: var(--nk-error)',
+  '--nk-chrome-badge-ink: var(--nk-on-error)',
 ].join(';')
 
 /** Firmalogo til historiene — inline SVG, ingen ekstern fil. */

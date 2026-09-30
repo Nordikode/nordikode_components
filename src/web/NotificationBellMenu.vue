@@ -9,6 +9,11 @@
  * Tilgjengelighet: bjellen er en knapp med `aria-label` som inkluderer
  * antall uleste, panelet er en `menu` med piltast-navigasjon, og ulest-
  * markeringen bæres av tekst (`labels.unread`) i tillegg til prikken.
+ *
+ * Farger: antallet på bjellen er et antall-merke og bruker badge-kontrakten
+ * `--nk-chrome-badge` / `--nk-chrome-badge-ink` (rød, som app-velgeren),
+ * aldri aksenten — aksenten er appens egen farge og gjorde antallet svart
+ * i noen apper og rosa i andre (SIGN-1318).
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
@@ -252,8 +257,8 @@ function onMarkAllRead() {
   height: 1rem;
   padding: 0 0.25rem;
   border-radius: 9999px;
-  background: var(--nk-chrome-accent, var(--color-ink));
-  color: var(--color-surface, #fff);
+  background: var(--nk-chrome-badge, var(--nk-error));
+  color: var(--nk-chrome-badge-ink, var(--nk-on-error));
   font-size: 0.625rem;
   font-weight: 600;
   line-height: 1rem;
