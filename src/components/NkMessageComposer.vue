@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { formatFileSize } from '../conversation'
+import type { NkMessageComposerAttachments } from '../types/NkMessageComposerAttachments'
 import type { NkMessageComposerLabels } from '../types/NkMessageComposerLabels'
 
 /**
@@ -13,12 +15,21 @@ import type { NkMessageComposerLabels } from '../types/NkMessageComposerLabels'
  *   imot: da tømmes feltet. Ved `false` eller feil beholdes teksten, og
  *   appen viser årsaken i `error`.
  * - Feltet og knappen er sperret mens sendingen pågår.
- * - Appen eier all tekst (`labels`, `error`). Vedlegg legges i
- *   `#attachments` (over feltet) og `#prepend` (knapp foran feltet).
+ * - Appen eier all tekst (`labels`, `error`).
+ * - Vedlegg (SIGN-1317): med `attachments` og `labels.attach` får feltet en
+ *   legg ved-knapp. Valgte filer står som merker over feltet og kan fjernes
+ *   før sending; `send` får dem som andre argument. Appen avgjør i
+ *   `attachments.validate` hva som tas imot, med sin egen tekst. En melding
+ *   kan være filer alene. `#attachments` og `#prepend` finnes fortsatt for
+ *   appens egne ting.
  */
 interface Props {
-  send: (text: string) => Promise<boolean>
+  send: (text: string, files: File[]) => Promise<boolean>
   labels: NkMessageComposerLabels
+  /** Vedlegg: grensene og teksten er appens (SIGN-1317). Uten verdi finnes ingen legg ved-knapp. */
+  attachments?: NkMessageComposerAttachments
+  /** Brukerens UI-språk, for størrelsen på valgte filer. */
+  locale?: string
   /** Utkastet, når appen vil eie det (v-model). Uten v-model holder feltet det selv. */
   modelValue?: string
   disabled?: boolean
@@ -33,6 +44,8 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   maxLength: undefined,
   error: '',
+  attachments: undefined,
+  locale: 'en',
 })
 
 const emit = defineEmits<{
@@ -60,10 +73,60 @@ const draft = computed({
   },
 })
 
+/* --- Vedlegg (SIGN-1317) --- */
+const picker = ref<HTMLInputElement | null>(null)
+const files = ref<File[]>([])
+const attachError = ref('')
+const canAttach = computed(() => props.attachments !== undefined && props.labels.attach !== undefined)
+
+function openPicker(): void {
+  attachError.value = ''
+  picker.value?.click()
+}
+
+/** Hver fil prøves for seg: de som tas imot legges til, den første som avvises gir teksten. */
+function onPicked(event: Event): void {
+  const input = event.target as HTMLInputElement
+  const picked = Array.from(input.files ?? [])
+  input.value = ''
+
+  if (!props.attachments) {
+    return
+  }
+
+  const accepted: File[] = []
+  let refused = ''
+
+  for (const file of picked) {
+    const reason = props.attachments.validate(file, files.value.length + accepted.length)
+
+    if (reason === null) {
+      accepted.push(file)
+    } else if (refused === '') {
+      refused = reason
+    }
+  }
+
+  files.value = props.attachments.multiple === false ? accepted.slice(0, 1) : [...files.value, ...accepted]
+  attachError.value = refused
+}
+
+function removeFile(index: number): void {
+  files.value = files.value.filter((_, i) => i !== index)
+  attachError.value = ''
+}
+
+function sizeLabel(file: File): string {
+  return formatFileSize(file.size, props.locale)
+}
+
+const shownError = computed(() => props.error || attachError.value)
+
 const length = computed(() => draft.value.length)
 const tooLong = computed(() => props.maxLength !== undefined && length.value > props.maxLength)
 const nearLimit = computed(() => props.maxLength !== undefined && length.value >= props.maxLength * 0.8)
-const canSend = computed(() => !props.disabled && !sending.value && draft.value.trim() !== '' && !tooLong.value)
+const hasContent = computed(() => draft.value.trim() !== '' || files.value.length > 0)
+const canSend = computed(() => !props.disabled && !sending.value && hasContent.value && !tooLong.value)
 
 async function submit(): Promise<void> {
   if (!canSend.value) {
@@ -71,10 +134,12 @@ async function submit(): Promise<void> {
   }
 
   sending.value = true
+  attachError.value = ''
 
   try {
-    if (await props.send(draft.value.trim())) {
+    if (await props.send(draft.value.trim(), [...files.value])) {
       draft.value = ''
+      files.value = []
     }
   } catch {
     // Teksten beholdes. Appen viser årsaken i `error`.
@@ -102,12 +167,48 @@ defineExpose({ focus: () => field.value?.focus() })
 
 <template>
   <form class="nk-message-composer" @submit.prevent="submit">
-    <div v-if="$slots.attachments" class="nk-message-composer__attachments">
+    <div v-if="$slots.attachments || files.length > 0" class="nk-message-composer__attachments">
       <slot name="attachments" />
+      <v-chip
+        v-for="(file, index) in files"
+        :key="`${file.name}-${file.size}-${index}`"
+        class="nk-message-composer__file"
+        closable
+        :close-label="props.labels.removeAttachment ? `${props.labels.removeAttachment}: ${file.name}` : file.name"
+        :disabled="props.disabled || sending"
+        :prepend-icon="file.type.startsWith('image/') ? 'mdi-image-outline' : 'mdi-file-outline'"
+        size="small"
+        variant="tonal"
+        @click:close="removeFile(index)"
+      >
+        <span class="nk-message-composer__file-name">{{ file.name }}</span>
+        <span class="nk-message-composer__file-size">{{ sizeLabel(file) }}</span>
+      </v-chip>
     </div>
 
     <div class="nk-message-composer__row">
       <slot name="prepend" />
+
+      <template v-if="canAttach">
+        <input
+          ref="picker"
+          :accept="props.attachments?.accept"
+          class="nk-message-composer__picker"
+          :multiple="props.attachments?.multiple !== false"
+          tabindex="-1"
+          type="file"
+          @change="onPicked"
+        >
+        <v-btn
+          class="nk-message-composer__attach"
+          icon="mdi-paperclip"
+          variant="text"
+          :aria-label="props.labels.attach"
+          :disabled="props.disabled || sending"
+          :title="props.labels.attach"
+          @click="openPicker"
+        />
+      </template>
 
       <v-textarea
         ref="field"
@@ -123,7 +224,7 @@ defineExpose({ focus: () => field.value?.focus() })
         :counter="nearLimit ? props.maxLength : undefined"
         :disabled="props.disabled || sending"
         :error="tooLong"
-        :error-messages="props.error"
+        :error-messages="shownError"
         :placeholder="props.labels.field"
         @keydown.enter="onEnter"
       />
@@ -154,6 +255,36 @@ defineExpose({ focus: () => field.value?.focus() })
   display: flex;
   flex-wrap: wrap;
   gap: var(--nk-gap-inline);
+}
+
+.nk-message-composer__file {
+  max-width: 100%;
+}
+
+.nk-message-composer__file-name {
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nk-message-composer__file-size {
+  color: var(--nk-text-secondary);
+  font-size: var(--nk-text-label);
+  margin-inline-start: calc(var(--nk-space-unit) / 2);
+}
+
+/* Filvelgeren åpnes fra knappen; selv er den ute av syne og ute av tab-rekkefølgen. */
+.nk-message-composer__picker {
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  width: 1px;
+}
+
+.nk-message-composer__attach {
+  flex: none;
 }
 
 /* Knappene står i høyde med feltets første linje, også når feltet vokser. */

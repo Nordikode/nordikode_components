@@ -4,6 +4,7 @@ import {
   formatConversationDay,
   formatConversationListTime,
   formatConversationTime,
+  formatFileSize,
   groupConversationEntries,
 } from '../src/conversation'
 import type { NkConversationEntry } from '../src/types/NkConversationEntry'
@@ -71,5 +72,20 @@ describe('gruppering per dag', () => {
 
   it('gir ingen dager for en tom samtale', () => {
     expect(groupConversationEntries([], 'no', now, zone)).toEqual([])
+  })
+})
+
+describe('filstørrelse (SIGN-1317)', () => {
+  it('velger enhet etter størrelsen og skriver tallet på språket', () => {
+    expect(formatFileSize(912, 'en')).toMatch(/^912 /)
+    expect(formatFileSize(48 * 1024, 'en')).toBe('48 kB')
+    expect(formatFileSize(1.25 * 1024 * 1024, 'en')).toBe('1.3 MB')
+    expect(formatFileSize(1.25 * 1024 * 1024, 'no')).toBe('1,3 MB')
+    expect(formatFileSize(48 * 1024, 'pl')).toBe('48 kB')
+  })
+
+  it('tåler tull', () => {
+    expect(formatFileSize(-5, 'en')).toMatch(/^0 /)
+    expect(formatFileSize(Number.NaN, 'sv')).toMatch(/^0 /)
   })
 })
