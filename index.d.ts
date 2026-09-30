@@ -10,8 +10,62 @@ export type NkStatusChipSize = 'sm' | 'md'
 /** NkEmptyState (SIGN-447): `default` for hele flater, `compact` for lister etter søk/filter. */
 export type NkEmptyStateSize = 'default' | 'compact'
 
+/**
+ * Ett innslag i NkConversation (SIGN-1313): en melding (boble) eller en hendelse
+ * (sentrert linje). `text`, `author` og `receipt` er ferdig oversatt av appen.
+ */
+export interface NkConversationEntry {
+  id: string
+  kind: 'message' | 'event'
+  /** Om den som ser på, har skrevet meldingen (boble til høyre). */
+  own?: boolean
+  author?: string
+  text: string
+  /** ISO 8601. */
+  at: string
+  /** Liten linje under boblen, f.eks. «Lest 14:03». */
+  receipt?: string
+}
+export interface NkConversationLabels {
+  /** Navnet på meldingslisten for skjermlesere. */
+  list: string
+  /** Knappen som vises når noe nytt har kommet mens leseren har rullet opp. */
+  newMessages: string
+}
+export interface NkMessageComposerLabels {
+  /** Feltets etikett og plassholder. */
+  field: string
+  /** Send-knappens navn. */
+  send: string
+}
+export interface NkConversationDay {
+  /** `YYYY-MM-DD` i tidssonen som brukes. */
+  key: string
+  label: string
+  entries: NkConversationEntry[]
+}
+
 export const IdentityAvatar: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkConversation (SIGN-1313): samtalevisning med bobler, dagskiller og hendelser.
+ * Props: `entries`, `locale`, `timeZone`, `labels`; slots `empty` og `footer`
+ * (skrivefeltet, fast nederst); emits `seen(lastEntryId)` når nyeste innslag er
+ * synlig og fanen er framme; eksponerer `scrollToEnd(smooth)`.
+ */
+export const NkConversation: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkConversationListItem (SIGN-1313): rad i en samtaleliste på `v-list-item`.
+ * Props: `title`, `preview`, `meta`, `at`, `locale`, `timeZone`, `unreadCount`,
+ * `unreadLabel`; slot `status`; `to`/`href`/`active` sendes videre til raden.
+ */
+export const NkConversationListItem: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkEmptyState: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkMessageComposer (SIGN-1313): skrivefelt som vokser, med send-knapp. Props:
+ * `send(text) => Promise<boolean>` (true tømmer feltet), `labels`, `modelValue`,
+ * `disabled`, `maxLength`, `error`; slots `attachments` og `prepend`; eksponerer `focus()`.
+ */
+export const NkMessageComposer: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /**
  * NkSheet (SIGN-733): det delte dialogskallet — hode, rullende kropp og festet
  * handlingsrad, fullskjerm under `smAndDown`. Props: `modelValue`/`open`, `title`,
@@ -51,6 +105,19 @@ export interface LocaleRegistryEntry {
  */
 export declare function configureLocales(locales: ReadonlyArray<LocaleRegistryEntry>): void
 export declare function toBcp47(locale: string | null | undefined): string
+/**
+ * Dato og tid i samtaler (SIGN-1313), formatert av Intl med brukerens UI-språk.
+ * «i dag»/«i går» kommer fra `Intl.RelativeTimeFormat`. Se src/conversation.ts.
+ */
+export declare function formatConversationDay(at: string | Date, locale: string, now?: Date, timeZone?: string): string
+export declare function formatConversationTime(at: string | Date, locale: string, timeZone?: string): string
+export declare function formatConversationListTime(at: string | Date, locale: string, now?: Date, timeZone?: string): string
+export declare function groupConversationEntries(
+  entries: ReadonlyArray<NkConversationEntry>,
+  locale: string,
+  now?: Date,
+  timeZone?: string,
+): NkConversationDay[]
 export declare function formatMoney(
   amount: number,
   currency: string | null | undefined,

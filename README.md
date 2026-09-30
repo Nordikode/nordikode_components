@@ -16,6 +16,26 @@ chrome-komponenter (`AppTopHeader`, `AppSidebarRail`, `UserIdentityMenu`,
 flatene bruker `AppHeader` med de delte menyene.
 
 - `IdentityAvatar`
+- `NkConversation` — samtalevisning (SIGN-1313): meldinger som bobler (egne til høyre),
+  delt per dag, med hendelser i samtalen som sentrerte linjer. `entries`
+  (`NkConversationEntry[]`: `id`, `kind` `message`/`event`, `own`, `author`, `text`, `at`,
+  `receipt`), `locale`, `timeZone`, `labels` (`list`, `newMessages`). Komponenten ruller
+  ikke selv — siden ruller, og `#footer` (skrivefeltet) står fast nederst. Åpnes nederst
+  og følger med når leseren er nederst; har leseren rullet opp, vises en «nye
+  meldinger»-knapp. `seen(lastEntryId)` sendes når nyeste innslag er synlig og fanen er
+  framme («lest til og med»). `#empty` vises uten innslag. All tekst kommer fra appen
+- `NkConversationListItem` — rad i en samtaleliste (SIGN-1313) på `v-list-item`: `title`,
+  `preview`, `meta`, `at` (tid i dag, ellers kort dato), `unreadCount` med `unreadLabel`
+  for skjermlesere, og `#status` til et `NkStatusChip`. `to`/`href`/`active` sendes videre
+- `NkMessageComposer` — skrivefelt for samtaler (SIGN-1313): vokser med teksten, Enter
+  sender og Shift+Enter gir ny linje (på berøringsskjerm sender bare knappen).
+  `send(text) => Promise<boolean>`: `true` tømmer feltet, ellers beholdes teksten og
+  appen viser årsaken i `error`. `labels` (`field`, `send`), `maxLength` med teller når
+  det nærmer seg, `disabled`, valgfri `v-model` for utkastet; `#attachments` og `#prepend`
+  er satt av til vedlegg
+- `formatConversationDay` / `formatConversationTime` / `formatConversationListTime` /
+  `groupConversationEntries` — dato og tid i samtaler, formatert av `Intl` med brukerens
+  UI-språk («i dag»/«i går» fra `Intl.RelativeTimeFormat`)
 - `NkEmptyState` — tom-tilstand (SIGN-447): sentrert ikon (valgfritt, `mdi-*`),
   `title`, `description` og `actions`-slot; `size` `default` (primær-tonet ikonsirkel,
   hele flater/paneler) eller `compact` (dempet sirkel, «ingen treff» etter søk/filter).
