@@ -180,7 +180,7 @@ The accent contract has three variables, and they mean different things
 (SIGN-904):
 
 - `--nk-chrome-accent` — the accent color itself: filled surfaces, 12 % tints,
-  the unread dot, focus rings.
+  the unread dot in the notification list, focus rings.
 - `--nk-chrome-accent-ink` — the accent used *as text or icon on a light
   tint* (active company, selected app, section nav). Hosts set it to the
   accent color; it is never text on a filled accent.
@@ -192,6 +192,14 @@ The accent contract has three variables, and they mean different things
 The contract is mandatory in both themes: hosts must define all three in light
 mode *and* in `.dark` — overriding only some of them in dark mode makes the
 chrome pick up mismatched colors.
+
+Count badges have their own contract (SIGN-1318): `--nk-chrome-badge` (fill)
+and `--nk-chrome-badge-ink` (the number). Every count in the chrome — the
+unread count on `NotificationBellMenu`, the counts in `AppLauncherMenu` and
+`SectionNav` — uses it, and every host sets it from its error token, so a
+count is red on every surface. A count badge never uses the accent: the accent
+is the host's own color and differs per app. `tests/chromeBadge.test.ts` fails
+when a badge in `src/web` is filled with anything else.
 
 Import styles once (`@nordikode/components/style.css`) — it carries the scoped
 CSS for these components too.
