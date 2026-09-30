@@ -47,6 +47,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Testene vokter blant annet at antall-merkene i headeren har samme
+      # farge på alle flater (SIGN-1318). Uten dette steget kjørte de aldri.
+      - name: Test
+        run: npm test
+
   publish:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     needs: build

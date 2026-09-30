@@ -13,6 +13,9 @@ const webTokens = [
   '--radius-standard: 14px',
   '--nk-chrome-accent: #2e6b5f',
   '--nk-chrome-accent-ink: #2e6b5f',
+  // Badge-kontrakten: verts-appene setter disse fra error-tokenet.
+  '--nk-chrome-badge: #c0504d',
+  '--nk-chrome-badge-ink: #ffffff',
 ].join(';')
 
 const meta: Meta<typeof NotificationBellMenu> = {
