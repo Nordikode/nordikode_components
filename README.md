@@ -19,7 +19,10 @@ flatene bruker `AppHeader` med de delte menyene.
 - `NkConversation` — samtalevisning (SIGN-1313): meldinger som bobler (egne til høyre),
   delt per dag, med hendelser i samtalen som sentrerte linjer. `entries`
   (`NkConversationEntry[]`: `id`, `kind` `message`/`event`, `own`, `author`, `text`, `at`,
-  `receipt`), `locale`, `timeZone`, `labels` (`list`, `newMessages`). Komponenten ruller
+  `receipt`, `attachments`), `locale`, `timeZone`, `labels` (`list`, `newMessages`). Filer i
+  et innslag (SIGN-1317, `NkConversationAttachment`: `name`, `url`, `isImage`, `sizeLabel`)
+  vises som bilde i boblen (`<img loading="lazy">` mot den signerte lenken) eller som
+  lenke med navn og størrelse; `url` null gir navn uten lenke. Komponenten ruller
   ikke selv — siden ruller, og `#footer` (skrivefeltet) står fast nederst. Åpnes nederst
   og følger med når leseren er nederst; har leseren rullet opp, vises en «nye
   meldinger»-knapp. `seen(lastEntryId)` sendes når nyeste innslag er synlig og fanen er
@@ -31,8 +34,15 @@ flatene bruker `AppHeader` med de delte menyene.
   sender og Shift+Enter gir ny linje (på berøringsskjerm sender bare knappen).
   `send(text) => Promise<boolean>`: `true` tømmer feltet, ellers beholdes teksten og
   appen viser årsaken i `error`. `labels` (`field`, `send`), `maxLength` med teller når
-  det nærmer seg, `disabled`, valgfri `v-model` for utkastet; `#attachments` og `#prepend`
-  er satt av til vedlegg
+  det nærmer seg, `disabled`, valgfri `v-model` for utkastet. Vedlegg (SIGN-1317): med
+  `attachments` (`NkMessageComposerAttachments`: `accept`, `multiple`, `validate(file,
+  selectedCount) => string | null` — appens egen tekst, null tar imot) og `labels.attach`
+  får feltet en legg ved-knapp; valgte filer står som merker som kan fjernes
+  (`labels.removeAttachment`), størrelsen formateres med `locale`, og `send(text, files)`
+  får dem. En melding kan være filer alene. `#attachments` og `#prepend` er fortsatt
+  appens
+- `formatFileSize(bytes, locale)` — filstørrelse fra `Intl` («48 kB», «1,3 MB»), for
+  vedlegg i samtaler (SIGN-1317)
 - `formatConversationDay` / `formatConversationTime` / `formatConversationListTime` /
   `groupConversationEntries` — dato og tid i samtaler, formatert av `Intl` med brukerens
   UI-språk («i dag»/«i går» fra `Intl.RelativeTimeFormat`)

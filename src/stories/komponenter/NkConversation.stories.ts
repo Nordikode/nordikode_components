@@ -67,6 +67,45 @@ export const Samtale: Story = {
     ),
 }
 
+// Vedlegg (SIGN-1317): et bilde i boblen, en fil som lenke, og legg ved i skrivefeltet.
+export const MedVedlegg: Story = {
+  render: () => {
+    const entries: NkConversationEntry[] = [
+      ...samtale.slice(0, 2),
+      {
+        id: 'v1',
+        kind: 'message',
+        own: true,
+        text: 'Her er skjermbildet og loggen.',
+        at: tid(2, '09:20'),
+        attachments: [
+          { id: 'a1', name: 'skjermbilde.png', url: 'https://picsum.photos/seed/nordikode/640/360', isImage: true, sizeLabel: '212 kB' },
+          { id: 'a2', name: 'konsoll-logg.txt', url: '#', isImage: false, sizeLabel: '4 kB' },
+        ],
+      },
+      { id: 'v2', kind: 'message', own: false, author: 'Nordikode', text: 'Takk! Vi ser på det.', at: tid(2, '09:31') },
+    ]
+    const attachments = {
+      accept: 'image/*,.pdf,.txt',
+      validate: (file: File, selected: number): string | null =>
+        selected >= 5 ? 'Høyst 5 filer per melding.' : file.size > 10 * 1024 * 1024 ? `«${file.name}» er for stor. Grensen er 10 MB.` : null,
+    }
+
+    return ramme(() =>
+      h(NkConversation, { entries, locale: 'no', labels }, {
+        footer: () =>
+          h(NkMessageComposer, {
+            send: sendOk,
+            labels: { ...composerLabels, attach: 'Legg ved fil', removeAttachment: 'Fjern' },
+            attachments,
+            locale: 'no',
+            maxLength: 5000,
+          }),
+      }),
+    )
+  },
+}
+
 // Backoffice: teamets svar er «egne», og under dem står lesebekreftelsen fra brukeren.
 export const BackofficeMedLesebekreftelse: Story = {
   render: () => {

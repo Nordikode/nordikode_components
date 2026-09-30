@@ -95,3 +95,21 @@ export function groupConversationEntries(
 
   return days
 }
+
+/**
+ * Filstørrelse på brukerens språk (SIGN-1317): «912 B», «48 kB», «1,2 MB».
+ * Enhet og tall kommer fra Intl, aldri fra en tabell i appen.
+ */
+export function formatFileSize(bytes: number, locale: string): string {
+  const size = Math.max(0, Number.isFinite(bytes) ? bytes : 0)
+  const tag = toBcp47(locale)
+  const unit = size >= 1024 * 1024 ? 'megabyte' : size >= 1024 ? 'kilobyte' : 'byte'
+  const value = unit === 'megabyte' ? size / (1024 * 1024) : unit === 'kilobyte' ? size / 1024 : size
+
+  return new Intl.NumberFormat(tag, {
+    style: 'unit',
+    unit,
+    unitDisplay: 'short',
+    maximumFractionDigits: unit === 'megabyte' ? 1 : 0,
+  }).format(value)
+}

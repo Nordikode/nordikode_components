@@ -182,7 +182,31 @@ defineExpose({ scrollToEnd })
             :class="{ 'nk-conversation__message--own': entry.own }"
           >
             <p v-if="showsAuthor(day.entries, index)" class="nk-conversation__author">{{ entry.author }}</p>
-            <p class="nk-conversation__bubble">{{ entry.text }}</p>
+            <p v-if="entry.text !== ''" class="nk-conversation__bubble">{{ entry.text }}</p>
+            <!-- Filene (SIGN-1317): bilder rett i boblen med vanlig lazy img, andre filer som lenker. -->
+            <template v-for="file in entry.attachments ?? []" :key="file.id">
+              <a
+                v-if="file.isImage && file.url"
+                class="nk-conversation__image"
+                :href="file.url"
+                rel="noopener"
+                target="_blank"
+              >
+                <img :alt="file.name" decoding="async" loading="lazy" :src="file.url">
+              </a>
+              <component
+                :is="file.url ? 'a' : 'span'"
+                v-else
+                class="nk-conversation__file"
+                :href="file.url ?? undefined"
+                :rel="file.url ? 'noopener' : undefined"
+                :target="file.url ? '_blank' : undefined"
+              >
+                <v-icon aria-hidden="true" :icon="file.isImage ? 'mdi-image-outline' : 'mdi-file-outline'" size="18" />
+                <span class="nk-conversation__file-name">{{ file.name }}</span>
+                <span class="nk-conversation__file-size">{{ file.sizeLabel }}</span>
+              </component>
+            </template>
             <p class="nk-conversation__meta">
               <time :datetime="entry.at">{{ time(entry) }}</time>
               <template v-if="entry.receipt"> · {{ entry.receipt }}</template>
@@ -296,6 +320,52 @@ defineExpose({ scrollToEnd })
   overflow-wrap: anywhere;
   padding: var(--nk-space-unit) calc(var(--nk-space-unit) * 1.5);
   white-space: pre-wrap;
+}
+
+.nk-conversation__image {
+  border: 1px solid var(--nk-surface-border);
+  border-radius: var(--nk-radius-lg);
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.nk-conversation__image img {
+  display: block;
+  height: auto;
+  max-height: 20rem;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.nk-conversation__file {
+  align-items: center;
+  background: var(--nk-surface-soft);
+  border: 1px solid var(--nk-surface-border);
+  border-radius: var(--nk-radius-lg);
+  color: var(--nk-link);
+  display: inline-flex;
+  font-size: var(--nk-text-body);
+  gap: calc(var(--nk-space-unit) / 2);
+  max-width: 100%;
+  padding: calc(var(--nk-space-unit) * 0.75) calc(var(--nk-space-unit) * 1.5);
+  text-decoration: none;
+}
+
+a.nk-conversation__file:hover {
+  text-decoration: underline;
+}
+
+.nk-conversation__file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nk-conversation__file-size {
+  color: var(--nk-text-secondary);
+  font-size: var(--nk-text-label);
+  white-space: nowrap;
 }
 
 .nk-conversation__message--own .nk-conversation__bubble {
