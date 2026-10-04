@@ -234,10 +234,35 @@ skip-lenken i `App.vue`):
   negativ når ringen skal ligge innenfor en fylt flate (skip-lenken).
 - Bare `:focus-visible`, aldri `:focus` — musebrukere skal ikke få ringen.
 - Menyelementene i `AppHeader`/`AccountIdentityMenu`/`TenantSwitcherMenu`/
-  `NotificationBellMenu`/`AppLauncherMenu` her i biblioteket setter
-  `outline: none` og gir hover-bakgrunnen (`--color-surface-alt`) på
-  `:focus-visible` i samme komponent — det er den synlige erstatningen.
-  Vuetify-komponentene beholder sin egen fokusstil.
+  `AppLauncherMenu` her i biblioteket setter `outline: none` og gir
+  hover-bakgrunnen (`--color-surface-alt`) på `:focus-visible` i samme
+  komponent. Vuetify-komponentene beholder sin egen fokusstil.
+- `NotificationBellMenu` gjør ikke det lenger (SIGN-1288): hover-bakgrunnen
+  holdt ikke 3:1 mot panelet (tabellen under), så radene og «Merk alle som
+  lest» har en ring i tekstfargen, `outline: 2px solid var(--color-ink)` med
+  `outline-offset: -2px` (innenfor raden, ellers klippes den av lista som
+  ruller). `tests/notificationBell.test.ts` feiler hvis `outline: none`
+  kommer tilbake i bjellen.
+
+### Målt kontrast for fokus i varselbjellen (SIGN-1288)
+
+Kontrast mot panelet (`--color-surface-raised` = `surface`), regnet fra
+token-verdiene i `src/tokens/products/`. Kravet er 3:1 (WCAG 1.4.11 og
+2.4.7). Bakgrunnen er `--color-surface-alt` (`surfaceSoft`) i lys modus og
+20 % av den over panelet i mørk.
+
+| Tema | Før: bare bakgrunn, lys | Før: bare bakgrunn, mørk | Nå: ring `textPrimary`, lys | Nå: ring `textPrimary`, mørk |
+| --- | --- | --- | --- | --- |
+| Sign | `#f5f5f7` på `#ffffff` — 1,09:1 | 1,01:1 | `#0d1c26` på `#ffffff` — **17,3:1** | `#e6e9ee` på `#0e1216` — **15,5:1** |
+| Time | `#faf6f0` på `#ffffff` — 1,08:1 | 1,01:1 | `#2c2418` på `#ffffff` — **15,3:1** | `#f1e9dd` på `#231d16` — **13,9:1** |
+| Backoffice | `#f7ebec` på `#ffffff` — 1,16:1 | 1,01:1 | `#35171b` på `#ffffff` — **16,3:1** | `#f2e4e6` på `#271a1e` — **13,6:1** |
+
+Plattformtemaet (konto, firma, utvikler og nettsiden) arver `textPrimary`,
+`surface` og `surfaceSoft` fra Sign og har samme tall.
+
+Ringen holder også mot selve fokusbakgrunnen (laveste: 13,4:1, backoffice
+mørk). Den er tekstfargen og ikke appens aksent, så den er lik på alle
+flater og kan ikke falle under 3:1 når en app bytter aksent.
 
 ## Automatisk sjekk i CI
 
