@@ -67,24 +67,35 @@ export const nkTypography = {
 export const nkFontHref =
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
 
-/** Felles statusfarger — light. */
+/**
+ * Felles statusfarger — light (Time og backoffice).
+ *
+ * Fargene brukes både som tekst og som fyll med hvit etikett, så de må holde
+ * 4,5:1 begge veier (SIGN-1198). De opprinnelige tonene (#1f8a55, #c99a2e,
+ * #c0504d) målte 4,4 / 2,6 / 4,7:1 mot hvitt. Verdiene er de samme som
+ * statusteksten fikk i SIGN-1158.
+ */
 export const nkStatusLight = {
-  success: '#1f8a55',
+  success: '#176840', // avledet: #1f8a55 mørknet 25 % mot svart — 6,8:1 mot hvitt, 6,4:1 på backoffice-siden
   onSuccess: '#ffffff',
-  warning: '#c99a2e',
+  warning: '#795c1c', // avledet: #c99a2e mørknet 40 % mot svart — 6,3:1 mot hvitt, 5,9:1 på backoffice-siden
   onWarning: '#ffffff',
-  error: '#c0504d',
+  error: '#9a403e', // avledet: #c0504d mørknet 20 % mot svart — 6,6:1 mot hvitt, 6,2:1 på backoffice-siden
   onError: '#ffffff',
 } as const
 
-/** Felles statusfarger — dark (var allerede identiske i alle fire apper). */
+/**
+ * Felles statusfarger — dark (var allerede identiske i alle fire apper).
+ * Etiketten på fylt farge er svart: hvit målte 2,6:1 på grønn og 3,0:1 på
+ * rød (SIGN-1198).
+ */
 export const nkStatusDark = {
   success: '#4cb583',
-  onSuccess: '#ffffff',
+  onSuccess: '#000000', // avledet: svart gir 8,2:1 (hvit 2,6:1)
   warning: '#d9ad55',
   onWarning: '#000000',
   error: '#d97b78',
-  onError: '#ffffff',
+  onError: '#000000', // avledet: svart gir 7,1:1 (hvit 3,0:1)
 } as const
 
 /** Felles Vuetify-variabler. */

@@ -46,15 +46,16 @@ export const backofficeTheme: NkProductTheme = {
     onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     info: '#7d2431',
     onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
-    attention: '#c99a2e', // avledet: = felles warning
-    onAttention: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
+    attention: '#c99a2e', // gul som fyll (oppmerksomhet); felles warning er mørknet til tekstfarge (SIGN-1198)
+    onAttention: '#000000', // avledet: svart gir 8,2:1 (hvit 2,6:1) — gul har mørk etikett, slik Sign har på gold
     frame: '#9f2f3b', // avledet: = primary til produktet får egen rammefarge
     onFrame: '#fff9fa', // avledet
     ...nkStatusLight,
     // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
-    // Statusteksten (success/warning/error) er mørkere enn statusfargen selv
-    // (SIGN-1158): statusfargen som tekst holdt ikke 4,5:1 på sin egen tint.
+    // Statusflatene er 12 %-tinten av de opprinnelige statustonene (#1f8a55,
+    // #c99a2e, #c0504d) og er uendret; statusteksten er statusfargen selv,
+    // som siden SIGN-1198 er mørk nok til å holde 4,5:1 også her.
     primarySoft: '#f3e6e7',
     onPrimarySoft: '#9f2f3b',
     infoSoft: '#efe5e6', // avledet: 12 %-blend av info over surface (som de andre soft-flatene)
@@ -62,15 +63,15 @@ export const backofficeTheme: NkProductTheme = {
     aiSoft: '#efe5e6', // avledet: = infoSoft til produktet adopterer ny palett
     onAiSoft: '#7d2431', // avledet
     successSoft: '#e4f1eb',
-    onSuccessSoft: '#176840', // avledet: success mørknet 25 % mot svart — 5,9:1 på successSoft (success selv 3,7:1)
+    onSuccessSoft: '#176840', // avledet: = success — 5,9:1 på successSoft
     inflightSoft: '#f3e6d8', // avledet: felles kopper-tint (ny palett) til produktet adopterer den
     onInflightSoft: '#7c5322', // avledet: 5,5:1 på inflightSoft
     mutedSoft: '#f7ebec', // avledet: = surfaceSoft til produktet adopterer ny palett
     onMutedSoft: '#35171b', // avledet
     warningSoft: '#f9f3e6',
-    onWarningSoft: '#795c1c', // avledet: warning mørknet 40 % mot svart — 5,7:1 på warningSoft (warning selv 2,3:1)
+    onWarningSoft: '#795c1c', // avledet: = warning — 5,7:1 på warningSoft
     errorSoft: '#f7eaea',
-    onErrorSoft: '#9a403e', // avledet: error mørknet 20 % mot svart — 5,6:1 på errorSoft (error selv 4,0:1)
+    onErrorSoft: '#9a403e', // avledet: = error — 5,6:1 på errorSoft
     shadowSoft: 'rgba(53, 23, 27, 0.14)',
     shadowStrong: 'rgba(53, 23, 27, 0.2)',
     borderColor: '#35171b', // avledet (ingen variables-blokk i appen)
@@ -112,7 +113,7 @@ export const backofficeTheme: NkProductTheme = {
     secondary: '#e08f99',
     onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     info: '#df8a94',
-    onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
+    onInfo: '#000000', // avledet: svart gir 8,2:1 (hvit 2,6:1)
     attention: '#d9ad55', // avledet: = felles warning (dark)
     onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     frame: '#d4707b', // avledet: = primary til produktet får egen rammefarge
@@ -121,7 +122,7 @@ export const backofficeTheme: NkProductTheme = {
     // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
     primarySoft: '#3c2429',
-    onPrimarySoft: '#d4707b',
+    onPrimarySoft: '#d87e88', // avledet: primary lysnet 10 % mot hvit — 4,9:1 på primarySoft (primary selv 4,3:1)
     infoSoft: '#3d272c', // avledet: 12 %-blend av info over surface
     onInfoSoft: '#df8a94', // avledet: = info
     aiSoft: '#3d272c', // avledet: = infoSoft til produktet adopterer ny palett
