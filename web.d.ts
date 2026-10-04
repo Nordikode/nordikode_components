@@ -135,6 +135,16 @@ export type NkSignedOutDialogLabels = {
   waiting: string
 }
 
+/** Tekstene til `PhoneNumberField` — alle fra verts-appens oversettelser. */
+export type PhoneNumberFieldLabels = {
+  /** aria-label på landknappen og søkefeltet i menyen. */
+  country: string
+  /** Plassholder i søkefeltet. */
+  search: string
+  /** Vises når søket ikke gir treff. */
+  noResults: string
+}
+
 export function useTheme(): {
   isDark: import('vue').Ref<boolean>
   preference: import('vue').Ref<ThemePreference>
@@ -166,6 +176,15 @@ export const SectionNav: DefineComponent<Record<string, unknown>, Record<string,
 export const ThemeToggle: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NotificationBellMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkSignedOutDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * Telefonfeltet med landvelger uten Vuetify (SIGN-1301). Props: `modelValue`
+ * (E.164), `defaultCountryCode` (land fra bruker, firma eller marked — null gir
+ * tom velger), `locale`, `labels`, `id`, `name`, `disabled`, `required`,
+ * `invalid`, `describedBy`. Events: `update:modelValue`, `input`.
+ */
+export const PhoneNumberField: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/** Er verdien et gyldig nummer i internasjonal form (med landkode)? */
+export declare function isValidInternationalPhoneNumber(value: string | null | undefined): boolean
 
 export interface StaleChunkRouter {
   onError(handler: (error: unknown, to: { fullPath: string }) => unknown): unknown
