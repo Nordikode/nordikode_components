@@ -41,6 +41,18 @@ flatene bruker `AppHeader` med de delte menyene.
   (`labels.removeAttachment`), størrelsen formateres med `locale`, og `send(text, files)`
   får dem. En melding kan være filer alene. `#attachments` og `#prepend` er fortsatt
   appens
+- `NkTemplateField` — felt for tekster med plassholdere (SIGN-1465), f.eks. SMS-maler:
+  plassholderne settes inn med én knapp per plassholder (der markøren står) og vises som
+  brikker med navnet i feltet; brikken slettes som ett tegn. `v-model` er
+  lagringsformatet, uendret: teksten med `{key}`. `placeholders`
+  (`NkTemplatePlaceholder[]`: `key`, `label`, `missingMessage` — satt = obligatorisk, med
+  meldingen ved feltet) er appens data, typisk nøklene i standardmalen
+  (`templatePlaceholderKeys`). `labels` (`field`, `insert`), `hint`, `emptyText` (vises i
+  tomt felt, med brikker), `maxLength` (teller lagringsformatet), `rows`, `disabled`,
+  `errorMessages`
+- `templatePlaceholderKeys` / `parseTemplate` / `templateToken` /
+  `missingTemplatePlaceholders` — malformatet bak `NkTemplateField`; appen stopper
+  lagringen med `missingTemplatePlaceholders(text, placeholders)` (SIGN-1465)
 - `formatFileSize(bytes, locale)` — filstørrelse fra `Intl` («48 kB», «1,3 MB»), for
   vedlegg i samtaler (SIGN-1317)
 - `formatConversationDay` / `formatConversationTime` / `formatConversationListTime` /
