@@ -100,7 +100,14 @@ export function usePhoneNumberField(source: PhoneNumberFieldSource): PhoneNumber
       return countryOptions.value
     }
 
-    return countryOptions.value.filter((option) => option.search.toLowerCase().includes(query))
+    // Land og landkoder som begynner med søket står først («fr» gir Frankrike
+    // før land som bare har bokstavene et sted i navnet).
+    const startsWithQuery = (option: PhoneCountryOption): boolean =>
+      option.subtitle.toLowerCase().startsWith(query) || option.title.startsWith(query) || option.title.startsWith(`+${query}`)
+
+    const matches = countryOptions.value.filter((option) => option.search.toLowerCase().includes(query))
+
+    return [...matches.filter(startsWithQuery), ...matches.filter((option) => !startsWithQuery(option))]
   })
 
   watch(

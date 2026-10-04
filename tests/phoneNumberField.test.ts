@@ -137,6 +137,15 @@ describe('telefonfeltet med landvelger', () => {
     expect(field.filteredCountryOptions.value.map((option) => option.value)).toContain('FR')
     stop()
   })
+
+  it('søket setter land som begynner med søket først', () => {
+    const { field, stop } = mountField({ locale: 'en' })
+
+    field.countrySearch.value = 'fr'
+
+    expect(field.filteredCountryOptions.value[0]?.subtitle.toLowerCase().startsWith('fr')).toBe(true)
+    stop()
+  })
 })
 
 describe('isValidInternationalPhoneNumber', () => {

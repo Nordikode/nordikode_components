@@ -91,7 +91,13 @@ const numberEl = ref<HTMLInputElement | null>(null)
 function toggle() {
   if (props.disabled) return
   open.value = !open.value
-  if (open.value) void nextTick(() => searchEl.value?.focus())
+  if (open.value) {
+    void nextTick(() => {
+      searchEl.value?.focus()
+      // Valgt land skal være synlig når menyen åpnes, ikke gjemt langt nede.
+      listEl.value?.querySelector<HTMLElement>('[aria-selected="true"]')?.scrollIntoView?.({ block: 'center' })
+    })
+  }
 }
 
 function close(returnFocus = false) {
