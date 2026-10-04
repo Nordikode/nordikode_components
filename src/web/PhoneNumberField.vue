@@ -13,7 +13,9 @@
  * verts-appen (`id` kobler `<label for>`; `invalid` gir rød ramme). Alle
  * tekster kommer som `labels` fra verts-appens oversettelser.
  *
- * Tema: verts-appens web-designtokens (`--color-*`, `--radius-*`).
+ * Tema: verts-appens web-designtokens (`--color-*`, `--radius-*`). Skrift og
+ * høyde kan settes av verten med `--nk-phone-font-size` (minst 16px der
+ * Safari på iPhone ellers zoomer inn på feltet) og `--nk-phone-min-height`.
  */
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { CountryCode } from 'libphonenumber-js/min'
@@ -39,6 +41,10 @@ const props = withDefaults(
     /** id på selve nummerfeltet, så verts-appens `<label for>` treffer. */
     id?: string
     name?: string
+    /** Navnet på feltet for skjermlesere når verten ikke har en synlig `<label>`. */
+    ariaLabel?: string
+    /** Plassholder i nummerfeltet — feltets navn, aldri et eksempelnummer med landkode. */
+    placeholder?: string
     disabled?: boolean
     required?: boolean
     /** Rød ramme og `aria-invalid` — verts-appen viser selv meldingen. */
@@ -52,6 +58,8 @@ const props = withDefaults(
     locale: null,
     id: undefined,
     name: undefined,
+    ariaLabel: undefined,
+    placeholder: undefined,
     disabled: false,
     required: false,
     invalid: false,
@@ -228,6 +236,8 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
         inputmode="tel"
         autocomplete="tel"
         :name="name"
+        :aria-label="ariaLabel"
+        :placeholder="placeholder"
         :disabled="disabled"
         :required="required"
         :aria-invalid="invalid || undefined"
@@ -284,17 +294,18 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   min-width: 0;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-compact);
+  min-height: var(--nk-phone-min-height, 0);
   background: var(--color-surface-raised);
   color: var(--color-ink);
   transition: border-color 0.15s;
 }
 
 .nk-phone__frame:focus-within {
-  border-color: var(--color-action);
+  border-color: var(--color-action, currentColor);
 }
 
 .nk-phone--invalid .nk-phone__frame {
-  border-color: var(--color-error);
+  border-color: var(--color-error, currentColor);
 }
 
 .nk-phone--disabled .nk-phone__frame {
@@ -311,13 +322,13 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   background: transparent;
   padding: 0.5rem 0.5rem 0.5rem 0.75rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--nk-phone-font-size, 0.875rem);
   color: inherit;
   cursor: pointer;
 }
 
 .nk-phone__trigger:focus-visible {
-  outline: 2px solid var(--color-action);
+  outline: 2px solid var(--color-action, currentColor);
   outline-offset: -2px;
 }
 
@@ -356,7 +367,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   background: transparent;
   padding: 0.5rem 0.75rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--nk-phone-font-size, 0.875rem);
   color: inherit;
   outline: none;
 }
@@ -385,13 +396,13 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   background: var(--color-surface-raised);
   padding: 0.5rem 0.75rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--nk-phone-font-size, 0.875rem);
   color: var(--color-ink);
   outline: none;
 }
 
 .nk-phone__search:focus {
-  border-color: var(--color-action);
+  border-color: var(--color-action, currentColor);
 }
 
 .nk-phone__list {
@@ -412,7 +423,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   padding: 0.5rem 0.75rem;
   text-align: start;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--nk-phone-font-size, 0.875rem);
   color: var(--color-ink-secondary);
   cursor: pointer;
   outline: none;
@@ -444,7 +455,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 .nk-phone__empty {
   margin: 0;
   padding: 0.75rem;
-  font-size: 0.875rem;
+  font-size: var(--nk-phone-font-size, 0.875rem);
   color: var(--color-ink-secondary);
 }
 

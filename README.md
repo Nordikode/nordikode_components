@@ -108,7 +108,9 @@ from its own theme (see below).
   form (E.164). The host owns the label above and the error text below
   (`id`, `invalid`, `describedBy`) and passes every text in `labels`.
   `isValidInternationalPhoneNumber(value)` tells the host whether the value
-  can be submitted. Never pass a fixed country, and never write a country
+  can be submitted. Font size and height follow the host through
+  `--nk-phone-font-size` (use 16px where iOS Safari would zoom) and
+  `--nk-phone-min-height`. Never pass a fixed country, and never write a country
   code into a hint text (SIGN-1301).
 - `AppHeader` — the header shell itself: sticky 3.25rem bar with blur, brand
   (the full brand logo via `brand="nordikode" | "sign"` (SIGN-641), plus

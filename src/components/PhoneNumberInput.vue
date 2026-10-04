@@ -12,6 +12,8 @@ interface Props {
   required?: boolean
   countryLabel?: string | null
   numberLabel?: string | null
+  /** Navnet på feltet for skjermlesere når det ikke har en synlig etikett (tabellceller). */
+  ariaLabel?: string | null
   countryPlaceholder?: string | null
   placeholder?: string | null
   requiredMessage?: string | null
@@ -19,6 +21,8 @@ interface Props {
   noResultsMessage?: string | null
   hint?: string | null
   persistentHint?: boolean
+  /** Skjuler raden for hint og feil under feltet (tabeller og tette lister). */
+  hideDetails?: boolean | 'auto'
   density?: 'default' | 'comfortable' | 'compact'
   variant?: 'outlined' | 'filled' | 'underlined' | 'plain' | 'solo' | 'solo-filled' | 'solo-inverted'
 }
@@ -31,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   required: false,
   countryLabel: 'Country',
   numberLabel: 'Phone number',
+  ariaLabel: null,
   countryPlaceholder: 'Select country',
   placeholder: '',
   requiredMessage: 'Phone number is required.',
@@ -38,6 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   noResultsMessage: 'No matching country code.',
   hint: null,
   persistentHint: false,
+  hideDetails: false,
   density: undefined,
   variant: undefined,
 })
@@ -99,10 +105,15 @@ function selectCountry(countryCode: CountryCode): void {
     <v-text-field
       v-model="nationalInput"
       class="phone-input-number"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel"
       :density="density"
       :disabled="disabled"
       :hint="hint ?? undefined"
       :persistent-hint="persistentHint"
+      :hide-details="hideDetails"
+      :aria-label="ariaLabel ?? undefined"
       :variant="variant"
       :label="numberLabel ?? undefined"
       :placeholder="placeholder ?? undefined"
