@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, useId, useSlots } from 'vue'
 import { useDisplay } from 'vuetify'
+import NkDialog from './NkDialog.vue'
 
 /**
  * Delt dialogskall (SIGN-733): ett «sheet» med hode, rullende kropp og
@@ -19,6 +20,12 @@ import { useDisplay } from 'vuetify'
  *
  * Åpen/lukket styres enten med `v-model` eller med `open` + `close`;
  * begge hendelsene sendes uansett, så eieren kan velge.
+ *
+ * Sheetet bygger på NkDialog (SIGN-846): tittelen er dialogens navn
+ * (`aria-labelledby`), undertittelen er beskrivelsen (`aria-describedby`),
+ * og fokus går tilbake til elementet som åpnet sheetet. Et eget hode i
+ * `#head` får navnet sitt fra overskriften det inneholder. Med `closeLabel`
+ * får hodet en lukkeknapp med det navnet.
  */
 interface Props {
   /** v-model. */
@@ -33,6 +40,8 @@ interface Props {
   fullscreenOnMobile?: boolean
   /** Rendrer innholdet også når sheetet er lukket (monteringspunkt for f.eks. Stripe). */
   eager?: boolean
+  /** Navnet på lukkeknappen i hodet («Lukk», fra appens i18n). Uten tekst vises ingen lukkeknapp. */
+  closeLabel?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -43,6 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   maxWidth: 560,
   fullscreenOnMobile: true,
   eager: false,
+  closeLabel: '',
 })
 
 const emit = defineEmits<{
@@ -56,11 +66,24 @@ const { smAndDown } = useDisplay()
 const isOpen = computed(() => props.modelValue ?? props.open ?? false)
 const fullscreen = computed(() => props.fullscreenOnMobile && smAndDown.value)
 const hasHead = computed(
-  () => props.title !== '' || props.subtitle !== '' || Boolean(slots.head) || Boolean(slots.badge),
+  () =>
+    props.title !== '' ||
+    props.subtitle !== '' ||
+    props.closeLabel !== '' ||
+    Boolean(slots.head) ||
+    Boolean(slots.badge),
 )
 const hasActions = computed(() => Boolean(slots.actions))
 
-const titleId = `nk-sheet-title-${useId()}`
+const uid = useId()
+const titleId = `nk-sheet-title-${uid}`
+const subtitleId = `nk-sheet-subtitle-${uid}`
+// Standardhodet eier koblingen selv; med eget `#head` finner NkDialog
+// overskriften i innholdet.
+const ownsHead = computed(() => !slots.head)
+// Lukkekrysset som sti: pakka kan ikke forutsette at appens ikonregister har det.
+const closeIconPath =
+  'M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z'
 
 const onUpdate = (value: boolean) => {
   emit('update:modelValue', value)
@@ -69,12 +92,13 @@ const onUpdate = (value: boolean) => {
 </script>
 
 <template>
-  <v-dialog
+  <NkDialog
     :model-value="isOpen"
     :max-width="maxWidth"
     :fullscreen="fullscreen"
     :eager="eager"
-    :aria-labelledby="props.title !== '' ? titleId : undefined"
+    :aria-labelledby="ownsHead && props.title !== '' ? titleId : undefined"
+    :aria-describedby="ownsHead && props.subtitle !== '' ? subtitleId : undefined"
     scrollable
     @update:model-value="onUpdate"
   >
@@ -86,9 +110,22 @@ const onUpdate = (value: boolean) => {
               <h2 v-if="props.title !== ''" :id="titleId" class="nk-sheet__title">{{ props.title }}</h2>
               <slot name="badge" />
             </div>
-            <p v-if="props.subtitle !== ''" class="nk-sheet__subtitle">{{ props.subtitle }}</p>
+            <p v-if="props.subtitle !== ''" :id="subtitleId" class="nk-sheet__subtitle">{{ props.subtitle }}</p>
           </div>
         </slot>
+        <v-btn
+          v-if="props.closeLabel !== ''"
+          :aria-label="props.closeLabel"
+          class="nk-sheet__close"
+          density="comfortable"
+          icon
+          variant="text"
+          @click="onUpdate(false)"
+        >
+          <svg aria-hidden="true" class="nk-sheet__close-icon" focusable="false" viewBox="0 0 24 24">
+            <path :d="closeIconPath" />
+          </svg>
+        </v-btn>
       </div>
 
       <div class="nk-sheet__body" :class="{ 'nk-sheet__body--last': !hasActions }">
@@ -99,7 +136,7 @@ const onUpdate = (value: boolean) => {
         <slot name="actions" />
       </div>
     </v-card>
-  </v-dialog>
+  </NkDialog>
 </template>
 
 <style scoped>
@@ -146,6 +183,20 @@ const onUpdate = (value: boolean) => {
   letter-spacing: -0.01em;
   line-height: 1.3;
   margin: 0;
+}
+
+/* Lukkeknappen står øverst til høyre i hodet og trekkes ut i hodets luft,
+   så tittelen holder linjen sin. */
+.nk-sheet__close {
+  color: var(--nk-text-secondary);
+  flex-shrink: 0;
+  margin: calc(var(--nk-space-unit) * -1) calc(var(--nk-space-unit) * -1) 0 0;
+}
+
+.nk-sheet__close-icon {
+  fill: currentColor;
+  height: 1.5rem;
+  width: 1.5rem;
 }
 
 /* avledet: ett hakk under body-rollen, som støttetekst i kort/paneler. */
