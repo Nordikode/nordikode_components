@@ -1,0 +1,23 @@
+{
+  "banner": {
+    "region": "Supportsession",
+    "viewingAs": "Du ser {app} som {name} ({tenant})",
+    "viewingAsWithoutTenant": "Du ser {app} som {name}",
+    "timeLeft": "{time} kvar",
+    "expired": "Sessionen är avslutad",
+    "readMode": "Läsläge",
+    "writeMode": "Ändringar är på",
+    "makeChanges": "Gör ändringar",
+    "confirmWrite": "Ändringar du gör sparas hos kunden och loggas.",
+    "confirm": "Slå på",
+    "cancel": "Avbryt",
+    "end": "Avsluta"
+  },
+  "messages": {
+    "readOnly": "Du är i läsläge. Slå på «Gör ändringar» i bannern högst upp för att ändra något.",
+    "forbidden": "Detta kan inte göras i en supportsession. Kontot är personligt.",
+    "wrongTenant": "Supportsessionen gäller bara företaget den startades för.",
+    "modeFailed": "Kunde inte byta läge.",
+    "endFailed": "Kunde inte avsluta supportsessionen."
+  }
+}

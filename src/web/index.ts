@@ -24,6 +24,8 @@ export { isValidInternationalPhoneNumber } from '../phone/usePhoneNumberField'
 export { useTheme } from './useTheme'
 export { setEnvironmentLabel, useEnvironmentLabel } from './environmentLabel'
 export { useSupportBannerHeight } from './supportBannerHeight'
+export { supportSessionTexts } from './supportSessionTexts'
+export type { SupportSessionBannerTexts, SupportSessionMessageTexts, SupportSessionTexts } from './supportSessionTexts'
 
 export type { AppLauncherItem } from './AppLauncherMenu.vue'
 export type { AccountMenuService, AccountMenuLabels } from './AccountIdentityMenu.vue'

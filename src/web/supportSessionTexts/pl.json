@@ -1,0 +1,23 @@
+{
+  "banner": {
+    "region": "Sesja wsparcia",
+    "viewingAs": "Widzisz {app} jako {name} ({tenant})",
+    "viewingAsWithoutTenant": "Widzisz {app} jako {name}",
+    "timeLeft": "Pozostało: {time}",
+    "expired": "Sesja została zakończona",
+    "readMode": "Tryb odczytu",
+    "writeMode": "Zmiany są włączone",
+    "makeChanges": "Wprowadzaj zmiany",
+    "confirmWrite": "Zmiany, które wprowadzasz, są zapisywane u klienta i rejestrowane.",
+    "confirm": "Włącz",
+    "cancel": "Anuluj",
+    "end": "Zakończ"
+  },
+  "messages": {
+    "readOnly": "Jesteś w trybie odczytu. Włącz „Wprowadzaj zmiany” na banerze u góry, aby coś zmienić.",
+    "forbidden": "Tego nie można zrobić w sesji wsparcia. Konto jest osobiste.",
+    "wrongTenant": "Sesja wsparcia dotyczy tylko firmy, dla której została rozpoczęta.",
+    "modeFailed": "Nie udało się zmienić trybu.",
+    "endFailed": "Nie udało się zakończyć sesji wsparcia."
+  }
+}
