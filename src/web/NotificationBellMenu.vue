@@ -9,6 +9,11 @@
  * Tilgjengelighet: bjellen er en knapp med `aria-label` som inkluderer
  * antall uleste, panelet er en `menu` med piltast-navigasjon, og ulest-
  * markeringen bæres av tekst (`labels.unread`) i tillegg til prikken.
+ * Fokus (SIGN-1288): rader og «Merk alle som lest» har en synlig ring i
+ * tekstfargen (`--color-ink`, minst 3:1 mot panelet i lys og mørk modus) —
+ * hover-bakgrunnen alene holdt 1,15:1. Fokus går tilbake til bjellen når
+ * panelet lukkes med Escape, Tab eller valg av rad, og Escape lukker også
+ * et panel uten rader (lyttes på roten, ikke bare i panelet).
  *
  * Farger: antallet på bjellen er et antall-merke og bruker badge-kontrakten
  * `--nk-chrome-badge` / `--nk-chrome-badge-ink` (rød, som app-velgeren),
@@ -36,6 +41,8 @@ export type NotificationBellLabels = {
   markAllRead: string
   /** Skjermleser-tekst på uleste rader. */
   unread: string
+  /** Teksten i panelet mens feeden lastes første gang (SIGN-1288). */
+  loading?: string
 }
 
 const props = defineProps<{
@@ -93,7 +100,11 @@ function focusItem(index: number) {
   items[target]?.focus()
 }
 
-function onMenuKeydown(event: KeyboardEvent) {
+// Lyttes på roten (SIGN-1288): et panel uten rader har ingenting å sette
+// fokus på, så fokus står på bjellen — og Escape må virke derfra også.
+function onKeydown(event: KeyboardEvent) {
+  if (!open.value) return
+
   const items = menuItems()
   const current = items.indexOf(document.activeElement as HTMLElement)
 
@@ -119,7 +130,14 @@ function onMenuKeydown(event: KeyboardEvent) {
       close(true)
       break
     case 'Tab':
-      close()
+      // Panelet fjernes når det lukkes. Sto fokus i det, havnet fokus på
+      // `body`; nå går det tilbake til bjellen, og neste Tab går videre.
+      if (menuEl.value?.contains(document.activeElement)) {
+        event.preventDefault()
+        close(true)
+      } else {
+        close()
+      }
       break
   }
 }
@@ -132,7 +150,7 @@ onMounted(() => document.addEventListener('pointerdown', onDocumentPointerDown))
 onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPointerDown))
 
 function onSelect(item: NotificationBellItem) {
-  close()
+  close(true)
   emit('select', item)
 }
 
@@ -142,7 +160,7 @@ function onMarkAllRead() {
 </script>
 
 <template>
-  <div ref="root" class="nk-bell">
+  <div ref="root" class="nk-bell" @keydown="onKeydown">
     <button
       ref="trigger"
       type="button"
@@ -170,7 +188,7 @@ function onMarkAllRead() {
     </button>
 
     <Transition name="nk-pop">
-      <div v-if="open" ref="menuEl" role="menu" class="nk-bell__panel" :aria-label="labels.title" @keydown="onMenuKeydown">
+      <div v-if="open" ref="menuEl" role="menu" class="nk-bell__panel" :aria-label="labels.title">
         <div class="nk-bell__header">
           <p class="nk-bell__title">{{ labels.title }}</p>
           <button
@@ -185,7 +203,7 @@ function onMarkAllRead() {
         </div>
 
         <p v-if="items.length === 0" class="nk-bell__empty" aria-live="polite">
-          {{ loading ? '…' : labels.empty }}
+          {{ loading ? (labels.loading ?? '…') : labels.empty }}
         </p>
 
         <ul v-else class="nk-bell__list">
@@ -252,7 +270,10 @@ function onMarkAllRead() {
 .nk-bell__badge {
   position: absolute;
   top: 0.125rem;
-  inset-inline-end: 0.125rem;
+  /* Festet i venstre kant (SIGN-1288): merket vokser utover fra bjellen når
+     tallet blir bredere. Festet i høyre kant vokste «99+» innover og dekket
+     ikonet. Ett siffer står nøyaktig der det sto. */
+  inset-inline-start: 1.125rem;
   min-width: 1rem;
   height: 1rem;
   padding: 0 0.25rem;
@@ -263,6 +284,7 @@ function onMarkAllRead() {
   font-weight: 600;
   line-height: 1rem;
   text-align: center;
+  white-space: nowrap;
   box-shadow: 0 0 0 2px var(--color-surface, #fff);
 }
 
@@ -310,12 +332,20 @@ function onMarkAllRead() {
   font-weight: 500;
   color: var(--nk-chrome-accent, var(--color-ink-secondary));
   cursor: pointer;
-  outline: none;
 }
 
 .nk-bell__mark-all:hover,
 .nk-bell__mark-all:focus-visible {
   background: var(--color-surface-alt);
+}
+
+/* Fokusringen (SIGN-1288) er tekstfargen: den holder minst 3:1 mot panelet i
+   lys og mørk modus på alle flater, uansett appens aksent. Ringen ligger
+   innenfor flaten, ellers klippes den av lista som ruller. */
+.nk-bell__mark-all:focus-visible,
+.nk-bell__item:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: -2px;
 }
 
 .nk-bell__empty {
@@ -347,7 +377,6 @@ function onMarkAllRead() {
   font-family: inherit;
   color: var(--color-ink-secondary);
   cursor: pointer;
-  outline: none;
   transition: background-color 0.15s, color 0.15s;
 }
 
@@ -383,6 +412,9 @@ function onMarkAllRead() {
 }
 
 .nk-bell__item-title {
+  /* Et langt ord uten mellomrom (en adresse, et saksnavn) brytes i stedet
+     for å klippes ved panelkanten (SIGN-1288). */
+  overflow-wrap: anywhere;
   font-size: 0.875rem;
   line-height: 1.35;
 }
@@ -396,6 +428,7 @@ function onMarkAllRead() {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
   font-size: 0.8125rem;
   line-height: 1.35;
   color: var(--color-ink-secondary);

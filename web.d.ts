@@ -123,6 +123,7 @@ export type NotificationBellLabels = {
   empty: string
   markAllRead: string
   unread: string
+  loading?: string
 }
 
 export type NkSignedOutReason = 'revoked' | 'expired'
