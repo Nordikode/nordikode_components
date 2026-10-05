@@ -254,6 +254,71 @@ export const FirmablokkHoyre: Story = {
   }),
 }
 
+/**
+ * Langt firmanavn ved høyre kant på nettbrett i stående format (SIGN-1271):
+ * menygruppen krymper, og bare firmablokken i den — navnet trunkeres med
+ * ellipse, mens tema, varsler, app-velger og kontomenyen holder bredden sin
+ * og står innenfor rammen (768 px). Full tittel ligger i `title` på blokken.
+ */
+export const FirmablokkHoyreLangtNavn: Story = {
+  name: 'Firmablokk – ved høyre kant, langt firmanavn (768 px)',
+  args: { labels, width: 'full', brand: 'sign' },
+  decorators: [
+    () => ({
+      template: `<div style="width: 768px; max-width: 100%; outline: 1px dashed #c00;"><story /></div>`,
+    }),
+  ],
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu, AppLauncherMenu, NotificationBellMenu },
+    setup: () => ({
+      args,
+      toggleLabels,
+      tenants: [
+        { id: 't-1', name: 'Nordvestlandske Entreprenører Holding AS', logoUrl: demoLogo },
+        { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
+      ],
+      tenantLabels,
+      accountLabels,
+      services,
+      apps: [
+        { key: 'sign', label: 'Sign', url: '#', group: 'products' },
+        { key: 'time', label: 'Time', url: '#', group: 'products' },
+      ],
+      groupLabels: { products: 'Produkter' },
+      bellLabels: {
+        menu: 'Varsler',
+        menuWithUnread: 'Varsler, {count} uleste',
+        title: 'Varsler',
+        empty: 'Ingen varsler ennå.',
+        markAllRead: 'Merk alle som lest',
+        unread: 'ulest',
+      },
+    }),
+    template: `
+      <AppHeader v-bind="args">
+        <template #actions>
+          <div style="display: flex; align-items: center; gap: 0.375rem; white-space: nowrap; font-size: 0.875rem;">
+            <span style="padding: 0.375rem 0.75rem; border: 1px solid var(--color-line); border-radius: 9999px;">Donner votre avis</span>
+          </div>
+        </template>
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <NotificationBellMenu :items="[]" :unread-count="0" :labels="bellLabels" />
+          <AppLauncherMenu :apps="apps" :group-labels="groupLabels" label="Nordikode-apper" />
+          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" align="end" />
+          <AccountIdentityMenu
+            name="Kari Nordmann"
+            email="kari@example.com"
+            :services="services"
+            current-service-key="sign"
+            :labels="accountLabels"
+          />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}
+
 /** Uten logo (eller når logoen feiler å laste) står initialene i samme rute. */
 export const FirmablokkUtenLogo: Story = {
   name: 'Firmablokk – uten logo (initialer)',

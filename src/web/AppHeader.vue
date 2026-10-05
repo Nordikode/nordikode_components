@@ -720,6 +720,27 @@ html {
   background: var(--color-surface-raised);
 }
 
+/* Firmablokken ved høyre kant (`align="end"`, SIGN-683) ligger i menygruppen,
+   og den holder ellers bredden sin (`flex-shrink: 0`). Et langt firmanavn
+   dyttet da kontomenyen ut av bildet på nettbrett i stående format
+   (SIGN-1271: 80–131 px for bredt ved 768 px med et navn på 39 tegn).
+   Med blokken i gruppen får gruppen krympe, og bare blokken i den:
+   verktøyene holder bredden sin, firmanavnet får «…» — samme prinsipp som
+   blokken i #tenant (SIGN-537/561). Uscopet fordi menyene er slot-innhold. */
+.nk-header__end:has(> .nk-tenant--end) {
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.nk-header__end:has(> .nk-tenant--end) > * {
+  flex-shrink: 0;
+}
+
+.nk-header__end:has(> .nk-tenant--end) > .nk-tenant--end {
+  flex-shrink: 1;
+  min-width: 0;
+}
+
 /* Mobil (SIGN-756): menypanelene forankres til headeren, ikke til sin egen
    knapp. Panelene er 16–22 rem brede og høyrejustert mot knappen; bjellen
    og app-velgeren står et stykke inn fra høyre kant, så på 360–414 px
