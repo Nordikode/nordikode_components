@@ -99,6 +99,19 @@ the web design language's CSS variables (`--color-ink`, `--color-surface-*`,
 `--nk-chrome-accent-ink` / `--nk-chrome-on-accent`, which the host app sets
 from its own theme (see below).
 
+- `PhoneNumberField` — the phone field with country picker for surfaces
+  without Vuetify (the website). Same behaviour as `PhoneNumberInput` in the
+  main entry: both run on `usePhoneNumberField`. The country comes from the
+  host (`defaultCountryCode`: the user's, the company's or the market's
+  country); without one the picker is empty and the user picks a country or
+  types `+` and the country code. `v-model` is the number in international
+  form (E.164). The host owns the label above and the error text below
+  (`id`, `invalid`, `describedBy`) and passes every text in `labels`.
+  `isValidInternationalPhoneNumber(value)` tells the host whether the value
+  can be submitted. Font size and height follow the host through
+  `--nk-phone-font-size` (use 16px where iOS Safari would zoom) and
+  `--nk-phone-min-height`. Never pass a fixed country, and never write a country
+  code into a hint text (SIGN-1301).
 - `AppHeader` — the header shell itself: sticky 3.25rem bar with blur, brand
   (the full brand logo via `brand="nordikode" | "sign"` (SIGN-641), plus
   `#brand-suffix` for products without their own logo, optionally with the
