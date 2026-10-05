@@ -82,6 +82,50 @@ export type AppHeaderLabels = {
   menu: string
 }
 
+/** Lesemodus eller skrivemodus i en supportøkt (SIGN-1547). */
+export type SupportSessionMode = 'READ' | 'WRITE'
+
+/**
+ * Supportøkten `AppHeader` viser banner for (SIGN-1547): `supportSession`.
+ * Navn og firma er data; `appName` er produktnavnet («Nordikode Sign»).
+ */
+export type AppHeaderSupportSession = {
+  userName: string
+  tenantName?: string | null
+  appName?: string | null
+  mode: SupportSessionMode
+  /** ISO 8601. */
+  expiresAt: string
+  /** Et modusbytte eller en avslutning er underveis: knappene er av. */
+  busy?: boolean
+}
+
+/**
+ * Supportbannerets tekster: `supportSessionLabels` på `AppHeader`. Alle er
+ * valgfrie der (kildespråket er standard). `viewingAs` har plassholderne
+ * `{app}`, `{name}` og `{tenant}`, `timeLeft` har `{time}`.
+ */
+export type AppHeaderSupportSessionLabels = {
+  region: string
+  viewingAs: string
+  viewingAsWithoutTenant: string
+  timeLeft: string
+  expired: string
+  readMode: string
+  writeMode: string
+  makeChanges: string
+  confirmWrite: string
+  confirm: string
+  cancel: string
+  end: string
+}
+
+/**
+ * Høyden på supportbanneret i piksler, 0 når det ikke vises. Legges til
+ * høyden på en `v-app-bar` som holder `AppHeader`.
+ */
+export declare function useSupportBannerHeight(): Readonly<import('vue').Ref<number>>
+
 export type PageHeaderBack = {
   href: string
   label: string
@@ -171,6 +215,11 @@ export const BrandWordmark: DefineComponent<Record<string, unknown>, Record<stri
 /** Produktsymbolet foran produktnavnet (SIGN-614). `AppHeader` tar det som `productSymbol`. */
 export type ProductSymbolKey = 'sign'
 export const ProductSymbol: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * Supportøkt (SIGN-1547): props `supportSession`, `supportSessionLabels`,
+ * `locale`; events `support-session-mode` (`SupportSessionMode`) og
+ * `support-session-end`.
+ */
 export const AppHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PageHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const SectionNav: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>

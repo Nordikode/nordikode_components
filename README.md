@@ -126,6 +126,21 @@ from its own theme (see below).
   user is (brand, product, company); the right side holds the user's own tools.
   `#nav-item` lets Inertia/SPA apps render their own link component. z-index
   override: `--nk-chrome-z` (default 50).
+  **Support session banner (SIGN-1547):** with `supportSession` set
+  (`{ userName, tenantName, appName, mode, expiresAt, busy }`) a banner stays
+  above the header row: who the operator is viewing as, time left, the mode in
+  words, the «Make changes» switch (confirmed in the banner itself before it
+  is turned on) and «End». It cannot be closed. The header calls no API: it
+  emits `support-session-mode` (`'READ' | 'WRITE'`) and `support-session-end`.
+  Texts come in `supportSessionLabels` (English by default; `viewingAs` takes
+  `{app}`, `{name}`, `{tenant}`, `timeLeft` takes `{time}`), the time is
+  formatted with `Intl` in `locale`. Colours are the warning role
+  (`--nk-warning`/`--nk-on-warning`, on the website
+  `--color-warning`/`--color-on-warning`; override with `--nk-chrome-support`
+  and `--nk-chrome-on-support`). Inside a `v-app-bar` with a fixed height, add
+  `useSupportBannerHeight()` (pixels, 0 without a banner) to the height.
+  `@nordikode/app-core` gives all of it ready to bind:
+  `<AppHeader v-bind="supportBanner">` with `useSupportSessionBanner()`.
 - `PageHeader` — the page-heading standard: hierarchical back link (always
   one level up, never browser history; top-level pages have none) → the
   page's single H1 → subtitle, with `#badge` (status chip) and `#actions`.

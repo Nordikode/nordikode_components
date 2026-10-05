@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { ref } from 'vue'
 import AppHeader from '../../web/AppHeader.vue'
 import ThemeToggle from '../../web/ThemeToggle.vue'
 import TenantSwitcherMenu from '../../web/TenantSwitcherMenu.vue'
@@ -579,6 +580,57 @@ export const SmalMobilNettsidensFirmameny: Story = {
             current-service-key="website"
             :labels="accountLabels"
           />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}
+
+const supportLabels = {
+  region: 'Supportøkt',
+  viewingAs: 'Du ser {app} som {name} ({tenant})',
+  viewingAsWithoutTenant: 'Du ser {app} som {name}',
+  timeLeft: '{time} igjen',
+  expired: 'Økten er avsluttet',
+  readMode: 'Lesemodus',
+  writeMode: 'Endringer er på',
+  makeChanges: 'Gjør endringer',
+  confirmWrite: 'Endringer du gjør, lagres hos kunden og logges.',
+  confirm: 'Slå på',
+  cancel: 'Avbryt',
+  end: 'Avslutt',
+}
+
+/**
+ * Supportøkt (SIGN-1547): banneret står fast over headerraden og kan ikke
+ * lukkes. Bryteren «Gjør endringer» bekreftes i banneret selv før
+ * `support-session-mode` sendes; «Avslutt» sender `support-session-end`.
+ * Historien bytter modus lokalt — i appene eier app-core kallet. Se den på
+ * 360 px og i mørk modus: teksten brytes, knappene får egen rad.
+ */
+export const Supportokt: Story = {
+  name: 'Supportøkt (banner over headeren)',
+  args: { labels, width: 'full', brand: 'sign', locale: 'no', supportSessionLabels: supportLabels },
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, AccountIdentityMenu },
+    setup() {
+      const session = ref({
+        userName: 'Kari Hansen',
+        tenantName: 'Torsvik Bygg AS',
+        appName: 'Nordikode Sign',
+        mode: 'READ' as 'READ' | 'WRITE',
+        expiresAt: new Date(Date.now() + 23 * 60_000).toISOString(),
+      })
+      const onMode = (mode: 'READ' | 'WRITE') => {
+        session.value = { ...session.value, mode }
+      }
+      return { args, session, onMode, toggleLabels, accountLabels, services }
+    },
+    template: `
+      <AppHeader v-bind="args" :support-session="session" @support-session-mode="onMode">
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <AccountIdentityMenu name="Kari Hansen" email="kari@example.com" :services="services" :labels="accountLabels" />
         </template>
       </AppHeader>
     `,

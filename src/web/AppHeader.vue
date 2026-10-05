@@ -33,10 +33,23 @@
  * blokk under), verts-appen overstyrer på `:root`. Ikke stol på fallbacken i
  * `var()` alene — i Chrome 152 ble den til 0, og innhold med `z-index: 0`
  * (kort, knapper) la seg over menypanelene (SIGN-442).
+ *
+ * Supportøkt (SIGN-1547): med `supportSession` satt står supportbanneret
+ * fast over headerraden — hvem det vises som, gjenstående tid, modus,
+ * «Gjør endringer» og «Avslutt». Det kan ikke lukkes, og følger med
+ * headeren på alle flater. Headeren kaller ikke API: modusbytte og avslutt
+ * sendes som `support-session-mode` og `support-session-end`. I en
+ * `v-app-bar` med fast høyde legges `useSupportBannerHeight()` til høyden.
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue'
 import BrandWordmark from './BrandWordmark.vue'
 import ProductSymbol from './ProductSymbol.vue'
+import SupportSessionBanner from './SupportSessionBanner.vue'
+import type {
+  AppHeaderSupportSession,
+  AppHeaderSupportSessionLabels,
+  SupportSessionMode,
+} from './SupportSessionBanner.vue'
 import type { ProductSymbolKey } from './ProductSymbol.vue'
 import type { BrandKey } from './BrandWordmark.vue'
 
@@ -90,6 +103,15 @@ const props = withDefaults(
     width?: 'standard' | 'wide' | 'full'
     /** Aktiv sti for aktiv-markering (f.eks. `location.pathname`). */
     currentPath?: string | null
+    /**
+     * Supportøkten nettleseren er i (SIGN-1547), eller null. Satt ⇒
+     * supportbanneret vises over headerraden og kan ikke lukkes.
+     */
+    supportSession?: AppHeaderSupportSession | null
+    /** Bannerets tekster på brukerens språk. Utelatte tekster står på kildespråket. */
+    supportSessionLabels?: Partial<AppHeaderSupportSessionLabels>
+    /** Brukerens UI-språk, som det er — til tidsformatet i banneret. */
+    locale?: string | null
   }>(),
   {
     nav: () => [],
@@ -99,8 +121,18 @@ const props = withDefaults(
     productSymbol: null,
     width: 'full',
     currentPath: null,
+    supportSession: null,
+    supportSessionLabels: () => ({}),
+    locale: null,
   },
 )
+
+const emit = defineEmits<{
+  /** Brukeren ba om lesemodus eller skrivemodus i supportbanneret. */
+  'support-session-mode': [mode: SupportSessionMode]
+  /** Brukeren trykket «Avslutt» i supportbanneret. */
+  'support-session-end': []
+}>()
 
 function isActive(item: AppHeaderNavChild | AppHeaderNavItem): boolean {
   if (item.active !== undefined) return item.active
@@ -181,6 +213,14 @@ const drawerItems = computed(() =>
 
 <template>
   <header :class="rootClass">
+    <SupportSessionBanner
+      v-if="supportSession"
+      :session="supportSession"
+      :labels="supportSessionLabels"
+      :locale="locale"
+      @mode="emit('support-session-mode', $event)"
+      @end="emit('support-session-end')"
+    />
     <div :class="innerClass">
       <slot name="brand" :close="closeAll">
         <a :href="brandHref" class="nk-header__brand">
