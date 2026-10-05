@@ -264,6 +264,43 @@ Ringen holder også mot selve fokusbakgrunnen (laveste: 13,4:1, backoffice
 mørk). Den er tekstfargen og ikke appens aksent, så den er lik på alle
 flater og kan ikke falle under 3:1 når en app bytter aksent.
 
+## Dialoger har navn (SIGN-846)
+
+En dialog uten navn leses som bare «dialog» (WCAG 4.1.2, funn B6 i
+gjennomgangen). Vuetifys `v-dialog` setter `role="dialog"`, `aria-modal`,
+fokusfelle og Esc, men kobler ikke dialogen til tittelen sin. Derfor:
+
+**Appene bruker aldri rå `v-dialog` — de bruker `NkDialog`, `NkSheet` eller
+`NkConfirmDialog`.** Alle tre gir dialogen navn uten at den som bygger
+dialogen må huske det.
+
+| Dialogen har … | Slik får den navnet |
+| --- | --- |
+| en overskrift (`h1`–`h6`, `v-card-title`, `v-toolbar-title`) | automatisk — `NkDialog` peker `aria-labelledby` på den første overskriften |
+| en tittel som ikke er en overskrift (`div`/`span`), eller flere overskrifter | merk tittelen med `data-nk-dialog-title` |
+| ingen synlig tittel (bildevisning, datovelger, søk) | `aria-label` med tekst fra appens i18n |
+| en ingress som forklarer konsekvensen | merk den med `data-nk-dialog-description` → `aria-describedby` |
+| `NkSheet` med `title`/`subtitle` | automatisk — tittelen er navnet, undertittelen beskrivelsen |
+| `NkConfirmDialog` | automatisk — spørsmålet er navnet, meldingen beskrivelsen, `role="alertdialog"` |
+
+- **Fokus går tilbake** til elementet som åpnet dialogen når den lukkes —
+  også for dialoger styrt med `v-model` (Vuetify gjør det bare med
+  `activator`). Har eieren selv flyttet fokus et annet sted, blir det der.
+- **Esc lukker** alle dialoger som ikke er `persistent`. `NkConfirmDialog` er
+  bare låst mens handlingen pågår (`loading`).
+- **Lukkeknapp har navn:** `NkSheet` med `closeLabel` gir en lukkeknapp med
+  det navnet. En egen ikonknapp for lukking i en dialog skal ha `aria-label`.
+- **Bekreftelser starter på Avbryt**, så Enter aldri utfører noe brukeren ikke
+  har sett på, og bekreft-knappen sier handlingen («Slett avdelingen»).
+- Finner `NkDialog` verken tittel, `aria-label` eller `aria-labelledby`,
+  skriver den en advarsel i konsollen. `tests/dialog.test.ts` her i
+  biblioteket vokter navn, beskrivelse, fokusretur og Esc; hver app har en
+  vakt-test som feiler på rå `v-dialog` og på dialoger uten navn.
+
+Stikkprøve med skjermleser: åpne dialogen med VoiceOver (⌘F5) — den skal
+lese tittelen og «dialog» (bekreftelser: «varseldialog» og meldingen), og
+fokus skal stå på knappen du åpnet fra når du lukker med Esc.
+
 ## Automatisk sjekk i CI
 
 Alle frontend-repoene kjører `scripts/check-a11y.mjs` (SIGN-21) — ESLint over
@@ -300,9 +337,6 @@ legges ut av `pull-a11y-check.mjs`, så rediger aldri kopien.
 - Andre par under 4,5:1: `onPrimarySoft` i mørk backoffice (4,3:1), og i lys
   Time `onPrimarySoft`/`onInfoSoft`/`onAiSoft` (4,3:1) og `neutral`-merket
   (4,4:1).
-- Ingen felles dialog-wrapper med `aria-labelledby`: over hundre rå
-  `v-dialog` på tvers av appene (105 ved tellingen i SIGN-21) gir dialogen
-  navn hver for seg eller ikke i det hele tatt — egen task under SIGN-22.
 - Touch-target-størrelser (24×24, helst 44×44) er ikke verifisert per
   komponent.
 - `no-autofocus`-brudd ligger bevisst i baselinen: dialoger setter fokus i
