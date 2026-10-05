@@ -1,0 +1,23 @@
+{
+  "banner": {
+    "region": "Supportøkt",
+    "viewingAs": "Du ser {app} som {name} ({tenant})",
+    "viewingAsWithoutTenant": "Du ser {app} som {name}",
+    "timeLeft": "{time} igjen",
+    "expired": "Økten er avsluttet",
+    "readMode": "Lesemodus",
+    "writeMode": "Endringer er på",
+    "makeChanges": "Gjør endringer",
+    "confirmWrite": "Endringer du gjør, lagres hos kunden og logges.",
+    "confirm": "Slå på",
+    "cancel": "Avbryt",
+    "end": "Avslutt"
+  },
+  "messages": {
+    "readOnly": "Du er i lesemodus. Slå på «Gjør endringer» i banneret øverst for å endre noe.",
+    "forbidden": "Dette kan ikke gjøres i en supportøkt. Kontoen er personlig.",
+    "wrongTenant": "Supportøkten gjelder bare firmaet den ble startet for.",
+    "modeFailed": "Kunne ikke bytte modus.",
+    "endFailed": "Kunne ikke avslutte supportøkten."
+  }
+}

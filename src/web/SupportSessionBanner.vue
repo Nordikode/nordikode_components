@@ -8,8 +8,8 @@
  * Kan ikke lukkes eller skjules: det finnes ingen lukkeknapp og ingen prop
  * som slår det av mens økten finnes.
  *
- * Ren presentasjon, som resten av chromen: økten og tekstene kommer som
- * props, modusbytte og avslutt sendes som hendelser — verts-appen (eller
+ * Økten kommer som prop, tekstene fra pakken selv på språket i `locale`
+ * (`supportSessionTexts`), så ingen app har egne kopier; modusbytte og avslutt sendes som hendelser — verts-appen (eller
  * `@nordikode/app-core`) eier kallene. Navn og firma er data. Gjenstående
  * tid formateres med `Intl` på brukerens språk.
  *
@@ -25,6 +25,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { toBcp47 } from '../money'
 import { setSupportBannerHeight } from './supportBannerHeight'
+import { supportSessionTexts } from './supportSessionTexts'
 
 export type SupportSessionMode = 'READ' | 'WRITE'
 
@@ -69,22 +70,6 @@ export type AppHeaderSupportSessionLabels = {
   end: string
 }
 
-/** Kildespråket. Verts-appen sender sine oversettelser i `labels`. */
-const DEFAULT_LABELS: AppHeaderSupportSessionLabels = {
-  region: 'Support session',
-  viewingAs: 'You are viewing {app} as {name} ({tenant})',
-  viewingAsWithoutTenant: 'You are viewing {app} as {name}',
-  timeLeft: '{time} left',
-  expired: 'The session has ended',
-  readMode: 'Read mode',
-  writeMode: 'Changes are on',
-  makeChanges: 'Make changes',
-  confirmWrite: 'Changes you make are saved for the customer and logged.',
-  confirm: 'Turn on',
-  cancel: 'Cancel',
-  end: 'End',
-}
-
 const props = withDefaults(
   defineProps<{
     session: AppHeaderSupportSession
@@ -102,7 +87,9 @@ const emit = defineEmits<{
   end: []
 }>()
 
-const text = computed<AppHeaderSupportSessionLabels>(() => ({ ...DEFAULT_LABELS, ...props.labels }))
+/* Tekstene kommer fra pakken, på brukerens språk (én kilde for alle apper).
+   `labels` er bare for en app som bevisst vil overstyre en enkelt tekst. */
+const text = computed<AppHeaderSupportSessionLabels>(() => ({ ...supportSessionTexts(props.locale).banner, ...props.labels }))
 
 const fill = (template: string, values: Record<string, string>): string =>
   template.replace(/\{(\w+)\}/g, (match, key: string) => values[key] ?? match).replace(/\s{2,}/g, ' ').trim()

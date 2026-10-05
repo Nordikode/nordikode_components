@@ -126,6 +126,29 @@ export type AppHeaderSupportSessionLabels = {
  */
 export declare function useSupportBannerHeight(): Readonly<import('vue').Ref<number>>
 
+/** Meldingene appene viser når en handling avvises i en supportøkt (SIGN-1547). */
+export type SupportSessionMessageTexts = {
+  readOnly: string
+  forbidden: string
+  wrongTenant: string
+  modeFailed: string
+  endFailed: string
+}
+
+export type SupportSessionBannerTexts = AppHeaderSupportSessionLabels
+
+export type SupportSessionTexts = {
+  banner: SupportSessionBannerTexts
+  messages: SupportSessionMessageTexts
+}
+
+/**
+ * Supportøktens tekster på brukerens språk — én kilde for alle apper.
+ * Banneret bruker dem selv ut fra `locale`; appene bruker `messages`.
+ * Et språk pakken ikke har, gir kildespråket.
+ */
+export declare function supportSessionTexts(locale?: string | null): SupportSessionTexts
+
 export type PageHeaderBack = {
   href: string
   label: string

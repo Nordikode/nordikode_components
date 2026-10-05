@@ -132,9 +132,14 @@ from its own theme (see below).
   words, the «Make changes» switch (confirmed in the banner itself before it
   is turned on) and «End». It cannot be closed. The header calls no API: it
   emits `support-session-mode` (`'READ' | 'WRITE'`) and `support-session-end`.
-  Texts come in `supportSessionLabels` (English by default; `viewingAs` takes
-  `{app}`, `{name}`, `{tenant}`, `timeLeft` takes `{time}`), the time is
-  formatted with `Intl` in `locale`. Colours are the warning role
+  The texts live in this package, one file per language in
+  `src/web/supportSessionTexts/`, and the banner picks them from `locale` —
+  no app keeps its own copy (a language without a file gets English; a new
+  language is a new file). `supportSessionTexts(locale)` gives apps the same
+  texts for the messages they show when an action is refused
+  (`messages.readOnly`, `.forbidden`, `.wrongTenant`, `.modeFailed`,
+  `.endFailed`). `supportSessionLabels` only overrides a single text. The
+  time is formatted with `Intl` in `locale`. Colours are the warning role
   (`--nk-warning`/`--nk-on-warning`, on the website
   `--color-warning`/`--color-on-warning`; override with `--nk-chrome-support`
   and `--nk-chrome-on-support`). Inside a `v-app-bar` with a fixed height, add

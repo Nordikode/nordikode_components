@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createApp, h, nextTick, reactive, type App } from 'vue'
 
+import { supportSessionTexts } from '../src/web/supportSessionTexts'
 import AppHeader from '../src/web/AppHeader.vue'
 import { useSupportBannerHeight } from '../src/web/supportBannerHeight'
 
@@ -106,6 +107,39 @@ describe('supportbanneret i AppHeader', () => {
     expect(banner()!.querySelector('.nk-support__title')!.textContent).toBe('Du ser Nordikode Sign som Kari Hansen (Torsvik Bygg)')
     expect(banner()!.querySelector('.nk-support__mode')!.textContent).toBe('Lesemodus')
     expect(banner()!.querySelector('time')!.textContent).toBe(expected)
+  })
+
+  it('henter tekstene fra pakken på brukerens språk, uten at appen sender noen', () => {
+    const { banner } = mountHeader({ supportSession: session({ mode: 'READ' }), locale: 'no' })
+
+    expect(banner()!.textContent).toContain('Du ser Nordikode Sign som Kari Hansen (Torsvik Bygg)')
+    expect(banner()!.textContent).toContain('Lesemodus')
+    expect(banner()!.textContent).toContain('Avslutt')
+  })
+
+  it('har alle tekstene på hvert språk pakken har, og gir kildespråket ellers', () => {
+    const source = supportSessionTexts('en')
+    const files = import.meta.glob('../src/web/supportSessionTexts/*.json', { eager: true, import: 'default' })
+
+    expect(Object.keys(files).length).toBeGreaterThan(1)
+
+    for (const [path, texts] of Object.entries(files) as Array<[string, typeof source]>) {
+      expect(Object.keys(texts.banner).sort(), path).toEqual(Object.keys(source.banner).sort())
+      expect(Object.keys(texts.messages).sort(), path).toEqual(Object.keys(source.messages).sort())
+
+      for (const value of [...Object.values(texts.banner), ...Object.values(texts.messages)]) {
+        expect(value.trim(), path).not.toBe('')
+      }
+
+      // Plassholderne er de samme som i kilden.
+      for (const key of ['viewingAs', 'viewingAsWithoutTenant', 'timeLeft'] as const) {
+        expect((texts.banner[key].match(/\{\w+\}/g) ?? []).sort(), path).toEqual((source.banner[key].match(/\{\w+\}/g) ?? []).sort())
+      }
+    }
+
+    expect(supportSessionTexts('no-NO')).toBe(supportSessionTexts('no'))
+    expect(supportSessionTexts('xx')).toBe(source)
+    expect(supportSessionTexts(null)).toBe(source)
   })
 
   it('utelater firmaet når det ikke har navn', () => {
