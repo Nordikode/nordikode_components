@@ -160,7 +160,10 @@ from its own theme (see below).
 - `NotificationBellMenu` — the global notification bell (SIGN-459): unread badge,
   panel with the user's feed and «mark all as read»; the host maps app-core's
   `useNotificationStore` items to `{ id, title, body, timeLabel, read }`, translates
-  `eventKey` + `params` itself and navigates on `select`
+  `eventKey` + `params` itself and navigates on `select`. `labels.loading` is the
+  text shown while the feed loads the first time — pass it in every language the
+  host has. Rows and «mark all as read» carry a visible focus ring, and focus
+  returns to the bell when the panel closes (SIGN-1288)
 - `AccountIdentityMenu` — the avatar/account menu with service list
 - `tenantLogoPresentation` (+ `TenantLogoPresentation`, `TenantLogoFacts`) —
   the smart-logo rule (SIGN-676): `initials` (no logo → circle), `square`,
