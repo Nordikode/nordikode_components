@@ -19,6 +19,7 @@ const meta: Meta<typeof NkSheet> = {
     maxWidth: { control: 'number' },
     fullscreenOnMobile: { control: 'boolean' },
     eager: { control: 'boolean' },
+    closeLabel: { control: 'text' },
   },
   args: {
     fullscreenOnMobile: true,
@@ -35,6 +36,7 @@ interface SheetArgs {
   maxWidth?: number | string
   fullscreenOnMobile?: boolean
   eager?: boolean
+  closeLabel?: string
 }
 
 /** Åpneknapp + sheetet, så historien kan lukkes og åpnes igjen. */
@@ -164,8 +166,27 @@ export const FullskjermMobil: Story = {
     ),
 }
 
-// Bekreftelse: bare tekst og to knapper — her er fullskjerm på mobil skrudd
-// av, et kort spørsmål trenger ikke hele skjermen.
+// Lukkeknapp med navn: `closeLabel` («Lukk» fra appens i18n) gir en
+// lukkeknapp i hodet. Tittelen er dialogens navn og undertittelen
+// beskrivelsen (SIGN-846).
+export const MedLukkeknapp: Story = {
+  args: {
+    title: 'Montering Bergen',
+    subtitle: 'Avdelingen har tre ansatte og to åpne saker.',
+    closeLabel: 'Lukk',
+    maxWidth: 480,
+  },
+  render: (args) =>
+    h(
+      sheetStory(args as SheetArgs, () =>
+        h('p', { class: 'text-body-2', style: 'margin:0;' }, 'Leder: Ola Hansen. Opprettet 12. mars 2026.'),
+      ),
+    ),
+}
+
+// Bekreftelse bygd for hånd: bare tekst og to knapper — her er fullskjerm på
+// mobil skrudd av. Nye bekreftelser bruker NkConfirmDialog, som gjør dette
+// og i tillegg håndterer lasting, feil og fokus.
 export const Bekreftelse: Story = {
   args: {
     title: 'Logg ut fra Safari på iPhone?',

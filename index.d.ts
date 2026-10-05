@@ -9,6 +9,8 @@ export type NkStatusChipTone = 'success' | 'inflight' | 'warning' | 'error' | 'i
 export type NkStatusChipSize = 'sm' | 'md'
 /** NkEmptyState (SIGN-447): `default` for hele flater, `compact` for lister etter søk/filter. */
 export type NkEmptyStateSize = 'default' | 'compact'
+/** NkConfirmDialog (SIGN-846): `danger` er handlinger som ikke kan angres — bekreft-knappen får feilfargen. */
+export type NkConfirmDialogTone = 'default' | 'danger'
 
 /**
  * Ett innslag i NkConversation (SIGN-1313): en melding (boble) eller en hendelse
@@ -115,10 +117,31 @@ export const NkEmptyState: DefineComponent<Record<string, unknown>, Record<strin
  */
 export const NkMessageComposer: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /**
+ * NkDialog (SIGN-846): `v-dialog` med tilgjengelig navn. Dialogen kobles til den
+ * synlige tittelen med `aria-labelledby` (elementet merket `data-nk-dialog-title`,
+ * ellers første overskrift / `v-card-title` i innholdet), til ingressen merket
+ * `data-nk-dialog-description` med `aria-describedby`, og fokus går tilbake til
+ * elementet som åpnet den. Dialoger uten synlig tittel får `aria-label`. Alle
+ * `v-dialog`-props, -hendelser og -slots sendes videre; standard-slotten får også
+ * `close`. Exposes `close()` og `syncNames()`.
+ */
+export const NkDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkConfirmDialog (SIGN-846): bekreftelsesdialog på NkSheet (`role="alertdialog"`).
+ * Props: `modelValue`, `title` (spørsmålet), `message`, `confirmLabel` (handlingen i
+ * klartekst), `cancelLabel`, `tone` (`NkConfirmDialogTone`), `loading`,
+ * `confirmDisabled`, `error` («Kunne ikke X.»), `maxWidth`; slot `default`; emits
+ * `confirm` (lukker ikke — eieren lukker når handlingen er ferdig), `cancel` og
+ * `update:modelValue`.
+ */
+export const NkConfirmDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
  * NkSheet (SIGN-733): det delte dialogskallet — hode, rullende kropp og festet
- * handlingsrad, fullskjerm under `smAndDown`. Props: `modelValue`/`open`, `title`,
- * `subtitle`, `maxWidth`, `fullscreenOnMobile`, `eager`; slots `default`, `actions`,
- * `head`, `badge`; emits `update:modelValue` og `close`.
+ * handlingsrad, fullskjerm under `smAndDown`. Bygger på NkDialog (SIGN-846):
+ * tittelen er dialogens navn, undertittelen beskrivelsen. Props: `modelValue`/`open`,
+ * `title`, `subtitle`, `maxWidth`, `fullscreenOnMobile`, `eager`, `closeLabel`
+ * (lukkeknapp med det navnet); slots `default`, `actions`, `head`, `badge`; emits
+ * `update:modelValue` og `close`.
  */
 export const NkSheet: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkStatusChip: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>

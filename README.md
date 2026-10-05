@@ -58,6 +58,26 @@ flatene bruker `AppHeader` med de delte menyene.
 - `formatConversationDay` / `formatConversationTime` / `formatConversationListTime` /
   `groupConversationEntries` — dato og tid i samtaler, formatert av `Intl` med brukerens
   UI-språk («i dag»/«i går» fra `Intl.RelativeTimeFormat`)
+- `NkDialog` — felles dialog-wrapper (SIGN-846): `v-dialog` med tilgjengelig navn ut
+  av boksen. **Appene bruker aldri rå `v-dialog`.** Dialogen kobles til den synlige
+  tittelen med `aria-labelledby`: elementet merket `data-nk-dialog-title`, ellers den
+  første overskriften i innholdet (`h1`–`h6`, `role="heading"`, `v-card-title`,
+  `v-toolbar-title`) — tittelen får en `id` hvis den mangler. Ingressen merkes
+  `data-nk-dialog-description` og blir `aria-describedby`. En dialog uten synlig tittel
+  (bildevisning, datovelger) får `aria-label`; uten noen av delene advarer konsollen.
+  Fokus går tilbake til elementet som åpnet dialogen (Vuetify gjør det bare med
+  `activator`), og Esc lukker som før. Alle `v-dialog`-props, -hendelser og -slots
+  sendes videre, eierens `scoped`-stiler treffer fortsatt, og standard-slotten får i
+  tillegg `close`. Wrapperen har ingen egen flate: innholdet er appens, eller `NkSheet`
+- `NkConfirmDialog` — felles bekreftelse (SIGN-846): `title` (spørsmålet), `message`
+  (konsekvensen), `confirmLabel` (handlingen i klartekst — «Slett avdelingen», aldri
+  «OK») og `cancelLabel`, alle fra appens i18n og uten standardverdi. `tone="danger"`
+  for det som ikke kan angres. `confirm` lukker ikke dialogen: eieren utfører
+  handlingen med `loading` (dialogen kan da ikke lukkes), lukker selv når den er
+  ferdig, eller setter `error` («Kunne ikke slette avdelingen.», vises som
+  `role="alert"`). Avbryt, Esc og klikk utenfor sender `cancel`. `role="alertdialog"`
+  med spørsmålet som navn og meldingen som beskrivelse; fokus starter på Avbryt.
+  Standard-slotten er for en kort oversikt eller ett felt — ikke skjemaer
 - `NkEmptyState` — tom-tilstand (SIGN-447): sentrert ikon (valgfritt, `mdi-*`),
   `title`, `description` og `actions`-slot; `size` `default` (primær-tonet ikonsirkel,
   hele flater/paneler) eller `compact` (dempet sirkel, «ingen treff» etter søk/filter).
@@ -71,7 +91,10 @@ flatene bruker `AppHeader` med de delte menyene.
   `v-model` eller `open` + `close`; `maxWidth` (standard 560) og `eager`
   sendes til dialogen. Sekundær handling til venstre: `class="me-auto"` på
   knappen. Erstatter app-kopiene av `.nk-sheet*`-CSS-en — konsumentene har
-  ingen egen dialog-CSS; navnet på konsumentens komponent er fortsatt `*Dialog`
+  ingen egen dialog-CSS; navnet på konsumentens komponent er fortsatt `*Dialog`.
+  Bygger på `NkDialog` (SIGN-846): `title` er dialogens navn, `subtitle` beskrivelsen,
+  og et eget `#head` får navnet fra overskriften sin. `closeLabel` («Lukk» fra appens
+  i18n) gir en lukkeknapp med det navnet i hodet
 - `NkStatusChip` — statuschip med to størrelser (`sm`/`md`) og seks semantiske
   toner (`success`/`inflight`/`warning`/`error`/`info`/`neutral`) fra soft-tokenparene;
   teksten kommer alltid fra appens i18n
@@ -138,6 +161,26 @@ from its own theme (see below).
   user is (brand, product, company); the right side holds the user's own tools.
   `#nav-item` lets Inertia/SPA apps render their own link component. z-index
   override: `--nk-chrome-z` (default 50).
+  **Support session banner (SIGN-1547):** with `supportSession` set
+  (`{ userName, tenantName, appName, mode, expiresAt, busy }`) a banner stays
+  above the header row: who the operator is viewing as, time left, the mode in
+  words, the «Make changes» switch (confirmed in the banner itself before it
+  is turned on) and «End». It cannot be closed. The header calls no API: it
+  emits `support-session-mode` (`'READ' | 'WRITE'`) and `support-session-end`.
+  The texts live in this package, one file per language in
+  `src/web/supportSessionTexts/`, and the banner picks them from `locale` —
+  no app keeps its own copy (a language without a file gets English; a new
+  language is a new file). `supportSessionTexts(locale)` gives apps the same
+  texts for the messages they show when an action is refused
+  (`messages.readOnly`, `.forbidden`, `.wrongTenant`, `.modeFailed`,
+  `.endFailed`). `supportSessionLabels` only overrides a single text. The
+  time is formatted with `Intl` in `locale`. Colours are the warning role
+  (`--nk-warning`/`--nk-on-warning`, on the website
+  `--color-warning`/`--color-on-warning`; override with `--nk-chrome-support`
+  and `--nk-chrome-on-support`). Inside a `v-app-bar` with a fixed height, add
+  `useSupportBannerHeight()` (pixels, 0 without a banner) to the height.
+  `@nordikode/app-core` gives all of it ready to bind:
+  `<AppHeader v-bind="supportBanner">` with `useSupportSessionBanner()`.
 - `PageHeader` — the page-heading standard: hierarchical back link (always
   one level up, never browser history; top-level pages have none) → the
   page's single H1 → subtitle, with `#badge` (status chip) and `#actions`.

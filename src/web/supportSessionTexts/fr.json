@@ -1,0 +1,23 @@
+{
+  "banner": {
+    "region": "Session d’assistance",
+    "viewingAs": "Vous voyez {app} en tant que {name} ({tenant})",
+    "viewingAsWithoutTenant": "Vous voyez {app} en tant que {name}",
+    "timeLeft": "Encore {time}",
+    "expired": "La session est terminée",
+    "readMode": "Lecture seule",
+    "writeMode": "Modifications activées",
+    "makeChanges": "Apporter des modifications",
+    "confirmWrite": "Vos modifications sont enregistrées chez le client et consignées.",
+    "confirm": "Activer",
+    "cancel": "Annuler",
+    "end": "Terminer"
+  },
+  "messages": {
+    "readOnly": "Vous êtes en lecture seule. Activez « Apporter des modifications » dans le bandeau en haut pour modifier quelque chose.",
+    "forbidden": "Cette action est impossible dans une session d’assistance. Le compte est personnel.",
+    "wrongTenant": "La session d’assistance ne concerne que l’entreprise pour laquelle elle a été ouverte.",
+    "modeFailed": "Impossible de changer de mode.",
+    "endFailed": "Impossible de terminer la session d’assistance."
+  }
+}

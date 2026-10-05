@@ -10,5 +10,8 @@ export default defineConfig({
   plugins: [vue()],
   test: {
     include: ['tests/**/*.test.ts'],
+    // Dialogtestene (SIGN-846) monterer ekte Vuetify-komponenter; pakka må
+    // gjennom Vite så CSS-importene i den ikke stopper Node.
+    server: { deps: { inline: ['vuetify'] } },
   },
 })
