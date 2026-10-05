@@ -7,6 +7,7 @@ export { default as NkEmptyState } from './components/NkEmptyState.vue'
 export { default as NkMessageComposer } from './components/NkMessageComposer.vue'
 export { default as NkSheet } from './components/NkSheet.vue'
 export { default as NkStatusChip } from './components/NkStatusChip.vue'
+export { default as NkTemplateField } from './components/NkTemplateField.vue'
 export { default as PhoneNumberInput } from './components/PhoneNumberInput.vue'
 
 export type { SharedLocale } from './types/SharedLocale'
@@ -19,6 +20,8 @@ export type { NkConversationEntry } from './types/NkConversationEntry'
 export type { NkConversationLabels } from './types/NkConversationLabels'
 export type { NkMessageComposerAttachments } from './types/NkMessageComposerAttachments'
 export type { NkMessageComposerLabels } from './types/NkMessageComposerLabels'
+export type { NkTemplateFieldLabels } from './types/NkTemplateFieldLabels'
+export type { NkTemplatePlaceholder } from './types/NkTemplatePlaceholder'
 
 export * from './tokens'
 
@@ -33,3 +36,6 @@ export type { FormatMoneyOptions, LocaleRegistryEntry } from './money'
 
 export { formatConversationDay, formatConversationListTime, formatConversationTime, formatFileSize, groupConversationEntries } from './conversation'
 export type { NkConversationDay } from './conversation'
+
+export { missingTemplatePlaceholders, parseTemplate, templatePlaceholderKeys, templateToken } from './template'
+export type { NkTemplateSegment } from './template'
