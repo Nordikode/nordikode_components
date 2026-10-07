@@ -113,6 +113,10 @@ describe('NkGroupedMoveList', () => {
     expect(document.activeElement).toBe(options[0])
 
     options[1]!.click()
+    // Hendelsen kommer først etter at menyen er tegnet bort, så raden
+    // forlater gruppen uten en åpen meny hengende på seg.
+    expect(moves).toEqual([])
+    await nextTick()
     await nextTick()
 
     expect(moves).toEqual([{ itemId: '1', fromGroupId: 'a', toGroupId: null }])

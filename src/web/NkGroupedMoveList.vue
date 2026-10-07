@@ -171,8 +171,11 @@ function closeMenu(returnFocus = false) {
   menuTrigger = null
 }
 
-function choose(item: NkMoveItem, toGroupId: string | null) {
+async function choose(item: NkMoveItem, toGroupId: string | null) {
   closeMenu(true)
+  // Menyen skal være tegnet bort før raden forlater gruppen: ellers henger
+  // den åpne menyen igjen på raden mens utgangsovergangen spilles.
+  await nextTick()
   emit('move', { itemId: item.id, fromGroupId: item.groupId, toGroupId })
 }
 
