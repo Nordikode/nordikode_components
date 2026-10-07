@@ -8,6 +8,7 @@ export { default as NkMessageComposer } from './components/NkMessageComposer.vue
 export { default as NkSheet } from './components/NkSheet.vue'
 export { default as NkStatusChip } from './components/NkStatusChip.vue'
 export { default as NkTemplateField } from './components/NkTemplateField.vue'
+export { default as NkTradeSelect } from './components/NkTradeSelect.vue'
 export { default as PhoneNumberInput } from './components/PhoneNumberInput.vue'
 
 export type { SharedLocale } from './types/SharedLocale'
@@ -21,6 +22,8 @@ export type { NkConversationLabels } from './types/NkConversationLabels'
 export type { NkMessageComposerAttachments } from './types/NkMessageComposerAttachments'
 export type { NkMessageComposerLabels } from './types/NkMessageComposerLabels'
 export type { NkTemplateFieldLabels } from './types/NkTemplateFieldLabels'
+export type { NkPlatformTradeOption, NkTradeCreateInput, NkTradeDelivery, NkTradeOption } from './types/NkTrade'
+export type { NkTradeSelectLabels } from './types/NkTradeSelectLabels'
 export type { NkTemplatePlaceholder } from './types/NkTemplatePlaceholder'
 
 export * from './tokens'
