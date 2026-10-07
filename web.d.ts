@@ -344,3 +344,30 @@ export type NkAutosaveStatusLabels = {
   error: string
 }
 export const NkAutosaveStatus: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+
+/* Gruppert liste med flytting mellom gruppene (SIGN-1395). */
+export interface NkMoveGroup {
+  id: string
+  name: string
+}
+export interface NkMoveItem {
+  id: string
+  groupId: string | null
+  name: string
+  movable?: boolean
+}
+export interface NkMoveEvent {
+  itemId: string
+  fromGroupId: string | null
+  toGroupId: string | null
+}
+export interface NkMoveSection extends NkMoveGroup {
+  key: string
+  items: NkMoveItem[]
+}
+export type NkGroupedMoveListLabels = {
+  ungrouped: string
+  move: string
+  drag: string
+}
+export const NkGroupedMoveList: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
