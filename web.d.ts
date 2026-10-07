@@ -309,3 +309,38 @@ export declare function formatMoneyRange(
   options?: FormatMoneyOptions,
 ): string
 export declare function supportedCurrencyCodes(): string[]
+
+/* Delt autolagring (SIGN-1382): skrivemotoren, innstillingskjernen og statuslinjen. */
+export type DraftAutosaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'error'
+export interface DraftAutosave {
+  status: import('vue').Ref<DraftAutosaveStatus>
+  savedAt: import('vue').Ref<Date | null>
+  schedule: () => void
+  flush: () => Promise<void>
+  cancel: () => void
+}
+export const DRAFT_AUTOSAVE_DELAY_MS: number
+export const SETTINGS_AUTOSAVE_DELAY_MS: number
+export declare function createDraftAutosave(save: () => Promise<void>, delayMs?: number): DraftAutosave
+export interface SettingsAutosaveOptions {
+  signature: import('vue').Ref<string>
+  baseline: import('vue').Ref<string>
+  save: () => Promise<void>
+  describeError: (error: unknown) => string
+  delayMs?: number
+}
+export interface SettingsAutosave {
+  status: import('vue').Ref<DraftAutosaveStatus>
+  errorMessage: import('vue').Ref<string>
+  absorbOwnUpdate: () => boolean
+  isDirty: () => boolean
+  flush: () => Promise<void>
+  cancel: () => void
+}
+export declare function useSettingsAutosave(options: SettingsAutosaveOptions): SettingsAutosave
+export type NkAutosaveStatusLabels = {
+  saving: string
+  saved: string
+  error: string
+}
+export const NkAutosaveStatus: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
