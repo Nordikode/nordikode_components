@@ -9,6 +9,8 @@ export type NkStatusChipTone = 'success' | 'inflight' | 'warning' | 'error' | 'i
 export type NkStatusChipSize = 'sm' | 'md'
 /** NkEmptyState (SIGN-447): `default` for hele flater, `compact` for lister etter søk/filter. */
 export type NkEmptyStateSize = 'default' | 'compact'
+/** NkConfirmDialog (SIGN-846): `danger` er handlinger som ikke kan angres — bekreft-knappen får feilfargen. */
+export type NkConfirmDialogTone = 'default' | 'danger'
 
 /**
  * Ett innslag i NkConversation (SIGN-1313): en melding (boble) eller en hendelse
@@ -66,6 +68,24 @@ export interface NkMessageComposerAttachments {
   multiple?: boolean
   validate: (file: File, selectedCount: number) => string | null
 }
+/** Tekstene NkTemplateField trenger fra appens i18n (SIGN-1465). */
+export interface NkTemplateFieldLabels {
+  /** Feltets etikett. */
+  field: string
+  /** Navnet på knapperaden for skjermlesere, f.eks. «Sett inn i teksten». */
+  insert: string
+}
+/**
+ * En plassholder i NkTemplateField (SIGN-1465): `key` er nøkkelen i lagringsformatet
+ * (`link` = `{link}`), `label` navnet på knappen og brikken, og `missingMessage` gjør den
+ * obligatorisk med appens ferdig oversatte melding.
+ */
+export interface NkTemplatePlaceholder {
+  key: string
+  label: string
+  missingMessage?: string
+}
+export type NkTemplateSegment = { kind: 'text'; text: string } | { kind: 'placeholder'; key: string }
 export interface NkConversationDay {
   /** `YYYY-MM-DD` i tidssonen som brukes. */
   key: string
@@ -97,13 +117,41 @@ export const NkEmptyState: DefineComponent<Record<string, unknown>, Record<strin
  */
 export const NkMessageComposer: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /**
+ * NkDialog (SIGN-846): `v-dialog` med tilgjengelig navn. Dialogen kobles til den
+ * synlige tittelen med `aria-labelledby` (elementet merket `data-nk-dialog-title`,
+ * ellers første overskrift / `v-card-title` i innholdet), til ingressen merket
+ * `data-nk-dialog-description` med `aria-describedby`, og fokus går tilbake til
+ * elementet som åpnet den. Dialoger uten synlig tittel får `aria-label`. Alle
+ * `v-dialog`-props, -hendelser og -slots sendes videre; standard-slotten får også
+ * `close`. Exposes `close()` og `syncNames()`.
+ */
+export const NkDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkConfirmDialog (SIGN-846): bekreftelsesdialog på NkSheet (`role="alertdialog"`).
+ * Props: `modelValue`, `title` (spørsmålet), `message`, `confirmLabel` (handlingen i
+ * klartekst), `cancelLabel`, `tone` (`NkConfirmDialogTone`), `loading`,
+ * `confirmDisabled`, `error` («Kunne ikke X.»), `maxWidth`; slot `default`; emits
+ * `confirm` (lukker ikke — eieren lukker når handlingen er ferdig), `cancel` og
+ * `update:modelValue`.
+ */
+export const NkConfirmDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
  * NkSheet (SIGN-733): det delte dialogskallet — hode, rullende kropp og festet
- * handlingsrad, fullskjerm under `smAndDown`. Props: `modelValue`/`open`, `title`,
- * `subtitle`, `maxWidth`, `fullscreenOnMobile`, `eager`; slots `default`, `actions`,
- * `head`, `badge`; emits `update:modelValue` og `close`.
+ * handlingsrad, fullskjerm under `smAndDown`. Bygger på NkDialog (SIGN-846):
+ * tittelen er dialogens navn, undertittelen beskrivelsen. Props: `modelValue`/`open`,
+ * `title`, `subtitle`, `maxWidth`, `fullscreenOnMobile`, `eager`, `closeLabel`
+ * (lukkeknapp med det navnet); slots `default`, `actions`, `head`, `badge`; emits
+ * `update:modelValue` og `close`.
  */
 export const NkSheet: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkStatusChip: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkTemplateField (SIGN-1465): felt for tekster med plassholdere. Plassholderne settes
+ * inn med knapper og vises som brikker; `v-model` er teksten med `{key}`. Props:
+ * `modelValue`, `placeholders` (`NkTemplatePlaceholder[]`), `labels`, `hint`, `emptyText`,
+ * `maxLength`, `rows`, `disabled`, `errorMessages`; eksponerer `focus()`.
+ */
+export const NkTemplateField: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PhoneNumberInput: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 
 export interface StaleChunkRouter {
@@ -150,6 +198,17 @@ export declare function groupConversationEntries(
 ): NkConversationDay[]
 /** Filstørrelse fra Intl på brukerens språk («48 kB», «1,3 MB») — SIGN-1317. */
 export declare function formatFileSize(bytes: number, locale: string): string
+/** Nøklene som står som `{key}` i en malt tekst, i rekkefølge og uten duplikater (SIGN-1465). */
+export declare function templatePlaceholderKeys(text: string | null | undefined): string[]
+/** Deler teksten i tekst og plassholdere; bare `knownKeys` blir plassholdere. */
+export declare function parseTemplate(text: string, knownKeys: readonly string[]): NkTemplateSegment[]
+/** Lagringsformatet for en plassholder: `{key}`. */
+export declare function templateToken(key: string): string
+/** De obligatoriske plassholderne som mangler; et tomt felt mangler ingenting. */
+export declare function missingTemplatePlaceholders(
+  text: string | null | undefined,
+  placeholders: readonly NkTemplatePlaceholder[],
+): NkTemplatePlaceholder[]
 export declare function formatMoney(
   amount: number,
   currency: string | null | undefined,

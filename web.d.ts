@@ -82,6 +82,73 @@ export type AppHeaderLabels = {
   menu: string
 }
 
+/** Lesemodus eller skrivemodus i en supportøkt (SIGN-1547). */
+export type SupportSessionMode = 'READ' | 'WRITE'
+
+/**
+ * Supportøkten `AppHeader` viser banner for (SIGN-1547): `supportSession`.
+ * Navn og firma er data; `appName` er produktnavnet («Nordikode Sign»).
+ */
+export type AppHeaderSupportSession = {
+  userName: string
+  tenantName?: string | null
+  appName?: string | null
+  mode: SupportSessionMode
+  /** ISO 8601. */
+  expiresAt: string
+  /** Et modusbytte eller en avslutning er underveis: knappene er av. */
+  busy?: boolean
+}
+
+/**
+ * Supportbannerets tekster: `supportSessionLabels` på `AppHeader`. Alle er
+ * valgfrie der (kildespråket er standard). `viewingAs` har plassholderne
+ * `{app}`, `{name}` og `{tenant}`, `timeLeft` har `{time}`.
+ */
+export type AppHeaderSupportSessionLabels = {
+  region: string
+  viewingAs: string
+  viewingAsWithoutTenant: string
+  timeLeft: string
+  expired: string
+  readMode: string
+  writeMode: string
+  makeChanges: string
+  confirmWrite: string
+  confirm: string
+  cancel: string
+  end: string
+}
+
+/**
+ * Høyden på supportbanneret i piksler, 0 når det ikke vises. Legges til
+ * høyden på en `v-app-bar` som holder `AppHeader`.
+ */
+export declare function useSupportBannerHeight(): Readonly<import('vue').Ref<number>>
+
+/** Meldingene appene viser når en handling avvises i en supportøkt (SIGN-1547). */
+export type SupportSessionMessageTexts = {
+  readOnly: string
+  forbidden: string
+  wrongTenant: string
+  modeFailed: string
+  endFailed: string
+}
+
+export type SupportSessionBannerTexts = AppHeaderSupportSessionLabels
+
+export type SupportSessionTexts = {
+  banner: SupportSessionBannerTexts
+  messages: SupportSessionMessageTexts
+}
+
+/**
+ * Supportøktens tekster på brukerens språk — én kilde for alle apper.
+ * Banneret bruker dem selv ut fra `locale`; appene bruker `messages`.
+ * Et språk pakken ikke har, gir kildespråket.
+ */
+export declare function supportSessionTexts(locale?: string | null): SupportSessionTexts
+
 export type PageHeaderBack = {
   href: string
   label: string
@@ -123,6 +190,7 @@ export type NotificationBellLabels = {
   empty: string
   markAllRead: string
   unread: string
+  loading?: string
 }
 
 export type NkSignedOutReason = 'revoked' | 'expired'
@@ -133,6 +201,16 @@ export type NkSignedOutDialogLabels = {
   expired: string
   signInAgain: string
   waiting: string
+}
+
+/** Tekstene til `PhoneNumberField` — alle fra verts-appens oversettelser. */
+export type PhoneNumberFieldLabels = {
+  /** aria-label på landknappen og søkefeltet i menyen. */
+  country: string
+  /** Plassholder i søkefeltet. */
+  search: string
+  /** Vises når søket ikke gir treff. */
+  noResults: string
 }
 
 export function useTheme(): {
@@ -160,12 +238,27 @@ export const BrandWordmark: DefineComponent<Record<string, unknown>, Record<stri
 /** Produktsymbolet foran produktnavnet (SIGN-614). `AppHeader` tar det som `productSymbol`. */
 export type ProductSymbolKey = 'sign'
 export const ProductSymbol: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * Supportøkt (SIGN-1547): props `supportSession`, `supportSessionLabels`,
+ * `locale`; events `support-session-mode` (`SupportSessionMode`) og
+ * `support-session-end`.
+ */
 export const AppHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PageHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const SectionNav: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const ThemeToggle: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NotificationBellMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkSignedOutDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * Telefonfeltet med landvelger uten Vuetify (SIGN-1301). Props: `modelValue`
+ * (E.164), `defaultCountryCode` (land fra bruker, firma eller marked — null gir
+ * tom velger), `locale`, `labels`, `id`, `name`, `ariaLabel`, `placeholder`, `disabled`,
+ * `required`, `invalid`, `describedBy`. Skrift og høyde: `--nk-phone-font-size`,
+ * `--nk-phone-min-height`. Events: `update:modelValue`, `input`.
+ */
+export const PhoneNumberField: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/** Er verdien et gyldig nummer i internasjonal form (med landkode)? */
+export declare function isValidInternationalPhoneNumber(value: string | null | undefined): boolean
 
 export interface StaleChunkRouter {
   onError(handler: (error: unknown, to: { fullPath: string }) => unknown): unknown

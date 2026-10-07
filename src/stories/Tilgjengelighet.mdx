@@ -268,10 +268,72 @@ skip-lenken i `App.vue`):
   negativ når ringen skal ligge innenfor en fylt flate (skip-lenken).
 - Bare `:focus-visible`, aldri `:focus` — musebrukere skal ikke få ringen.
 - Menyelementene i `AppHeader`/`AccountIdentityMenu`/`TenantSwitcherMenu`/
-  `NotificationBellMenu`/`AppLauncherMenu` her i biblioteket setter
-  `outline: none` og gir hover-bakgrunnen (`--color-surface-alt`) på
-  `:focus-visible` i samme komponent — det er den synlige erstatningen.
-  Vuetify-komponentene beholder sin egen fokusstil.
+  `AppLauncherMenu` her i biblioteket setter `outline: none` og gir
+  hover-bakgrunnen (`--color-surface-alt`) på `:focus-visible` i samme
+  komponent. Vuetify-komponentene beholder sin egen fokusstil.
+- `NotificationBellMenu` gjør ikke det lenger (SIGN-1288): hover-bakgrunnen
+  holdt ikke 3:1 mot panelet (tabellen under), så radene og «Merk alle som
+  lest» har en ring i tekstfargen, `outline: 2px solid var(--color-ink)` med
+  `outline-offset: -2px` (innenfor raden, ellers klippes den av lista som
+  ruller). `tests/notificationBell.test.ts` feiler hvis `outline: none`
+  kommer tilbake i bjellen.
+
+### Målt kontrast for fokus i varselbjellen (SIGN-1288)
+
+Kontrast mot panelet (`--color-surface-raised` = `surface`), regnet fra
+token-verdiene i `src/tokens/products/`. Kravet er 3:1 (WCAG 1.4.11 og
+2.4.7). Bakgrunnen er `--color-surface-alt` (`surfaceSoft`) i lys modus og
+20 % av den over panelet i mørk.
+
+| Tema | Før: bare bakgrunn, lys | Før: bare bakgrunn, mørk | Nå: ring `textPrimary`, lys | Nå: ring `textPrimary`, mørk |
+| --- | --- | --- | --- | --- |
+| Sign | `#f5f5f7` på `#ffffff` — 1,09:1 | 1,01:1 | `#0d1c26` på `#ffffff` — **17,3:1** | `#e6e9ee` på `#0e1216` — **15,5:1** |
+| Time | `#faf6f0` på `#ffffff` — 1,08:1 | 1,01:1 | `#2c2418` på `#ffffff` — **15,3:1** | `#f1e9dd` på `#231d16` — **13,9:1** |
+| Backoffice | `#f7ebec` på `#ffffff` — 1,16:1 | 1,01:1 | `#35171b` på `#ffffff` — **16,3:1** | `#f2e4e6` på `#271a1e` — **13,6:1** |
+
+Plattformtemaet (konto, firma, utvikler og nettsiden) arver `textPrimary`,
+`surface` og `surfaceSoft` fra Sign og har samme tall.
+
+Ringen holder også mot selve fokusbakgrunnen (laveste: 13,4:1, backoffice
+mørk). Den er tekstfargen og ikke appens aksent, så den er lik på alle
+flater og kan ikke falle under 3:1 når en app bytter aksent.
+
+## Dialoger har navn (SIGN-846)
+
+En dialog uten navn leses som bare «dialog» (WCAG 4.1.2, funn B6 i
+gjennomgangen). Vuetifys `v-dialog` setter `role="dialog"`, `aria-modal`,
+fokusfelle og Esc, men kobler ikke dialogen til tittelen sin. Derfor:
+
+**Appene bruker aldri rå `v-dialog` — de bruker `NkDialog`, `NkSheet` eller
+`NkConfirmDialog`.** Alle tre gir dialogen navn uten at den som bygger
+dialogen må huske det.
+
+| Dialogen har … | Slik får den navnet |
+| --- | --- |
+| en overskrift (`h1`–`h6`, `v-card-title`, `v-toolbar-title`) | automatisk — `NkDialog` peker `aria-labelledby` på den første overskriften |
+| en tittel som ikke er en overskrift (`div`/`span`), eller flere overskrifter | merk tittelen med `data-nk-dialog-title` |
+| ingen synlig tittel (bildevisning, datovelger, søk) | `aria-label` med tekst fra appens i18n |
+| en ingress som forklarer konsekvensen | merk den med `data-nk-dialog-description` → `aria-describedby` |
+| `NkSheet` med `title`/`subtitle` | automatisk — tittelen er navnet, undertittelen beskrivelsen |
+| `NkConfirmDialog` | automatisk — spørsmålet er navnet, meldingen beskrivelsen, `role="alertdialog"` |
+
+- **Fokus går tilbake** til elementet som åpnet dialogen når den lukkes —
+  også for dialoger styrt med `v-model` (Vuetify gjør det bare med
+  `activator`). Har eieren selv flyttet fokus et annet sted, blir det der.
+- **Esc lukker** alle dialoger som ikke er `persistent`. `NkConfirmDialog` er
+  bare låst mens handlingen pågår (`loading`).
+- **Lukkeknapp har navn:** `NkSheet` med `closeLabel` gir en lukkeknapp med
+  det navnet. En egen ikonknapp for lukking i en dialog skal ha `aria-label`.
+- **Bekreftelser starter på Avbryt**, så Enter aldri utfører noe brukeren ikke
+  har sett på, og bekreft-knappen sier handlingen («Slett avdelingen»).
+- Finner `NkDialog` verken tittel, `aria-label` eller `aria-labelledby`,
+  skriver den en advarsel i konsollen. `tests/dialog.test.ts` her i
+  biblioteket vokter navn, beskrivelse, fokusretur og Esc; hver app har en
+  vakt-test som feiler på rå `v-dialog` og på dialoger uten navn.
+
+Stikkprøve med skjermleser: åpne dialogen med VoiceOver (⌘F5) — den skal
+lese tittelen og «dialog» (bekreftelser: «varseldialog» og meldingen), og
+fokus skal stå på knappen du åpnet fra når du lukker med Esc.
 
 ## Automatisk sjekk i CI
 
@@ -300,9 +362,6 @@ legges ut av `pull-a11y-check.mjs`, så rediger aldri kopien.
 - Time og backoffice har avledede verdier for rollene `frame`, `mutedSoft`
   og `textTitle` til de adopterer paletten; kontrasten der er ikke målt i
   tabellene over.
-- Ingen felles dialog-wrapper med `aria-labelledby`: over hundre rå
-  `v-dialog` på tvers av appene (105 ved tellingen i SIGN-21) gir dialogen
-  navn hver for seg eller ikke i det hele tatt — egen task under SIGN-22.
 - Touch-target-størrelser (24×24, helst 44×44) er ikke verifisert per
   komponent.
 - `no-autofocus`-brudd ligger bevisst i baselinen: dialoger setter fokus i

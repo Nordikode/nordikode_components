@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { ref } from 'vue'
 import AppHeader from '../../web/AppHeader.vue'
 import ThemeToggle from '../../web/ThemeToggle.vue'
 import TenantSwitcherMenu from '../../web/TenantSwitcherMenu.vue'
@@ -240,6 +241,71 @@ export const FirmablokkHoyre: Story = {
       <AppHeader v-bind="args">
         <template #menus>
           <ThemeToggle :labels="toggleLabels" />
+          <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" align="end" />
+          <AccountIdentityMenu
+            name="Kari Nordmann"
+            email="kari@example.com"
+            :services="services"
+            current-service-key="sign"
+            :labels="accountLabels"
+          />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}
+
+/**
+ * Langt firmanavn ved høyre kant på nettbrett i stående format (SIGN-1271):
+ * menygruppen krymper, og bare firmablokken i den — navnet trunkeres med
+ * ellipse, mens tema, varsler, app-velger og kontomenyen holder bredden sin
+ * og står innenfor rammen (768 px). Full tittel ligger i `title` på blokken.
+ */
+export const FirmablokkHoyreLangtNavn: Story = {
+  name: 'Firmablokk – ved høyre kant, langt firmanavn (768 px)',
+  args: { labels, width: 'full', brand: 'sign' },
+  decorators: [
+    () => ({
+      template: `<div style="width: 768px; max-width: 100%; outline: 1px dashed #c00;"><story /></div>`,
+    }),
+  ],
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu, AppLauncherMenu, NotificationBellMenu },
+    setup: () => ({
+      args,
+      toggleLabels,
+      tenants: [
+        { id: 't-1', name: 'Nordvestlandske Entreprenører Holding AS', logoUrl: demoLogo },
+        { id: 't-2', name: 'Moore Eiendom AS', logoUrl: null },
+      ],
+      tenantLabels,
+      accountLabels,
+      services,
+      apps: [
+        { key: 'sign', label: 'Sign', url: '#', group: 'products' },
+        { key: 'time', label: 'Time', url: '#', group: 'products' },
+      ],
+      groupLabels: { products: 'Produkter' },
+      bellLabels: {
+        menu: 'Varsler',
+        menuWithUnread: 'Varsler, {count} uleste',
+        title: 'Varsler',
+        empty: 'Ingen varsler ennå.',
+        markAllRead: 'Merk alle som lest',
+        unread: 'ulest',
+      },
+    }),
+    template: `
+      <AppHeader v-bind="args">
+        <template #actions>
+          <div style="display: flex; align-items: center; gap: 0.375rem; white-space: nowrap; font-size: 0.875rem;">
+            <span style="padding: 0.375rem 0.75rem; border: 1px solid var(--color-line); border-radius: 9999px;">Donner votre avis</span>
+          </div>
+        </template>
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <NotificationBellMenu :items="[]" :unread-count="0" :labels="bellLabels" />
+          <AppLauncherMenu :apps="apps" :group-labels="groupLabels" label="Nordikode-apper" />
           <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" align="end" />
           <AccountIdentityMenu
             name="Kari Nordmann"
@@ -514,6 +580,57 @@ export const SmalMobilNettsidensFirmameny: Story = {
             current-service-key="website"
             :labels="accountLabels"
           />
+        </template>
+      </AppHeader>
+    `,
+  }),
+}
+
+const supportLabels = {
+  region: 'Supportøkt',
+  viewingAs: 'Du ser {app} som {name} ({tenant})',
+  viewingAsWithoutTenant: 'Du ser {app} som {name}',
+  timeLeft: '{time} igjen',
+  expired: 'Økten er avsluttet',
+  readMode: 'Lesemodus',
+  writeMode: 'Endringer er på',
+  makeChanges: 'Gjør endringer',
+  confirmWrite: 'Endringer du gjør, lagres hos kunden og logges.',
+  confirm: 'Slå på',
+  cancel: 'Avbryt',
+  end: 'Avslutt',
+}
+
+/**
+ * Supportøkt (SIGN-1547): banneret står fast over headerraden og kan ikke
+ * lukkes. Bryteren «Gjør endringer» bekreftes i banneret selv før
+ * `support-session-mode` sendes; «Avslutt» sender `support-session-end`.
+ * Historien bytter modus lokalt — i appene eier app-core kallet. Se den på
+ * 360 px og i mørk modus: teksten brytes, knappene får egen rad.
+ */
+export const Supportokt: Story = {
+  name: 'Supportøkt (banner over headeren)',
+  args: { labels, width: 'full', brand: 'sign', locale: 'no', supportSessionLabels: supportLabels },
+  render: (args) => ({
+    components: { AppHeader, ThemeToggle, AccountIdentityMenu },
+    setup() {
+      const session = ref({
+        userName: 'Kari Hansen',
+        tenantName: 'Torsvik Bygg AS',
+        appName: 'Nordikode Sign',
+        mode: 'READ' as 'READ' | 'WRITE',
+        expiresAt: new Date(Date.now() + 23 * 60_000).toISOString(),
+      })
+      const onMode = (mode: 'READ' | 'WRITE') => {
+        session.value = { ...session.value, mode }
+      }
+      return { args, session, onMode, toggleLabels, accountLabels, services }
+    },
+    template: `
+      <AppHeader v-bind="args" :support-session="session" @support-session-mode="onMode">
+        <template #menus>
+          <ThemeToggle :labels="toggleLabels" />
+          <AccountIdentityMenu name="Kari Hansen" email="kari@example.com" :services="services" :labels="accountLabels" />
         </template>
       </AppHeader>
     `,

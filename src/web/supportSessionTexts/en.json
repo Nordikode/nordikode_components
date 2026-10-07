@@ -1,0 +1,23 @@
+{
+  "banner": {
+    "region": "Support session",
+    "viewingAs": "You are viewing {app} as {name} ({tenant})",
+    "viewingAsWithoutTenant": "You are viewing {app} as {name}",
+    "timeLeft": "{time} left",
+    "expired": "The session has ended",
+    "readMode": "Read mode",
+    "writeMode": "Changes are on",
+    "makeChanges": "Make changes",
+    "confirmWrite": "Changes you make are saved for the customer and logged.",
+    "confirm": "Turn on",
+    "cancel": "Cancel",
+    "end": "End"
+  },
+  "messages": {
+    "readOnly": "You are in read mode. Turn on «Make changes» in the banner at the top to change anything.",
+    "forbidden": "This cannot be done in a support session. The account is personal.",
+    "wrongTenant": "The support session only applies to the company it was started for.",
+    "modeFailed": "Could not change the mode.",
+    "endFailed": "Could not end the support session."
+  }
+}
