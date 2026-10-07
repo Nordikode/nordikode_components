@@ -30,7 +30,7 @@ export const timeTheme: NkProductTheme = {
     onSurfacePanelWarning: '#e0bf7b', // avledet: attention lysnet — 4,5:1
     onSurfacePanelLink: '#ecbb87', // avledet: dark.link lysnet — 4,6:1
     textPrimary: '#2c2418',
-    textSecondary: '#7d715f',
+    textSecondary: '#716656', // avledet: #7d715f mørknet 10 % mot svart — 5,2:1 på side og myk flate (#7d715f målte 4,4:1), 5,6:1 på kort
     textTitle: '#2c2418', // avledet: = textPrimary til produktet adopterer ny palett
     primary: '#b45309',
     primaryHover: '#92400e',
@@ -38,8 +38,8 @@ export const timeTheme: NkProductTheme = {
     link: '#b45309', // avledet: = primary til produktet adopterer ny palett
     linkHover: '#92400e', // avledet
     onPrimary: '#ffffff',
-    secondary: '#c98f57',
-    onSecondary: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
+    secondary: '#835d39', // avledet: #c98f57 mørknet 35 % mot svart — 5,0:1 som tonal-chip («Til godkjenning», #c98f57 målte 2,5:1), 5,4:1 på side
+    onSecondary: '#ffffff', // 5,9:1 på secondary
     info: '#b45309',
     onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
     attention: '#d9a62e',
@@ -49,24 +49,27 @@ export const timeTheme: NkProductTheme = {
     ...nkStatusLight,
     // Myke flater — avledet: eksakt blend-ekvivalent av Vuetifys tonal-
     // rendering (farge på 12 % over kortflaten), så utseendet er uendret.
-    // Statusteksten (success/warning/error) er mørkere enn statusfargen selv
-    // (SIGN-1158): statusfargen som tekst holdt ikke 4,5:1 på sin egen tint.
+    // Statusflatene er 12 %-tinten av de opprinnelige statustonene (#1f8a55,
+    // #c99a2e, #c0504d) og er uendret; statusteksten er statusfargen selv,
+    // som siden SIGN-1198 er mørk nok til å holde 4,5:1 også her.
+    // Teksten på de myke handlingsflatene er primaryHover: primary selv målte
+    // 4,3:1 på tinten (SIGN-1198).
     primarySoft: '#f6eae1',
-    onPrimarySoft: '#b45309',
+    onPrimarySoft: '#92400e', // avledet: = primaryHover — 6,0:1 på primarySoft
     infoSoft: '#f6eae1', // avledet: 12 %-blend av info over surface (som de andre soft-flatene)
-    onInfoSoft: '#b45309', // avledet: = info
+    onInfoSoft: '#92400e', // avledet: = primaryHover — 6,0:1 på infoSoft
     aiSoft: '#f6eae1', // avledet: = infoSoft til produktet adopterer ny palett
-    onAiSoft: '#b45309', // avledet
+    onAiSoft: '#92400e', // avledet: = onInfoSoft — 6,0:1 på aiSoft
     successSoft: '#e4f1eb',
-    onSuccessSoft: '#176840', // avledet: success mørknet 25 % mot svart — 5,9:1 på successSoft (success selv 3,7:1)
+    onSuccessSoft: '#176840', // avledet: = success — 5,9:1 på successSoft
     inflightSoft: '#f3e6d8', // avledet: felles kopper-tint (ny palett) til produktet adopterer den
     onInflightSoft: '#7c5322', // avledet: 5,5:1 på inflightSoft
     mutedSoft: '#faf6f0', // avledet: = surfaceSoft til produktet adopterer ny palett
     onMutedSoft: '#2c2418', // avledet
     warningSoft: '#f9f3e6',
-    onWarningSoft: '#795c1c', // avledet: warning mørknet 40 % mot svart — 5,7:1 på warningSoft (warning selv 2,3:1)
+    onWarningSoft: '#795c1c', // avledet: = warning — 5,7:1 på warningSoft
     errorSoft: '#f7eaea',
-    onErrorSoft: '#9a403e', // avledet: error mørknet 20 % mot svart — 5,6:1 på errorSoft (error selv 4,0:1)
+    onErrorSoft: '#9a403e', // avledet: = error — 5,6:1 på errorSoft
     shadowSoft: 'rgba(44, 36, 24, 0.14)', // avledet
     shadowStrong: 'rgba(44, 36, 24, 0.2)', // avledet
     borderColor: '#2c2418',
@@ -108,7 +111,7 @@ export const timeTheme: NkProductTheme = {
     secondary: '#d9b189',
     onSecondary: '#000000', // avledet: Vuetifys tidligere auto-verdi
     info: '#e0913c',
-    onInfo: '#ffffff', // avledet: Vuetifys tidligere auto-verdi
+    onInfo: '#000000', // avledet: svart gir 8,3:1 (hvit 2,5:1)
     attention: '#d9ad55',
     onAttention: '#000000', // avledet: Vuetifys tidligere auto-verdi
     frame: '#e0913c', // avledet: = primary til produktet får egen rammefarge
