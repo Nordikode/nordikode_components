@@ -36,6 +36,7 @@
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { initialsOf } from '../initials'
 import { tenantLogoPresentation, type TenantLogoFacts, type TenantLogoPresentation } from './tenantLogoPresentation'
 
 /** Logo-fakta (`logoAspectRatio`, `logoContainsText`) — se tenantLogoPresentation.ts. */
@@ -93,16 +94,6 @@ const selected = computed(() => {
   if (personalSelected.value) return props.personal ?? null
   return props.tenants.find((tenant) => tenant.id === props.selectedId) ?? null
 })
-
-// Samme regel som avataren i kontomenyen: de to første ordene.
-function initialsOf(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean)
-  if (parts.length === 0) return '?'
-  return parts
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? '')
-    .join('')
-}
 
 /** Logoer som feiler å laste faller tilbake til initialer. */
 const failedLogos = ref<Set<string>>(new Set())

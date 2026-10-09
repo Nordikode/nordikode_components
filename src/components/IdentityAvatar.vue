@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { initialsOf } from '../initials'
 
 interface Props {
   name: string
@@ -14,13 +15,14 @@ const props = withDefaults(defineProps<Props>(), {
   color: 'primary',
 })
 
-const fallbackInitial = computed(() => (props.name?.trim()[0] ?? 'U').toUpperCase())
+// Samme regel som konto- og firmamenyen (SIGN-1668): de to første ordene.
+const fallbackInitials = computed(() => initialsOf(props.name))
 </script>
 
 <template>
   <v-avatar :color="props.color" :size="props.size">
     <v-img v-if="props.imageUrl" :src="props.imageUrl" cover />
-    <span v-else class="avatar-fallback">{{ fallbackInitial }}</span>
+    <span v-else class="avatar-fallback">{{ fallbackInitials }}</span>
   </v-avatar>
 </template>
 
