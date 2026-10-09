@@ -151,7 +151,9 @@ from its own theme (see below).
   (the full brand logo via `brand="nordikode" | "sign"` (SIGN-641), plus
   `#brand-suffix` for products without their own logo, optionally with the
   product's symbol in front of the suffix via `productSymbol="sign"`,
-  SIGN-614), the company block in `#tenant` (SIGN-561, see below), nav from a
+  SIGN-614; client-side routers pass `linkComponent` + `hrefProp` so the
+  brand link changes page without a reload, as in `SectionNav`, SIGN-1496),
+  the company block in `#tenant` (SIGN-561, see below), nav from a
   `nav` prop rendered both as desktop
   nav (one dropdown level, active by `currentPath` prefix) and as the built-in
   burger drawer below 640px. Widths: `standard` (64rem), `wide` (72rem),

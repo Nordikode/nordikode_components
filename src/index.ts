@@ -37,5 +37,7 @@ export type { FormatMoneyOptions, LocaleRegistryEntry } from './money'
 export { formatConversationDay, formatConversationListTime, formatConversationTime, formatFileSize, groupConversationEntries } from './conversation'
 export type { NkConversationDay } from './conversation'
 
+export { initialsOf } from './initials'
+
 export { missingTemplatePlaceholders, parseTemplate, templatePlaceholderKeys, templateToken } from './template'
 export type { NkTemplateSegment } from './template'
