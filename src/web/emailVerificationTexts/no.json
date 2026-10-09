@@ -1,0 +1,7 @@
+{
+  "region": "E-postadressen er ikke bekreftet",
+  "message": "Bekreft e-postadressen din innen {date}. Vi har sendt en lenke til {email}.",
+  "resend": "Send ny lenke",
+  "resendIn": "Send på nytt om {seconds} s",
+  "sent": "Ny lenke er sendt til {email}."
+}

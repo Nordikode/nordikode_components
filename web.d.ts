@@ -149,6 +149,31 @@ export type SupportSessionTexts = {
  */
 export declare function supportSessionTexts(locale?: string | null): SupportSessionTexts
 
+/** Det som venter på bekreftelse (SIGN-1676): `me.pendingEmailVerification` fra core. */
+export type PendingEmailVerification = {
+  email: string
+  /** ISO 8601 eller `YYYY-MM-DD HH:MM:SS` (UTC) slik core gir den. */
+  deadlineAt: string
+}
+
+/** Båndets tekster; `message` har `{date}` og `{email}`, `resendIn` har `{seconds}`. */
+export type EmailVerificationBannerTexts = {
+  region: string
+  message: string
+  resend: string
+  resendIn: string
+  sent: string
+}
+
+/**
+ * Båndet «Bekreft e-posten din» (SIGN-1676): `pending`, `locale`, `busy`,
+ * `resendSecondsLeft` og valgfrie `labels`; sender `resend`.
+ */
+export declare const EmailVerificationBanner: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+
+/** Båndets tekster på brukerens språk, med kildespråket som reserve. */
+export declare function emailVerificationTexts(locale?: string | null): EmailVerificationBannerTexts
+
 export type PageHeaderBack = {
   href: string
   label: string

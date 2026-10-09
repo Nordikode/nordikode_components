@@ -1,0 +1,7 @@
+{
+  "region": "E-postadressen är inte bekräftad",
+  "message": "Bekräfta din e-postadress senast {date}. Vi har skickat en länk till {email}.",
+  "resend": "Skicka ny länk",
+  "resendIn": "Skicka igen om {seconds} s",
+  "sent": "En ny länk har skickats till {email}."
+}
