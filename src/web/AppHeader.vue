@@ -41,7 +41,7 @@
  * sendes som `support-session-mode` og `support-session-end`. I en
  * `v-app-bar` med fast høyde legges `useSupportBannerHeight()` til høyden.
  */
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch, type Component } from 'vue'
 import BrandWordmark from './BrandWordmark.vue'
 import ProductSymbol from './ProductSymbol.vue'
 import SupportSessionBanner from './SupportSessionBanner.vue'
@@ -86,6 +86,14 @@ const props = withDefaults(
     /** Dit merkevaren lenker. Kan være ekstern (konto-appen → nettsiden). */
     brandHref?: string
     /**
+     * Lenkekomponent for merkevaren ved klient-side ruting (Inertia `Link`,
+     * `RouterLink`), som i `SectionNav` (SIGN-1496): logoen bytter side uten
+     * å laste hele appen på nytt. Standard: `<a>`.
+     */
+    linkComponent?: Component | string | null
+    /** Prop-navnet lenkekomponenten tar målet i: `href` (Inertia) eller `to` (RouterLink). */
+    hrefProp?: string
+    /**
      * Logoen i headeren (SIGN-641): hele merkevarelogoen fra `BrandWordmark`.
      * Plattformflatene viser `nordikode`; Sign viser sin egen (`sign`).
      * Produkter uten egen logo (Time, backoffice) beholder `nordikode` og
@@ -116,6 +124,8 @@ const props = withDefaults(
   {
     nav: () => [],
     brandHref: '/',
+    linkComponent: null,
+    hrefProp: 'href',
     brand: 'nordikode',
     brandLabel: undefined,
     productSymbol: null,
@@ -223,7 +233,7 @@ const drawerItems = computed(() =>
     />
     <div :class="innerClass">
       <slot name="brand" :close="closeAll">
-        <a :href="brandHref" class="nk-header__brand">
+        <component :is="linkComponent ?? 'a'" v-bind="{ [hrefProp]: brandHref }" class="nk-header__brand">
           <!-- Hele logoen (SIGN-641); med firmablokk på smale mobiler vises kun
                symbolet så firmanavnet får plass (SIGN-561). -->
           <BrandWordmark
@@ -242,7 +252,7 @@ const drawerItems = computed(() =>
             <ProductSymbol v-if="productSymbol" :product="productSymbol" class="nk-header__brand-symbol" />
             <slot name="brand-suffix" />
           </span>
-        </a>
+        </component>
       </slot>
 
       <!-- Firmablokken (SIGN-561): hvilket firma brukeren opptrer for, rett
