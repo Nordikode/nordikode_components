@@ -371,3 +371,10 @@ export type NkGroupedMoveListLabels = {
   drag: string
 }
 export const NkGroupedMoveList: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+
+/**
+ * Reserve-initialer for avatarer uten bilde (SIGN-1668): første bokstav i hvert av
+ * de to første ordene («Kari Lund» → «KL», «Kari» → «K»); tomt navn gir `fallback`
+ * («?»). Samme regel i IdentityAvatar, AccountIdentityMenu og TenantSwitcherMenu.
+ */
+export declare function initialsOf(name: string | null | undefined, fallback?: string): string
