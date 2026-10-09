@@ -73,3 +73,12 @@ export const MedBadge: Story = {
     groupLabels: { products: 'Produkter', internal: 'Internt' },
   },
 }
+
+/** Én app (SIGN-1506): ingen meny å velge i — knappen er en direkte lenke med appens ikon og navn. */
+export const EnApp: Story = {
+  name: 'Én app',
+  args: {
+    label: 'Nordikode-apper',
+    apps: [{ key: 'sign', label: 'Sign', url: 'https://sign.nordikode.com', group: 'products' }],
+  },
+}

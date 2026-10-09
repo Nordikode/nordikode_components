@@ -5,6 +5,10 @@
  * presentasjon: applisten kommer som props fra verts-appens adapter, ikonene
  * slås opp i det delte registeret (appIcons.ts) på app-nøkkelen.
  *
+ * Én app i lista (SIGN-1506): ingen meny å velge i, så knappen er en direkte
+ * lenke med appens ikon og navn («Sign») i stedet for ni prikker — en kjent
+ * vei tilbake fra firmainnstillingene og kontoen. To eller flere: rutenettet.
+ *
  * Tema: bruker verts-appens web-designtokens (`--color-*`, `--radius-*`) og
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
  */
@@ -54,6 +58,9 @@ const sections = computed(() => {
     apps,
   }))
 })
+
+/** Eneste app i lista — vises som direkte lenke i stedet for rutenettet. */
+const single = computed(() => (props.apps.length === 1 ? props.apps[0] : null))
 
 /** 3×3-rutenettet i utløser-knappen. */
 const TRIGGER_DOTS = [5, 12, 19].flatMap((y) => [5, 12, 19].map((x) => ({ x, y })))
@@ -138,7 +145,32 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 
 <template>
   <div ref="root" class="nk-launcher">
+    <a v-if="single" :href="single.url" rel="noopener" class="nk-launcher__direct">
+      <span class="nk-launcher__direct-icon" :class="{ 'nk-launcher__chip--tile': webAppTileFor(single.key) }">
+        <template v-if="webAppTileFor(single.key)">
+          <img :src="webAppTileFor(single.key)!.light" alt="" class="nk-launcher__tile nk-launcher__tile--light" />
+          <img :src="webAppTileFor(single.key)!.dark" alt="" class="nk-launcher__tile nk-launcher__tile--dark" aria-hidden="true" />
+        </template>
+        <svg
+          v-else
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="nk-launcher__direct-svg"
+          aria-hidden="true"
+        >
+          <path v-for="(d, index) in webAppIconFor(single.key)" :key="index" :d="d" />
+        </svg>
+      </span>
+      <span class="nk-launcher__direct-label">{{ single.label }}</span>
+      <span v-if="(single.badge ?? 0) > 0" class="nk-launcher__badge nk-launcher__badge--trigger">{{ badgeText(single.badge!) }}</span>
+    </a>
+
     <button
+      v-else
       ref="trigger"
       type="button"
       class="nk-launcher__trigger"
@@ -155,7 +187,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 
     <Transition name="nk-pop">
       <div
-        v-if="open"
+        v-if="open && !single"
         ref="panelEl"
         role="menu"
         :aria-label="label"
@@ -236,6 +268,66 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   color: var(--color-ink);
 }
 
+/* Direkte lenke ved én app (SIGN-1506): samme høyde og hover som
+   rutenett-knappen, men pilleformet med appens ikon og navn. */
+.nk-launcher__direct {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  padding-inline: 0.375rem 0.75rem;
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s;
+}
+
+.nk-launcher__direct:hover,
+.nk-launcher__direct:focus-visible {
+  background: var(--color-surface-alt);
+}
+
+.nk-launcher__direct-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-compact, 0.625rem);
+  background: color-mix(in srgb, var(--nk-chrome-accent, var(--color-ink-tertiary)) 12%, var(--color-surface-raised));
+  box-shadow: inset 0 0 0 1px var(--color-line);
+  color: var(--nk-chrome-accent-ink, var(--nk-chrome-accent, var(--color-ink-secondary)));
+}
+
+.nk-launcher__direct-svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Smal mobil (samme brudd som headerens burger): bare appikonet, så
+   knappen tar like lite plass som rutenett-knappen. Navnet står igjen
+   for skjermlesere. */
+@media (max-width: 639px) {
+  .nk-launcher__direct {
+    justify-content: center;
+    width: 2.25rem;
+    padding: 0;
+  }
+
+  .nk-launcher__direct-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
 
 .nk-launcher__grid-icon {
   width: 1.25rem;
@@ -393,6 +485,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 
 @media (prefers-reduced-motion: reduce) {
   .nk-launcher__trigger,
+  .nk-launcher__direct,
   .nk-launcher__item,
   .nk-pop-enter-active,
   .nk-pop-leave-active {
@@ -413,7 +506,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   display: block;
 }
 
-.dark .nk-launcher .nk-launcher__trigger:hover {
+.dark .nk-launcher .nk-launcher__trigger:hover,
+.dark .nk-launcher .nk-launcher__direct:hover,
+.dark .nk-launcher .nk-launcher__direct:focus-visible {
   background: var(--color-surface-raised);
 }
 
