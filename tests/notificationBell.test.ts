@@ -25,7 +25,8 @@ const labels = {
 const unreadItem = { id: '1', title: 'First', timeLabel: 'now', read: false }
 const readItem = { id: '2', title: 'Second', timeLabel: 'yesterday', read: true }
 
-type Props = { items: (typeof unreadItem)[]; unreadCount: number; loading?: boolean; labels: Partial<typeof labels> }
+type Item = typeof unreadItem & { tenantId?: string | null }
+type Props = { items: Item[]; unreadCount: number; loading?: boolean; labels: Partial<typeof labels>; companies?: { id: string; name: string }[] }
 
 let app: App | null = null
 let host: HTMLElement | null = null
@@ -224,5 +225,49 @@ describe('bjellens stilregler', () => {
 
   it.each(['.nk-bell__item-title', '.nk-bell__item-body'])('%s bryter lange ord uten mellomrom', (selector) => {
     expect(declarationsFor(selector)).toMatch(/overflow-wrap:\s*anywhere/)
+  })
+})
+
+// Firmanavnet (SIGN-1579): vises bare når brukeren er med i flere firmaer,
+// og bare for firmaer i `companies` — lista over brukerens medlemskap.
+describe('NotificationBellMenu firma', () => {
+  const companies = [
+    { id: 't1', name: 'Hansen Bygg AS' },
+    { id: 't2', name: 'Larsen Rør AS' },
+  ]
+
+  const companyLabels = async (initial: Partial<Props>) => {
+    const bell = mountBell(initial)
+    await bell.openPanel()
+    return Array.from(host!.querySelectorAll('.nk-bell__item')).map(
+      (item) => item.querySelector('.nk-bell__item-company')?.textContent ?? null,
+    )
+  }
+
+  it('viser firmanavnet på hvert varsel når brukeren har flere firmaer', async () => {
+    const names = await companyLabels({
+      companies,
+      items: [{ ...unreadItem, tenantId: 't1' }, { ...readItem, tenantId: 't2' }],
+    })
+
+    expect(names).toEqual(['Hansen Bygg AS', 'Larsen Rør AS'])
+  })
+
+  it('viser ingenting ekstra når brukeren har ett firma', async () => {
+    const names = await companyLabels({
+      companies: [companies[0]!],
+      items: [{ ...unreadItem, tenantId: 't1' }, { ...readItem, tenantId: 't1' }],
+    })
+
+    expect(names).toEqual([null, null])
+  })
+
+  it('viser aldri et firma brukeren ikke er medlem av, og ingenting for varsler uten firma', async () => {
+    const names = await companyLabels({
+      companies,
+      items: [{ ...unreadItem, tenantId: 'fremmed' }, { ...readItem, tenantId: null }],
+    })
+
+    expect(names).toEqual([null, null])
   })
 })

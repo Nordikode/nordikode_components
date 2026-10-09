@@ -19,6 +19,12 @@
  * `--nk-chrome-badge` / `--nk-chrome-badge-ink` (rød, som app-velgeren),
  * aldri aksenten — aksenten er appens egen farge og gjorde antallet svart
  * i noen apper og rosa i andre (SIGN-1318).
+ *
+ * Firma (SIGN-1579): bjellen viser varsler fra alle brukerens firmaer. Er
+ * brukeren med i mer enn ett, står firmanavnet på hvert varsel, så ingen
+ * handler på et varsel i feil firma. Navnet hentes bare fra `companies` —
+ * firmaene brukeren er medlem av — aldri fra varselet selv; et varsel fra et
+ * firma utenfor lista får ingen navnelinje. Med ett firma vises ingenting.
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
@@ -29,6 +35,14 @@ export type NotificationBellItem = {
   /** Ferdig formatert tidspunkt («2 min siden», «i går»). */
   timeLabel: string
   read: boolean
+  /** Firmaet varselet gjelder; navnet slås opp i `companies`. */
+  tenantId?: string | null
+}
+
+/** Et firma brukeren er medlem av. */
+export type NotificationBellCompany = {
+  id: string
+  name: string
 }
 
 export type NotificationBellLabels = {
@@ -51,6 +65,8 @@ const props = defineProps<{
   labels: NotificationBellLabels
   /** Viser en stille lasteindikator i panelet (første last). */
   loading?: boolean
+  /** Firmaene brukeren er medlem av; navnet vises når de er flere enn ett. */
+  companies?: NotificationBellCompany[]
 }>()
 
 const emit = defineEmits<{
@@ -70,6 +86,16 @@ const badge = computed(() => (props.unreadCount > 99 ? '99+' : String(props.unre
 const triggerLabel = computed(() =>
   hasUnread.value ? props.labels.menuWithUnread.replace('{count}', String(props.unreadCount)) : props.labels.menu,
 )
+
+const companyNames = computed(() => {
+  const companies = props.companies ?? []
+  return companies.length > 1 ? new Map(companies.map((company) => [company.id, company.name])) : null
+})
+
+function companyName(item: NotificationBellItem): string | null {
+  if (!companyNames.value || !item.tenantId) return null
+  return companyNames.value.get(item.tenantId) || null
+}
 
 const BELL_ICON = [
   'M15 17.5H9m6 0h3.5a1 1 0 0 0 .8-1.6l-1.3-1.7V10.5a6 6 0 0 0-12 0v3.7l-1.3 1.7a1 1 0 0 0 .8 1.6H9m6 0a3 3 0 0 1-6 0',
@@ -221,7 +247,10 @@ function onMarkAllRead() {
                   {{ item.title }}<span v-if="!item.read" class="nk-sr-only"> ({{ labels.unread }})</span>
                 </span>
                 <span v-if="item.body" class="nk-bell__item-body">{{ item.body }}</span>
-                <span class="nk-bell__item-time">{{ item.timeLabel }}</span>
+                <span class="nk-bell__item-meta">
+                  <span v-if="companyName(item)" class="nk-bell__item-company">{{ companyName(item) }}</span>
+                  <span class="nk-bell__item-time">{{ item.timeLabel }}</span>
+                </span>
               </span>
             </button>
           </li>
@@ -432,6 +461,30 @@ function onMarkAllRead() {
   font-size: 0.8125rem;
   line-height: 1.35;
   color: var(--color-ink-secondary);
+}
+
+.nk-bell__item-meta {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--color-ink-tertiary);
+}
+
+.nk-bell__item-company {
+  overflow-wrap: anywhere;
+  font-weight: 500;
+  color: var(--color-ink-secondary);
+}
+
+/* Skillepunktet er pynt; skjermlesere leser firma og tid som to ord. */
+.nk-bell__item-company::after {
+  content: '·';
+  content: '·' / '';
+  margin-inline-start: 0.375rem;
+  color: var(--color-ink-tertiary);
 }
 
 .nk-bell__item-time {

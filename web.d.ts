@@ -181,6 +181,14 @@ export type NotificationBellItem = {
   body?: string | null
   timeLabel: string
   read: boolean
+  /** Firmaet varselet gjelder; navnet slås opp i bjellens `companies` (SIGN-1579). */
+  tenantId?: string | null
+}
+
+/** Et firma brukeren er medlem av; bjellen viser navnet når de er flere enn ett. */
+export type NotificationBellCompany = {
+  id: string
+  name: string
 }
 
 export type NotificationBellLabels = {
