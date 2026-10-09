@@ -112,12 +112,17 @@ const platformMatch = computed<NkPlatformTradeOption | null>(() => {
   return taken ? null : found
 })
 
+/**
+ * «Legg til» vises bare når teksten ikke alt er et av firmaets fag — også
+ * et arkivert: ellers ville velgeren bedt core lage et duplikat av et fag
+ * som bare er lagt bort.
+ */
 const canAdd = computed(
   () =>
     props.canManage &&
     props.createTrade !== undefined &&
     query.value !== '' &&
-    !activeTrades.value.some((trade) => searchTermsFor(trade).includes(query.value)),
+    !props.trades.some((trade) => searchTermsFor(trade).includes(query.value)),
 )
 
 const addLabel = computed(() =>
@@ -163,9 +168,15 @@ function remove(key: string) {
 
 function onUpdate(value: string | string[] | null) {
   const values = Array.isArray(value) ? value : value === null ? [] : [value]
+  const chosen = values.filter((key) => key !== ADD)
   if (!values.includes(ADD)) {
-    emit('update:modelValue', props.multiple ? values : (values[0] ?? null))
+    emit('update:modelValue', props.multiple ? chosen : (chosen[0] ?? null))
     return
+  }
+  // Ved flervalg kan en avhuking og «Legg til» komme i samme runde: avhukingen
+  // sendes ut først, så den ikke går tapt mens det nye faget lages.
+  if (props.multiple && chosen.length !== selectedKeys.value.length) {
+    emit('update:modelValue', chosen)
   }
   startAdd()
 }
