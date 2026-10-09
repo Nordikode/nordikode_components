@@ -183,6 +183,17 @@ from its own theme (see below).
   `useSupportBannerHeight()` (pixels, 0 without a banner) to the height.
   `@nordikode/app-core` gives all of it ready to bind:
   `<AppHeader v-bind="supportBanner">` with `useSupportSessionBanner()`.
+- `EmailVerificationBanner` — the «Confirm your e-mail» band (SIGN-1676) every
+  signed-in surface shows at the top of its content while the account has no
+  verified e-mail address and the deadline is ahead: the address the link went
+  to, the deadline (formatted with `Intl` on the user's locale) and one button,
+  «Send a new link». It cannot be dismissed; it goes away when `me` no longer
+  carries `pendingEmailVerification`. Data via `pending` ({ email, deadlineAt }),
+  texts from the package on `locale` (`emailVerificationTexts`, one JSON per
+  language), the host owns the sending (`resend` event, `busy`,
+  `resendSecondsLeft` for the shared 30 s cooldown). Colours from the warning
+  role (`--nk-warning`/`--nk-on-warning`, on the website
+  `--color-warning`/`--color-on-warning`).
 - `PageHeader` — the page-heading standard: hierarchical back link (always
   one level up, never browser history; top-level pages have none) → the
   page's single H1 → subtitle, with `#badge` (status chip) and `#actions`.

@@ -1,0 +1,7 @@
+{
+  "region": "E-mail address not verified",
+  "message": "Confirm your e-mail address by {date}. We sent a link to {email}.",
+  "resend": "Send a new link",
+  "resendIn": "Send again in {seconds} s",
+  "sent": "A new link is on its way to {email}."
+}
