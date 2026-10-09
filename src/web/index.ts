@@ -57,3 +57,5 @@ export type { StaleChunkRouter } from '../staleChunkReload'
 
 export { configureLocales, formatMinorAmount, formatMoney, formatMoneyRange, supportedCurrencyCodes, toBcp47 } from '../money'
 export type { FormatMoneyOptions, LocaleRegistryEntry } from '../money'
+
+export { initialsOf } from '../initials'

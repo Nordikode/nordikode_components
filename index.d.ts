@@ -234,3 +234,10 @@ import type { IconSet } from 'vuetify'
 export type MdiRegistry = Readonly<Record<string, string>>
 /** Vuetify-ikonsett som slår opp `mdi-*`-navn i et generert @mdi/js-register (SIGN-521). */
 export declare function mdiRegistryIconSet(registry: MdiRegistry): IconSet
+
+/**
+ * Reserve-initialer for avatarer uten bilde (SIGN-1668): første bokstav i hvert av
+ * de to første ordene («Kari Lund» → «KL», «Kari» → «K»); tomt navn gir `fallback`
+ * («?»). Samme regel i IdentityAvatar, AccountIdentityMenu og TenantSwitcherMenu.
+ */
+export declare function initialsOf(name: string | null | undefined, fallback?: string): string

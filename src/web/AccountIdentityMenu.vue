@@ -9,6 +9,7 @@
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { initialsOf } from '../initials'
 import { webAppIconFor } from './appIcons'
 
 export type AccountMenuService = {
@@ -48,15 +49,8 @@ const menuEl = ref<HTMLElement | null>(null)
 
 const hasServices = computed(() => props.services.length > 0)
 
-// Samme regel som UserAvatar i appene: de to første ordene.
-const initials = computed(() => {
-  const parts = (props.name ?? '').trim().split(/\s+/).filter(Boolean)
-  if (parts.length === 0) return '?'
-  return parts
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? '')
-    .join('')
-})
+// Samme regel som IdentityAvatar og firmamenyen (SIGN-1668): de to første ordene.
+const initials = computed(() => initialsOf(props.name))
 
 const LOGOUT_ICON = [
   'M9.5 4.75H6.25A1.5 1.5 0 0 0 4.75 6.25v11.5a1.5 1.5 0 0 0 1.5 1.5H9.5',
