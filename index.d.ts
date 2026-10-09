@@ -85,6 +85,69 @@ export interface NkTemplatePlaceholder {
   label: string
   missingMessage?: string
 }
+/** Levering av et fag (SIGN-1481): firmaet leverer det selv, eller setter det bort. */
+export type NkTradeDelivery = 'own' | 'subcontracted'
+
+/**
+ * Et fag i firmaets fagliste (core `tenantTrades`). `key` er verdien som
+ * lagres overalt (`trade_key`); `name` er firmaets eget navn og oversettes
+ * ikke. `platformTradeKey` kobler faget til Nordikodes fagliste, så søket
+ * også treffer plattformfagets synonymer.
+ */
+export interface NkTradeOption {
+  key: string
+  name: string
+  delivery: NkTradeDelivery
+  platformTradeKey?: string | null
+  archived?: boolean
+}
+
+/** Et fag i Nordikodes fagliste (core `platformTrades`), med navn på brukerens språk. */
+export interface NkPlatformTradeOption {
+  key: string
+  name: string
+  synonyms?: string[]
+}
+
+/**
+ * Det fagvelgeren ber appen opprette (core `createTenantTrade`). Fra
+ * Nordikodes fagliste når `platformTradeKey` er satt, ellers et eget fag med
+ * `name`. Nøkkelen lager core; velgeren lager aldri en selv.
+ */
+export interface NkTradeCreateInput {
+  name: string
+  platformTradeKey: string | null
+  delivery: NkTradeDelivery
+}
+/** Tekstene NkTradeSelect trenger fra appens i18n (SIGN-1481). Fagnavnene er data, ikke tekster. */
+export interface NkTradeSelectLabels {
+  /** Feltets etikett, f.eks. «Fag». */
+  field: string
+  /** Plassholder i tomt felt, f.eks. «Søk etter fag». */
+  placeholder: string
+  /** Merket på fag som settes bort, f.eks. «Settes bort». */
+  subcontracted: string
+  /** Merket på et arkivert fag som alt er valgt, f.eks. «Arkivert». */
+  archived: string
+  /** Tomt treff, f.eks. «Ingen fag passer.» */
+  noMatch: string
+  /** Tomt treff uten rettighet, f.eks. «Ingen fag passer. En administrator kan legge til fag i Sign-innstillingene.» */
+  noMatchNoAccess: string
+  /** «Legg til «Stillas» som nytt fag» — et eget fag. */
+  addOwn: (name: string) => string
+  /** «Legg til «Rørlegger» fra Nordikodes fagliste». */
+  addFromPlatform: (name: string) => string
+  /** «Leverer dere «Stillas» selv, eller settes det bort?» */
+  deliveryQuestion: (name: string) => string
+  /** Knappen «Leverer selv». */
+  deliveryOwn: string
+  /** Knappen «Setter bort». */
+  deliverySubcontracted: string
+  /** Knappen «Avbryt». */
+  cancel: string
+  /** Feilen når faget ikke kunne legges til, f.eks. «Kunne ikke legge til faget.» */
+  createFailed: string
+}
 export type NkTemplateSegment = { kind: 'text'; text: string } | { kind: 'placeholder'; key: string }
 export interface NkConversationDay {
   /** `YYYY-MM-DD` i tidssonen som brukes. */
@@ -152,6 +215,16 @@ export const NkStatusChip: DefineComponent<Record<string, unknown>, Record<strin
  * `maxLength`, `rows`, `disabled`, `errorMessages`; eksponerer `focus()`.
  */
 export const NkTemplateField: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkTradeSelect (SIGN-1481): fagvelgeren overalt et fag velges. Firmaets fag med søk
+ * (navn og plattformfagets synonymer), merket «settes bort», og «Legg til …» nederst for
+ * den med `core.trades.manage` — fra Nordikodes fagliste når teksten treffer et
+ * plattformfag, ellers som eget fag, alltid med levering (spør, eller `delivery`).
+ * `v-model` er nøkkelen (nøklene med `multiple`). Props: `modelValue`, `trades`,
+ * `labels`, `platformTrades`, `multiple`, `canManage`, `createTrade(input) =>
+ * Promise<key>`, `delivery`, `hint`, `loading`, `disabled`, `errorMessages`.
+ */
+export const NkTradeSelect: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PhoneNumberInput: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 
 export interface StaleChunkRouter {
