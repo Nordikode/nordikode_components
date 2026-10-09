@@ -417,6 +417,63 @@ export const FirmablokkLangtNavn: Story = {
 }
 
 /**
+ * Én app (SIGN-1506): har firmaet bare Sign, viser app-velgeren «Sign» med
+ * ikon som direkte lenke i stedet for ni prikker. `width` styrer bredden, så
+ * samme historie viser både PC (1280 px) og smal mobil (360 px).
+ */
+function oneAppStory(width: string): Story {
+  return {
+    args: { labels, width: 'full', brand: 'sign' },
+    decorators: [
+      () => ({
+        template: `<div style="width: ${width}; max-width: 100%; min-height: 420px; outline: 1px dashed #c00;"><story /></div>`,
+      }),
+    ],
+    render: (args) => ({
+      components: { AppHeader, ThemeToggle, TenantSwitcherMenu, AccountIdentityMenu, AppLauncherMenu, NotificationBellMenu },
+      setup: () => ({
+        args,
+        toggleLabels,
+        tenants: [{ id: 't-1', name: 'RS Bygg AS', logoUrl: demoLogo }],
+        tenantLabels,
+        accountLabels,
+        services,
+        apps: [{ key: 'sign', label: 'Sign', url: '#', group: 'products' }],
+        bellLabels: {
+          menu: 'Varsler',
+          menuWithUnread: 'Varsler, {count} uleste',
+          title: 'Varsler',
+          empty: 'Ingen varsler ennå.',
+          markAllRead: 'Merk alle som lest',
+          unread: 'ulest',
+        },
+      }),
+      template: `
+        <AppHeader v-bind="args">
+          <template #menus>
+            <ThemeToggle :labels="toggleLabels" />
+            <NotificationBellMenu :items="[]" :unread-count="0" :labels="bellLabels" />
+            <AppLauncherMenu :apps="apps" label="Nordikode-apper" />
+            <TenantSwitcherMenu :tenants="tenants" selected-id="t-1" :labels="tenantLabels" variant="block" align="end" />
+            <AccountIdentityMenu
+              name="Tony Nordmann"
+              email="tony@example.com"
+              :services="services"
+              current-service-key="company"
+              :labels="accountLabels"
+            />
+          </template>
+        </AppHeader>
+      `,
+    }),
+  }
+}
+
+export const EnApp: Story = { ...oneAppStory('1280px'), name: 'Én app – Sign som direkte lenke' }
+
+export const EnAppSmalMobil: Story = { ...oneAppStory('360px'), name: 'Én app – smal mobil (360 px)' }
+
+/**
  * Smal mobil (SIGN-537/561): merket, firmablokken og menyene skal være
  * synlige uten horisontal scroll ved 360–414 px — ordet «Nordikode» og
  * suffikset viker, firmanavnet trunkeres og logoen står.
