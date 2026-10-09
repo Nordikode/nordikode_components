@@ -88,6 +88,23 @@ export const MedUleste: Story = {
   },
 }
 
+// Brukeren er med i flere firmaer (SIGN-1579): firmanavnet står på hvert varsel.
+export const FlereFirmaer: Story = {
+  args: {
+    labels,
+    unreadCount: 2,
+    companies: [
+      { id: 't1', name: 'Hansen Bygg AS' },
+      { id: 't2', name: 'Larsen Rør AS' },
+    ],
+    items: [
+      { id: '1', tenantId: 't1', title: 'Kunden har akseptert tilbudet i «Bad Bergen»', timeLabel: '2 min siden', read: false },
+      { id: '2', tenantId: 't2', title: 'Ola Nordmann har sendt en melding i «Kjøkken Voss»', body: 'Kan dere komme tirsdag i stedet?', timeLabel: '1 t siden', read: false },
+      { id: '3', tenantId: null, title: 'Kontoen din har fått en ny innlogging', timeLabel: 'i går', read: true },
+    ],
+  },
+}
+
 export const Tom: Story = {
   args: {
     labels,
