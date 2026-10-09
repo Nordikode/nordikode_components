@@ -50,6 +50,17 @@ flatene bruker `AppHeader` med de delte menyene.
   (`templatePlaceholderKeys`). `labels` (`field`, `insert`), `hint`, `emptyText` (vises i
   tomt felt, med brikker), `maxLength` (teller lagringsformatet), `rows`, `disabled`,
   `errorMessages`
+- `NkTradeSelect` — fagvelgeren (SIGN-1481), brukt overalt et fag velges. `trades`
+  (`NkTradeOption[]`: firmaets fag fra core `tenantTrades`, i firmaets rekkefølge) og
+  `v-model` med fagets nøkkel (nøklene med `multiple`). Søket treffer navnet og
+  synonymene i `platformTrades` (`NkPlatformTradeOption[]`, core `platformTrades`). Fag
+  som settes bort får et merke; arkiverte vises bare når de alt er valgt. Med
+  `canManage` (`core.trades.manage`) og `createTrade(input) => Promise<key>` står «Legg
+  til …» nederst når ingen fag heter akkurat det: fra Nordikodes fagliste når teksten
+  treffer et plattformfag, ellers eget fag. Velgeren spør om levering, med mindre
+  flaten sender `delivery`. Nøkkelen kommer alltid fra core. `labels`
+  (`NkTradeSelectLabels`), `hint`, `loading`, `disabled`, `errorMessages`; øvrige
+  attributter går til `v-autocomplete`
 - `templatePlaceholderKeys` / `parseTemplate` / `templateToken` /
   `missingTemplatePlaceholders` — malformatet bak `NkTemplateField`; appen stopper
   lagringen med `missingTemplatePlaceholders(text, placeholders)` (SIGN-1465)
