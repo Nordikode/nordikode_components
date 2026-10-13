@@ -200,31 +200,8 @@ export type ThemeToggleLabels = {
 
 export type ThemePreference = 'system' | 'light' | 'dark'
 
-export type NotificationBellItem = {
-  id: string
-  title: string
-  body?: string | null
-  timeLabel: string
-  read: boolean
-  /** Firmaet varselet gjelder; navnet slås opp i bjellens `companies` (SIGN-1579). */
-  tenantId?: string | null
-}
-
-/** Et firma brukeren er medlem av; bjellen viser navnet når de er flere enn ett. */
-export type NotificationBellCompany = {
-  id: string
-  name: string
-}
-
-export type NotificationBellLabels = {
-  menu: string
-  menuWithUnread: string
-  title: string
-  empty: string
-  markAllRead: string
-  unread: string
-  loading?: string
-}
+// Bjellens typer bor i `bell.d.ts` (egen inngang, SIGN-1295) og eksporteres herfra som før.
+export type { NotificationBellCompany, NotificationBellItem, NotificationBellLabels } from './bell'
 
 export type NkSignedOutReason = 'revoked' | 'expired'
 
@@ -280,7 +257,7 @@ export const AppHeader: DefineComponent<Record<string, unknown>, Record<string, 
 export const PageHeader: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const SectionNav: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const ThemeToggle: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
-export const NotificationBellMenu: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export { NotificationBellMenu } from './bell'
 export const NkSignedOutDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /**
  * Telefonfeltet med landvelger uten Vuetify (SIGN-1301). Props: `modelValue`

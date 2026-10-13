@@ -13,6 +13,8 @@ export default defineConfig({
         tokens: resolve(__dirname, 'src/tokens/index.ts'),
         // Vuetify-fri entry for webflatene (nettside/konto-app) — se src/web/.
         web: resolve(__dirname, 'src/web/index.ts'),
+        // Bjellen alene (SIGN-1295): nettsiden laster den bare for innloggede.
+        bell: resolve(__dirname, 'src/web/bell.ts'),
       },
       formats: ['es'],
       fileName: (_format, entryName) => `${entryName}.js`,
