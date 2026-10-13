@@ -1,6 +1,6 @@
 {
   "name": "@nordikode/components",
-  "version": "0.79.1",
+  "version": "0.81.0",
   "private": false,
   "repository": {
     "type": "git",
@@ -10,12 +10,16 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "files": [
     "dist",
     "bin",
     "index.d.ts",
     "tokens.d.ts",
     "web.d.ts",
+    "bell.d.ts",
     "style.css"
   ],
   "exports": {
@@ -30,6 +34,10 @@
     "./web": {
       "types": "./web.d.ts",
       "import": "./dist/web.js"
+    },
+    "./bell": {
+      "types": "./bell.d.ts",
+      "import": "./dist/bell.js"
     },
     "./style.css": "./style.css"
   },

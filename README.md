@@ -309,6 +309,15 @@ when a badge in `src/web` is filled with anything else.
 Import styles once (`@nordikode/components/style.css`) — it carries the scoped
 CSS for these components too.
 
+### `@nordikode/components/bell` (the bell alone, SIGN-1295)
+
+`NotificationBellMenu` and its types (`NotificationBellItem`,
+`NotificationBellCompany`, `NotificationBellLabels`) in a module of their own.
+`web` still exports the bell as before; this entry exists for a surface that
+loads the bell only for signed-in users — the website imports it from here in
+the lazily loaded notifications module, so a visitor's shared bundle never
+carries it. Same component, same styles (`style.css`).
+
 ## Package consumption
 
 Applications should consume `@nordikode/components` as a published package from GitHub Packages.
@@ -340,10 +349,20 @@ When a consuming app is linked locally, its `dev` and `build` scripts will autom
 ## Checks before a pull request
 
 ```bash
+npm test                # vitest over tests/**/*.test.ts; also a CI step — a red test stops the PR and the publish
 npm run type-check      # vue-tsc over src/ (components and stories); also a CI step
 npm run build
 npm run build-storybook
 ```
+
+Tests live in `tests/` and run with vitest (`vitest.config.ts`, separate from the
+library build). Pure functions are tested directly; a component test mounts the
+component with `createApp` in a browser-like DOM by putting
+`// @vitest-environment happy-dom` at the top of the file (see
+`tests/appHeader.test.ts`), and a Vuetify component also installs `createVuetify`
+with the components it renders (see `tests/phoneNumberInput.test.ts`,
+`tests/dialog.test.ts`). Behaviour that must be the same in every app belongs
+here, not in the apps.
 
 `index.d.ts`, `web.d.ts` and `tokens.d.ts` are written by hand, and they are where
 consuming apps get their types from. The type check does not read them: a type
