@@ -31,6 +31,10 @@ export type { NkGroupedMoveListLabels, NkMoveEvent, NkMoveGroup, NkMoveItem, NkM
 export { setEnvironmentLabel, useEnvironmentLabel } from './environmentLabel'
 export { useSupportBannerHeight } from './supportBannerHeight'
 export { supportSessionTexts } from './supportSessionTexts'
+export { default as EmailVerificationBanner } from './EmailVerificationBanner.vue'
+export { emailVerificationTexts } from './emailVerificationTexts'
+export type { EmailVerificationBannerTexts } from './emailVerificationTexts'
+export type { PendingEmailVerification } from './EmailVerificationBanner.vue'
 export type { SupportSessionBannerTexts, SupportSessionMessageTexts, SupportSessionTexts } from './supportSessionTexts'
 
 export type { AppLauncherItem } from './AppLauncherMenu.vue'
