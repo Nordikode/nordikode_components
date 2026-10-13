@@ -41,7 +41,7 @@ export const Detaljside: Story = {
   args: {
     title: 'Hedvig Hansen',
     subtitle: 'Tømrer · hedvig@example.com',
-    back: { href: '/personer', label: 'Til personer' },
+    back: { href: '/people', label: 'Til personer' },
   },
   render: (args) => ({
     components: { PageHeader },

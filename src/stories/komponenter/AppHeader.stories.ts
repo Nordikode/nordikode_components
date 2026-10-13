@@ -368,13 +368,13 @@ export const FirmablokkLangtNavn: Story = {
   args: {
     labels,
     width: 'full',
-    currentPath: '/personer',
+    currentPath: '/people',
     nav: [
-      { key: 'profile', label: 'Profil', href: '/profil' },
-      { key: 'people', label: 'Personer', href: '/personer' },
-      { key: 'departments', label: 'Avdelinger', href: '/avdelinger' },
-      { key: 'roles', label: 'Roller', href: '/roller' },
-      { key: 'subscription', label: 'Abonnement', href: '/abonnement' },
+      { key: 'profile', label: 'Profil', href: '/profile' },
+      { key: 'people', label: 'Personer', href: '/people' },
+      { key: 'departments', label: 'Avdelinger', href: '/departments' },
+      { key: 'roles', label: 'Roller', href: '/roles' },
+      { key: 'subscription', label: 'Abonnement', href: '/subscription' },
     ],
   },
   decorators: [
