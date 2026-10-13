@@ -4,18 +4,39 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 # Terminologi
 
-> **Status: utkast.** Beslutningene under er *forslag* fra design-auditen
-> 2026-08-18 og skal vedtas i fase 4 (SIGN-23). Beslutningsgrunnlaget med
-> målte forekomster per app ligger lenger ned. Når et begrep vedtas, flyttes
-> det til «Vedtatt»-tabellen og håndheves i i18n-katalogene.
+> **Status: vedtatt 13.10.2026.** Teamet tok vedtakene under i vedtakslaben
+> (SIGN-23, ny måling 12.10.2026). Håndhevingen i i18n-katalogene er egne
+> byggesaker: SIGN-1712 (prosjekt), SIGN-1713 (bedrift), SIGN-1714 (produkt),
+> SIGN-1715 (bruker/seat), SIGN-1716 (Nordi, AI), SIGN-1717 (rydding) og
+> SIGN-1347 (kundeinntak). Beslutningsgrunnlaget fra august ligger lenger ned.
 
 ## Vedtatt
 
 | Begrep | Norsk | Engelsk | Regel |
 | --- | --- | --- | --- |
-| *(ingen ennå)* | | | |
+| Det kunden gjør via kundelenken | kundeinntak (tittel), inntaket (i setninger) | customer intake, intake | Navnet på steget: tale, tekst, bilder og adresse. Lenken heter alltid «kundelenke» (customer link). Nordi er ikke aktøren i inntaket; kundens samtalepartner heter «assistenten». Svensk kundintag, fransk og polsk ett ord hver. |
+| Det bedriften jobber med | prosjekt | project | Ett ord overalt: Prosjekter, Nytt prosjekt, Prosjekt #23, prosjekttyper, prosjekthistorikk. Aldri «sak»/«case» i brukertekst. «Jobb» om selve arbeidet («Jobben er din») er lov. |
+| Bedriften som bruker Nordikode | bedrift | company | Aldri «firma» eller «selskap». Kundetypen forbruker/bedrift står. Svensk företag, fransk entreprise, polsk firma. «Tenant» finnes bare i kode. |
+| Det bedriften selger og priser | produkt | product | Aldri «vare»; «varenummer» beholdes bare om leverandørens artikkelnummer (NOBB). |
+| Dokumentet til kunden | tilbud | offer | «Quote» ble vurdert 13.10 og ikke prioritert; offer beholdes i hele produktet. Underleverandørens svar er «bud» / «bid». |
+| Lisensplass | bruker | seat | «per bruker», «3 brukere»; engelsk «seat». Aldri «sete» eller «plass». |
+| Hjelperen inne i Sign | Nordi | Nordi | Aldri «assistenten» eller «AI-en» om Nordi. Nordi finnes bare på bedriftens flater. |
+| Kunstig intelligens | AI | AI | Aldri «KI» på norsk. Aldri «med AI» i brukertekst (SIGN-858). |
+| Underleverandør, leverandør, partner | underleverandør · leverandør · partner | subcontractor · supplier · partner | Underleverandøren gjør arbeid, leverandøren selger produkter, partneren er et Sign-partnerskap. Engelsk «supplier», aldri «vendor». |
+| Bruker, person, medlem, ansatt | bruker · person · medlem · ansatt | user · person · member · employee | Bruker = kontoen. Person = mennesket (menyen Personer). Medlem = tilknytningen til bedriften. Ansatt = HR-kortet. |
+| Kunde og kontakt | kunde · kontakt | customer · contact | Kunden er den som får tilbudet; kontakten er oppføringen i kontaktregisteret. «Sluttkunde» brukes ikke i brukertekst. |
+| Prisen i tilbudet | fast pris · prisoverslag · regningsarbeid · prisantydning | | Følger pristypen håndverkeren velger på tilbudslinjene (SIGN-922). Ikke et eget terminologivedtak. |
 
-## Til beslutning (fra auditen)
+### Toneregler (vedtatt 13.10.2026)
+
+- Feilmeldinger starter med «Kunne ikke …». Aldri «Kan ikke …» eller «Klarte ikke …» om en feil.
+- Tre prikker er ett tegn: «…», aldri «...».
+- Ingen tankestreker i varsler, SMS og e-post (vedtak 02.09.2026).
+- Aldri «med AI» i brukertekst (vedtak 17.09.2026, holdes av `check-copy-rules`).
+- Produktnavn oversettes aldri (Sign er «Sign» på alle språk).
+- «Please try again» er tillatt på engelsk; «Vennligst» brukes ikke på norsk.
+
+## Forslagene fra auditen (august 2026, erstattet av vedtakene over)
 
 | Konsept | Varianter i dag | Forslag |
 | --- | --- | --- |
