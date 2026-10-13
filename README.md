@@ -309,6 +309,15 @@ when a badge in `src/web` is filled with anything else.
 Import styles once (`@nordikode/components/style.css`) — it carries the scoped
 CSS for these components too.
 
+### `@nordikode/components/bell` (the bell alone, SIGN-1295)
+
+`NotificationBellMenu` and its types (`NotificationBellItem`,
+`NotificationBellCompany`, `NotificationBellLabels`) in a module of their own.
+`web` still exports the bell as before; this entry exists for a surface that
+loads the bell only for signed-in users — the website imports it from here in
+the lazily loaded notifications module, so a visitor's shared bundle never
+carries it. Same component, same styles (`style.css`).
+
 ## Package consumption
 
 Applications should consume `@nordikode/components` as a published package from GitHub Packages.
