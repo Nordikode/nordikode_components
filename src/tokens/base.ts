@@ -99,6 +99,20 @@ export const nkStatusDark = {
 } as const
 
 /** Felles Vuetify-variabler. */
+/**
+ * Plattformens aksentfarger (SIGN-1781): de fire kulørene fra logoen og
+ * messeveggene som gløder på nettsiden, i e-postmalene og i messe-appen —
+ * periwinkle (Nordikode), lime, light berry (Sign) og gold. Statiske som
+ * radius og avstander: de er merkevaren, ikke lys/mørk-avledet. Veggene
+ * mikser dem over sidefargen (`color-mix`); fyll aldri en flate med dem rett.
+ */
+export const nkBrandAccents = {
+  periwinkle: '#90afed',
+  lime: '#bfd75b',
+  berry: '#dc7499',
+  gold: '#cca427',
+} as const
+
 export const nkOpacity = {
   borderLight: 0.1,
   borderDark: 0.14,
