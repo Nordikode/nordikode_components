@@ -117,6 +117,13 @@ export declare const nkFontMono: string
 export declare const nkFontHref: string
 export declare const nkStatusLight: { readonly success: string; readonly warning: string; readonly error: string }
 export declare const nkStatusDark: { readonly success: string; readonly warning: string; readonly error: string }
+export declare const nkBrandAccents: {
+  readonly periwinkle: string
+  readonly lime: string
+  readonly berry: string
+  readonly gold: string
+}
+
 export declare const nkOpacity: {
   readonly borderLight: number
   readonly borderDark: number
@@ -135,6 +142,8 @@ export interface NkStaticTokens {
   typography: { rootSize: string; heading: string; body: string; label: string; button: string }
   fontFamily: string
   fontMono: string
+  /** Plattformens aksentfarger (SIGN-1781) — gløder og merkevare, aldri flatefyll. */
+  accents: { periwinkle: string; lime: string; berry: string; gold: string }
 }
 export declare function defaultStaticTokens(): NkStaticTokens
 export declare function cssStaticVariables(statics?: NkStaticTokens): Record<string, string>

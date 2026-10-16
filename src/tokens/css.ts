@@ -1,4 +1,4 @@
-import { nkFontFamily, nkFontMono, nkRadius, nkSpaceUnit, nkSpacing, nkTypography } from './base'
+import { nkFontFamily, nkFontMono, nkRadius, nkSpaceUnit, nkSpacing, nkTypography, nkBrandAccents } from './base'
 import { documentScheme } from './document'
 import type { NkDocumentScheme, NkProductTheme, NkScheme } from './types'
 
@@ -125,6 +125,8 @@ export interface NkStaticTokens {
   typography: { rootSize: string; heading: string; body: string; label: string; button: string }
   fontFamily: string
   fontMono: string
+  /** Plattformens aksentfarger (SIGN-1781) — gløder og merkevare, aldri flatefyll. */
+  accents: { periwinkle: string; lime: string; berry: string; gold: string }
 }
 
 /** Dagens base-verdier som redigerbart objekt (f.eks. for theme lab). */
@@ -136,6 +138,7 @@ export function defaultStaticTokens(): NkStaticTokens {
     typography: { ...nkTypography },
     fontFamily: nkFontFamily,
     fontMono: nkFontMono,
+    accents: { ...nkBrandAccents },
   }
 }
 
@@ -146,6 +149,10 @@ export function cssStaticVariables(statics: NkStaticTokens = defaultStaticTokens
     '--nk-radius-md': statics.radius.md,
     '--nk-radius-lg': statics.radius.lg,
     '--nk-radius-pill': statics.radius.pill,
+    '--nk-accent-periwinkle': statics.accents.periwinkle,
+    '--nk-accent-lime': statics.accents.lime,
+    '--nk-accent-berry': statics.accents.berry,
+    '--nk-accent-gold': statics.accents.gold,
     '--nk-space-unit': statics.spaceUnit,
     '--nk-pad-card': statics.spacing.cardPadding,
     '--nk-gap-section': statics.spacing.sectionGap,
