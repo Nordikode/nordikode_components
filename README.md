@@ -110,6 +110,31 @@ flatene bruker `AppHeader` med de delte menyene.
   toner (`success`/`inflight`/`warning`/`error`/`info`/`neutral`) fra soft-tokenparene;
   teksten kommer alltid fra appens i18n
 - `PhoneNumberInput`
+- `NkSubscriptionCard` — abonnementskortet (SIGN-1790): plan, apper, statuschip, varslene
+  (prøveperiode, venter på betaling, feilet betaling, oppsigelse, ventende endring),
+  nøkkelrutenettet (brukere, frekvens, binding, neste faktura, betalingsmåte, pris) og
+  handlingsraden. Samme kort i firmaappen og Sign-innstillingene; eieren eier data,
+  rettigheter og tekster (`NkSubscriptionCardTexts`) og svarer på hendelsene
+- `NkPlanCheckoutForm` — utsjekkens skjema (SIGN-1790): planvalg, `NkOfferPicker`,
+  `NkSeatStepper`, kampanjekode bak en lenke (SIGN-829) og `NkQuoteSummary`, helt styrt av
+  eieren (forhåndsvisning, kjøp, konvertering og planbytte er eierens kall)
+- `NkOfferPicker` / `NkSeatStepper` / `NkQuoteSummary` — byggeklossene: frekvens × binding
+  avledet av planens tilbud (én mulighet vises som en linje), brukertelleren med grenser og
+  hint, og det server-prisede sammendraget med ferdig formaterte linjer
+- `NkPaymentElementDialog` — DEN betalingsdialogen (SIGN-95/1790): Stripe Payment Element
+  på NkSheet for betaling (`payment`) og kortlagring (`setup`), `redirect: 'if_required'`
+  med retur til samme side (`?checkout=return`, les med `readStripeReturn`). `getStripe` og
+  `completePaymentIntentAction` er de delte Stripe-hjelperne; publishable key kommer alltid
+  fra licensing-svaret, aldri fra env
+- `NkPaymentMethodList` / `NkInvoiceTable` — kortlisten (merke, siste fire, utløp,
+  lommebok, standard, sett/fjern) og fakturatabellen (nummer, dato, status, total, PDF) med
+  ferdig formaterte rader fra appen
+- Hjelperne for abonnement (SIGN-1790): `cadenceChoices`, `commitmentChoices`, `findOffer`,
+  `defaultOffer`, `initialSeats`, `matchingOffer`, `plansForApp`; `quoteLines`,
+  `changePreviewLines`, `changePreviewTerms`, `checkoutTerms`; `trialDaysLeft`,
+  `canCancelSubscription`, `cancelBlocked`, `subscriptionStatusTone`; `readStripeReturn`,
+  `stripStripeParams`, `createReloadPoller`. Tekstene kommer som funksjoner
+  (`NkQuoteLineTexts` m.fl.) — pakka har ingen strenger og ingen språkliste
 - `mdiRegistryIconSet(registry)` — Vuetify-ikonsett som slår opp `mdi-*`-navn i et generert
   `@mdi/js`-register (SIGN-521); registeret lages av bin-scriptet `nk-mdi-registry` fra appens
   kildekode, så bare ikonene som brukes bundles (ingen ikonfont).

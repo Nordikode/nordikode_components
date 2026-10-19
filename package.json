@@ -1,6 +1,6 @@
 {
   "name": "@nordikode/components",
-  "version": "0.82.0",
+  "version": "0.83.0",
   "private": false,
   "repository": {
     "type": "git",
@@ -58,6 +58,7 @@
     "icons:generate": "node bin/nk-mdi-registry.mjs --out .storybook/mdiRegistry.ts src"
   },
   "peerDependencies": {
+    "@stripe/stripe-js": "^9.0.0",
     "vue": "^3.5.0",
     "vuetify": "^4.0.0"
   },
@@ -65,6 +66,7 @@
     "@mdi/js": "^7.4.47",
     "@storybook/addon-docs": "^10.5.9",
     "@storybook/vue3-vite": "^10.5.9",
+    "@stripe/stripe-js": "^9.17.0",
     "@vitejs/plugin-vue": "^6.0.6",
     "@vue/tsconfig": "^0.9.1",
     "happy-dom": "^20.14.5",
@@ -79,5 +81,10 @@
   },
   "bin": {
     "nk-mdi-registry": "bin/nk-mdi-registry.mjs"
+  },
+  "peerDependenciesMeta": {
+    "@stripe/stripe-js": {
+      "optional": true
+    }
   }
 }

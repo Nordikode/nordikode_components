@@ -44,3 +44,80 @@ export { initialsOf } from './initials'
 
 export { missingTemplatePlaceholders, parseTemplate, templatePlaceholderKeys, templateToken } from './template'
 export type { NkTemplateSegment } from './template'
+
+// Abonnementsflatene (SIGN-1790): delt av firmaappen, app-core og Sign-innstillingene.
+export { default as NkSubscriptionCard } from './components/NkSubscriptionCard.vue'
+export { default as NkPlanCheckoutForm } from './components/NkPlanCheckoutForm.vue'
+export { default as NkOfferPicker } from './components/NkOfferPicker.vue'
+export { default as NkSeatStepper } from './components/NkSeatStepper.vue'
+export { default as NkQuoteSummary } from './components/NkQuoteSummary.vue'
+export { default as NkPaymentElementDialog } from './components/NkPaymentElementDialog.vue'
+export { default as NkPaymentMethodList } from './components/NkPaymentMethodList.vue'
+export { default as NkInvoiceTable } from './components/NkInvoiceTable.vue'
+export type { NkPlanCheckoutPromo } from './components/NkPlanCheckoutForm.vue'
+export type {
+  NkFormatDate,
+  NkFormatMoney,
+  NkFormatPercentLabel,
+  NkInvoiceRow,
+  NkInvoiceTableLabels,
+  NkOfferPickerLabels,
+  NkPaymentElementDialogLabels,
+  NkPaymentMethod,
+  NkPaymentMethodListLabels,
+  NkPlanCheckoutFormLabels,
+  NkSeatStepperLabels,
+  NkSubscriptionCardTexts,
+} from './types/NkLicensingLabels'
+export {
+  cadenceChoices,
+  commitmentChoices,
+  defaultOffer,
+  findOffer,
+  initialSeats,
+  matchingOffer,
+  offerForCadence,
+  offerForCommitment,
+  plansForApp,
+} from './licensing/planOffers'
+export type {
+  NkCatalogPlan,
+  NkOfferChoice,
+  NkPaymentTerms,
+  NkPlanCatalogApp,
+  NkPlanChangePreview,
+  NkPlanCheckoutQuote,
+  NkPlanOffer,
+  NkPlanOfferQuote,
+  NkPricingModel,
+  NkQuote,
+  NkQuoteCadence,
+  NkQuoteCommitment,
+} from './licensing/planOffers'
+export { changePreviewLines, changePreviewTerms, checkoutTerms, quoteLines } from './licensing/quoteLines'
+export type { NkChangePreviewTermTexts, NkChangePreviewTexts, NkCheckoutTermTexts, NkQuoteLine, NkQuoteLineTexts } from './licensing/quoteLines'
+export {
+  LIVE_SUBSCRIPTION_STATUSES,
+  canCancelSubscription,
+  canChangeTerms,
+  cancelBlocked,
+  hasUnlimitedSeats,
+  subscriptionStatusTone,
+  trialDaysLeft,
+} from './licensing/subscription'
+export type { NkSubscriptionPendingChange, NkSubscriptionSeat, NkSubscriptionSummary } from './licensing/subscription'
+export { completePaymentIntentAction, getStripe, knownPublishableKey, rememberPublishableKey } from './licensing/stripeClient'
+export type { NkStripePaymentActionResult } from './licensing/stripeClient'
+export {
+  CHECKOUT_RETURN_QUERY,
+  RELOAD_FALLBACK_DELAY_MS,
+  RELOAD_POLL_DELAYS_MS,
+  STRIPE_RETURN_QUERY_KEYS,
+  buildCheckoutReturnUrl,
+  createReloadPoller,
+  readQueryParam,
+  readStripeReturn,
+  stripQueryParam,
+  stripStripeParams,
+} from './licensing/checkoutReturn'
+export type { NkCheckoutReturnStatus, NkReloadPoller, NkReloadPollerOptions } from './licensing/checkoutReturn'
