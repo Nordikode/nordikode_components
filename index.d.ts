@@ -314,3 +314,351 @@ export declare function mdiRegistryIconSet(registry: MdiRegistry): IconSet
  * («?»). Samme regel i IdentityAvatar, AccountIdentityMenu og TenantSwitcherMenu.
  */
 export declare function initialsOf(name: string | null | undefined, fallback?: string): string
+
+/*
+ * Abonnementsflatene (SIGN-1790): abonnementskortet, utsjekkens skjema,
+ * tilbudsvelgeren, brukertelleren, prissammendraget, betalingsdialogen,
+ * kortlisten og fakturatabellen — delt av firmaappen, app-core og
+ * Sign-innstillingene. Pakka eier ingen tekster: alt kommer som props.
+ */
+export type NkPricingModel = 'flat' | 'per_seat' | 'included_seats'
+export type NkPaymentTerms = 'card' | 'invoice'
+export interface NkPlanCatalogApp { appId: string; appKey: string; name: string }
+export interface NkPlanOfferQuote { currency: string; effectiveMonthlyMinor: number; totalMinor: number; subtotalMinor?: number }
+export interface NkPlanOffer {
+  offerId: string
+  billingMonths: number
+  cadenceAdjustmentPercent: number
+  commitmentMonths: number
+  commitmentAdjustmentPercent: number
+  commitmentEndPolicy: string
+  isDefault: boolean
+  quote: NkPlanOfferQuote
+}
+export interface NkCatalogPlan {
+  id: string
+  key: string
+  name: string
+  description?: string | null
+  pricingModel: NkPricingModel
+  includedSeats: number | null
+  currency: string
+  baseAmountMinor: number
+  seatAmountMinor: number | null
+  seats: number
+  monthlyListMinor: number
+  defaultOfferId: string
+  trialAvailable?: boolean
+  trialDays?: number | null
+  apps: NkPlanCatalogApp[]
+  offers: NkPlanOffer[]
+}
+export interface NkQuoteCadence { months: number; adjustmentPercent: number; periodListMinor: number; adjustmentMinor: number; amountMinor: number }
+export interface NkQuoteCommitment { months: number; adjustmentPercent: number; endPolicy: string; adjustmentMinor: number; amountMinor: number }
+export interface NkQuote {
+  pricingModel: NkPricingModel
+  includedSeats: number | null
+  seats: number
+  billableSeats: number
+  offerId: string
+  currency: string
+  market: { currency: string; baseAmountMinor: number; seatAmountMinor: number | null; monthlyListMinor: number }
+  basePeriodMinor: number
+  seatsPeriodMinor: number
+  cadence: NkQuoteCadence
+  commitment: NkQuoteCommitment
+  subtotalMinor: number
+  discounts: { tenantPercent: number; tenantMinor: number; couponMinor: number; totalMinor: number }
+  discountedSubtotalMinor: number
+  vat: { mode: string; rate: number; amountMinor: number }
+  totalMinor: number
+  effectiveMonthlyMinor: number
+}
+export interface NkPlanCheckoutQuote {
+  plan: { id: string; key: string; name: string; pricingModel: NkPricingModel; includedSeats: number | null }
+  offer: { offerId: string; billingMonths: number; cadenceAdjustmentPercent: number; commitmentMonths: number; commitmentAdjustmentPercent: number; commitmentEndPolicy: string }
+  quote: NkQuote
+  seats: number
+  currency: string
+  subtotalMinor: number
+  discountMinor: number
+  vatRate: number
+  vatMinor: number
+  totalMinor: number
+  giftCardMinor: number
+  amountDueMinor: number
+  paymentTerms: NkPaymentTerms
+  invoiceDueDays: number | null
+  commitmentEndsAt: string | null
+  nextBillingAt: string | null
+  paymentId: string | null
+  subscriptionId: string | null
+  clientSecret: string | null
+  mode?: 'payment' | 'setup' | null
+  publishableKey: string | null
+  completed: boolean | null
+  invoiceId: string | null
+}
+export interface NkPlanChangePreview {
+  requiresPayment: boolean
+  scheduled: boolean
+  effectiveAt: string | null
+  amountMinor: number
+  vatMinor: number
+  totalMinor: number
+  currency: string
+  quote: NkQuote
+  seats: number | null
+  planId: string | null
+  offerId: string | null
+  upgrade: boolean | null
+  commitmentEndsAt: string | null
+  nextBillingAt: string | null
+}
+export interface NkOfferChoice { months: number; adjustmentPercent: number; available: boolean; effectiveMonthlyMinor: number | null }
+export declare const cadenceChoices: (offers: NkPlanOffer[], commitmentMonths: number) => NkOfferChoice[]
+export declare const commitmentChoices: (offers: NkPlanOffer[], billingMonths: number) => NkOfferChoice[]
+export declare const findOffer: (offers: NkPlanOffer[], billingMonths: number, commitmentMonths: number) => NkPlanOffer | null
+export declare const defaultOffer: (plan: Pick<NkCatalogPlan, 'offers' | 'defaultOfferId'>) => NkPlanOffer | null
+export declare const initialSeats: (plan: Pick<NkCatalogPlan, 'pricingModel' | 'includedSeats'>) => number
+export declare const matchingOffer: (plan: Pick<NkCatalogPlan, 'offers' | 'defaultOfferId'>, billingMonths: number | null, commitmentMonths: number | null) => NkPlanOffer | null
+export declare const plansForApp: <T extends { apps: Array<{ appKey: string }>; offers: unknown[] }>(plans: T[], appKey: string) => T[]
+export declare const offerForCadence: (offers: NkPlanOffer[], months: number, commitmentMonths: number | null) => NkPlanOffer | null
+export declare const offerForCommitment: (offers: NkPlanOffer[], months: number, billingMonths: number | null) => NkPlanOffer | null
+
+export interface NkQuoteLine { key: string; label: string; amount: string; emphasis?: boolean; divider?: boolean }
+export interface NkQuoteLineTexts {
+  money: (amountMinor: number) => string
+  percent: (value: number) => string
+  lineBase: string
+  linePerSeat: (seats: number) => string
+  lineExtraSeats: (seats: number) => string
+  linePeriod: (months: number) => string
+  lineCadence: (percent: string) => string
+  lineCommitment: (percent: string) => string
+  discount: string
+  vat: (rate: string) => string
+  giftCard: string
+  total: string
+  amountDue: string
+}
+export interface NkChangePreviewTexts {
+  money: (amountMinor: number) => string
+  percent: (value: number) => string
+  lineProrated: string
+  vat: (rate: string) => string
+  amountDue: string
+  lineNextPeriod: (months: number) => string
+}
+export interface NkChangePreviewTermTexts {
+  date: (iso: string | null) => string | null
+  nothingDue: string
+  effectiveNow: string
+  effectiveFrom: (date: string) => string
+  commitmentEnd: (date: string) => string
+  nextBilling: (date: string) => string
+}
+export interface NkCheckoutTermTexts {
+  date: (iso: string | null) => string | null
+  invoiceTerms: (dueDays: number) => string
+  cardTerms: string
+  commitmentEnd: (date: string) => string
+  nextBilling: (date: string) => string
+}
+export declare const quoteLines: (checkout: NkPlanCheckoutQuote, texts: NkQuoteLineTexts) => NkQuoteLine[]
+export declare const changePreviewLines: (preview: NkPlanChangePreview, texts: NkChangePreviewTexts) => NkQuoteLine[]
+export declare const changePreviewTerms: (preview: NkPlanChangePreview, texts: NkChangePreviewTermTexts) => string[]
+export declare const checkoutTerms: (checkout: NkPlanCheckoutQuote, texts: NkCheckoutTermTexts) => string[]
+
+export interface NkSubscriptionSeat { id: string; userId: string; userName: string | null; userEmail: string | null }
+export interface NkSubscriptionPendingChange {
+  type: string
+  planId: string | null
+  offerId: string
+  billingMonths: number | null
+  commitmentMonths: number | null
+  effectiveAt: string | null
+}
+export interface NkSubscriptionSummary {
+  id: string
+  appName: string
+  status: string
+  currency: string
+  paidSeatCount: number
+  cancelAtPeriodEnd: boolean
+  isComplimentary: boolean
+  currentPeriodEnd: string | null
+  trialEndsAt: string | null
+  planId: string | null
+  planName: string | null
+  pricingModel: NkPricingModel | null
+  planIncludedSeats: number | null
+  apps: { appKey: string; appName: string }[]
+  seatsCount: number | null
+  baseAmountMinor: number | null
+  seatAmountMinor: number | null
+  monthlyListMinor: number | null
+  billingMonths: number | null
+  commitmentMonths: number | null
+  commitmentEndsAt: string | null
+  commitmentEndPolicy: string | null
+  nextBillingAt: string | null
+  paymentTerms: NkPaymentTerms | null
+  cancelAt: string | null
+  cancelableFrom: string | null
+  pendingChange: NkSubscriptionPendingChange | null
+  seats: NkSubscriptionSeat[]
+}
+export declare const subscriptionStatusTone: Record<string, NkStatusChipTone>
+export declare const LIVE_SUBSCRIPTION_STATUSES: readonly ['incomplete', 'trialing', 'active', 'past_due', 'suspended']
+export declare const trialDaysLeft: (endsAt: string | null | undefined, now?: Date) => number | null
+export declare const hasUnlimitedSeats: (subscription: Pick<NkSubscriptionSummary, 'status' | 'isComplimentary'>) => boolean
+export declare const canCancelSubscription: (subscription: Pick<NkSubscriptionSummary, 'isComplimentary' | 'cancelAtPeriodEnd' | 'cancelAt' | 'status'>) => boolean
+export declare const cancelBlocked: (subscription: Pick<NkSubscriptionSummary, 'cancelableFrom' | 'status' | 'currentPeriodEnd'>) => boolean
+export declare const canChangeTerms: (subscription: Pick<NkSubscriptionSummary, 'planId' | 'isComplimentary' | 'status'>) => boolean
+
+export interface NkStripePaymentActionResult { outcome: 'succeeded' | 'processing' | 'requiresElement' | 'failed'; message?: string }
+export declare const rememberPublishableKey: (key: string | null | undefined) => void
+export declare const knownPublishableKey: () => string | null
+export declare const getStripe: (publishableKey?: string | null) => Promise<import('@stripe/stripe-js').Stripe>
+export declare const completePaymentIntentAction: (clientSecret: string, publishableKey?: string | null) => Promise<NkStripePaymentActionResult>
+
+export type NkCheckoutReturnStatus = 'succeeded' | 'processing' | 'failed'
+export declare const CHECKOUT_RETURN_QUERY: string
+export declare const STRIPE_RETURN_QUERY_KEYS: readonly string[]
+export declare const RELOAD_POLL_DELAYS_MS: readonly number[]
+export declare const RELOAD_FALLBACK_DELAY_MS: number
+export declare const buildCheckoutReturnUrl: (location?: Pick<Location, 'origin' | 'pathname'>) => string
+export declare const readStripeReturn: (search: string) => NkCheckoutReturnStatus | null
+export declare const stripStripeParams: (href: string) => string
+export declare const readQueryParam: (search: string, key: string) => string | null
+export declare const stripQueryParam: (href: string, key: string) => string
+export interface NkReloadPollerOptions { reload: () => Promise<void>; fingerprint?: () => unknown; delays?: readonly number[] }
+export interface NkReloadPoller { start: () => void; cancel: () => void }
+export declare const createReloadPoller: (options: NkReloadPollerOptions) => NkReloadPoller
+
+export type NkFormatMoney = (amountMinor: number, currency: string) => string
+export type NkFormatDate = (iso: string | null | undefined) => string | null
+export type NkFormatPercentLabel = (value: number) => string
+export interface NkOfferPickerLabels {
+  billing: string
+  commitment: string
+  billingEvery: (months: number) => string
+  commitmentFor: (months: number) => string
+  perMonth: (amount: string) => string
+}
+export interface NkSeatStepperLabels { fewer: string; more: string }
+export interface NkPlanCheckoutFormLabels {
+  plan: string
+  seats: string
+  fewerSeats: string
+  moreSeats: string
+  promoToggle: string
+  promoCode: string
+  promoApply: string
+  promoRemove: string
+  calculating: string
+}
+export interface NkPlanCheckoutPromo { input: string; applied: string | null; appliedLabel: string; error: string; applying: boolean }
+export interface NkPaymentElementDialogLabels { loading: string; payNow: string; saveCard: string; securedByStripe: string; cancel: string; failed: string }
+export interface NkSubscriptionCardTexts {
+  status: (status: string) => string
+  complimentary: string
+  notAvailable: string
+  seatsLabel: string
+  billingLabel: string
+  commitmentLabel: string
+  nextInvoiceLabel: string
+  paymentTermsLabel: string
+  priceLabel: string
+  seatsUnlimited: (used: number) => string
+  seatsUsage: (used: number, total: number) => string
+  seatsFromNextBilling: (total: number) => string
+  billingEvery: (months: number) => string
+  commitmentFor: (months: number) => string
+  commitmentTrial: string
+  commitmentUntil: (date: string) => string
+  endPolicy: (policy: string) => string
+  trialUntil: (date: string) => string
+  endsOn: (date: string) => string
+  nextInvoiceOn: (date: string) => string
+  paymentTermsCard: string
+  paymentTermsInvoice: string
+  paymentTermsTrial: string
+  monthlyList: (amount: string) => string
+  modelFlat: string
+  modelPerUser: (amount: string) => string
+  modelCompany: (amount: string, includedSeats: number) => string
+  modelExtraUser: (amount: string) => string
+  pendingPlan: (plan: string, date: string) => string
+  pendingOffer: (billing: string, commitment: string, date: string) => string
+  trialEndsToday: string
+  trialCountdown: (days: number) => string
+  incompleteAlert: string
+  pastDueAlert: string
+  suspendedAlert: string
+  cancelScheduled: (date: string) => string
+  cancelCommitted: (date: string) => string
+  actions: {
+    chooseOffer: string
+    completeCheckout: string
+    abandonCheckout: string
+    retryPayment: string
+    resume: string
+    manageSeats: string
+    changeSeats: string
+    changeOffer: string
+    changePlan: string
+    cancel: string
+  }
+}
+export interface NkPaymentMethod {
+  id: string
+  brand: string | null
+  last4: string | null
+  expMonth: number | null
+  expYear: number | null
+  walletType: string | null
+  isDefault: boolean
+}
+export interface NkPaymentMethodListLabels { empty: string; card: string; default: string; setDefault: string; remove: string; expires: (month: string, year: string) => string }
+export interface NkInvoiceRow {
+  id: string
+  number: string
+  dateLabel: string
+  statusTone: NkStatusChipTone
+  statusLabel: string
+  dueLabel: string | null
+  totalLabel: string
+  pdfHref: string | null
+  /** Uten lenke: eieren henter PDF-en selv på `download` (én fil ved klikk). */
+  downloadable?: boolean
+}
+export interface NkInvoiceTableLabels { empty: string; number: string; date: string; status: string; total: string; pdf: string }
+
+/**
+ * NkSubscriptionCard (SIGN-1790): abonnementskortet. Props `subscription`
+ * (`NkSubscriptionSummary`), `plans`, `canManage`, `canManageSeats`, `busy`,
+ * `texts` (`NkSubscriptionCardTexts`), `formatMoney`, `formatDate`. Hendelser:
+ * `choose-offer`, `complete-checkout`, `abandon-checkout`, `retry-payment`,
+ * `resume`, `cancel`, `manage-seats`, `change-seats`, `change-offer`, `change-plan`.
+ */
+export const NkSubscriptionCard: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkPlanCheckoutForm (SIGN-1790): utsjekkens skjema — planvalg, tilbudsvelger,
+ * brukerteller, kampanjekode og prissammendrag, helt styrt av eieren. Hendelser:
+ * `select-plan`, `update:offer`, `update:seats`, `update:promo-input`, `apply-promo`, `remove-promo`.
+ */
+export const NkPlanCheckoutForm: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const NkOfferPicker: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const NkSeatStepper: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const NkQuoteSummary: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkPaymentElementDialog (SIGN-1790): Stripe Payment Element på NkSheet.
+ * Props `open`, `mode` (`payment`/`setup`), `clientSecret`, `publishableKey`,
+ * `title`, `description`, `labels`, `dark`, `returnUrl`. Hendelser `close`,
+ * `succeeded`, `processing`, `failed`.
+ */
+export const NkPaymentElementDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const NkPaymentMethodList: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+export const NkInvoiceTable: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>

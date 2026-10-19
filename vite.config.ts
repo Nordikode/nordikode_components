@@ -25,7 +25,7 @@ export default defineConfig({
       // `vuetify/components` og `vuetify/lib/**/*.css`, og da bundles hele
       // Vuetify (JS + kompilert CSS med default-settings) inn i pakka.
       // Appene eier Vuetify-oppsettet (inkl. vuetify-settings.scss).
-      external: ['vue', 'vuetify', /^vuetify\//, /^libphonenumber-js/],
+      external: ['vue', 'vuetify', /^vuetify\//, /^libphonenumber-js/, '@stripe/stripe-js'],
       output: {
         globals: {
           vue: 'Vue',
