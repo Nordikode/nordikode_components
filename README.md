@@ -93,6 +93,18 @@ flatene bruker `AppHeader` med de delte menyene.
   `title`, `description` og `actions`-slot; `size` `default` (primær-tonet ikonsirkel,
   hele flater/paneler) eller `compact` (dempet sirkel, «ingen treff» etter søk/filter).
   All tekst og alle handlinger kommer fra appen
+- `NkListPane` — det delte listepanelet i liste/detalj-flater (SIGN-1845): listen til
+  venstre, det valgte til høyre. Hodet er tre rader og ikke mer — tittelraden (`title`,
+  `#badge`, `#actions`), søkeraden (`v-model:search` + `searchPlaceholder`,
+  `#search-append`, og én filterknapp med `filterCount` som åpner `#filters` i en
+  nedtrekksmeny med «Nullstill» → `reset-filters`) og verktøyraden (`#toolbar`, brikker og
+  teller). Filtre ligger aldri som rekker av nedtrekksfelt i hodet. Komponenten eier
+  rullingen i listen (`#default`): når listen rulles, krymper hodet til søkeraden, og det
+  kommer tilbake øverst (bare når listen fortsatt kan rulles etterpå, så ingenting hopper;
+  `prefers-reduced-motion` slår av overgangen). `#footer` står fast under listen.
+  `headingTag` er `h1` der panelet er sidens overskrift, `labels` (`NkListPaneLabels`)
+  og all annen tekst kommer fra appen. Eksponerer `body` (rulleelementet), `scrollToTop()`
+  og `condensed`
 - `NkSheet` — det delte dialogskallet (SIGN-733): `v-dialog` + kort med hode
   (`title`, `subtitle`, `#badge`, eller hele hodet i `#head`), rullende kropp
   (`default`) og festet handlingsrad (`#actions`). Bare kroppen ruller; den har

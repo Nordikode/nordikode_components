@@ -48,6 +48,13 @@ export interface NkConversationLabels {
   /** Knappen som vises når noe nytt har kommet mens leseren har rullet opp. */
   newMessages: string
 }
+/** Tekstene NkListPane trenger fra appens i18n (SIGN-1845). */
+export interface NkListPaneLabels {
+  /** Filterknappen og filtermenyens navn («Filtre»). Uten `#filters`-slot vises ingen knapp. */
+  filters?: string
+  /** «Nullstill»-knappen i filtermenyen; vises bare når `filterCount` > 0. */
+  resetFilters?: string
+}
 export interface NkMessageComposerLabels {
   /** Feltets etikett og plassholder. */
   field: string
@@ -171,6 +178,17 @@ export const NkConversation: DefineComponent<Record<string, unknown>, Record<str
  */
 export const NkConversationListItem: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkEmptyState: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkListPane (SIGN-1845): det delte listepanelet i liste/detalj-flater. Hodet er
+ * tittelraden (`title`, `#badge`, `#actions`), søkeraden (`v-model:search`,
+ * `searchPlaceholder`, `searchFieldAttrs`, `#search-append`, filterknapp med
+ * `filterCount` som åpner `#filters` i en nedtrekksmeny) og verktøyraden (`#toolbar`).
+ * Komponenten eier rullingen i listen (`#default`) og krymper hodet til søkeraden når
+ * listen rulles (`condense`); `#footer` står fast under listen. Props ellers:
+ * `headingTag` (`h1`/`h2`/`h3`), `labels` (`NkListPaneLabels`), `width`. Emits
+ * `update:search` og `reset-filters`; eksponerer `body`, `scrollToTop()` og `condensed`.
+ */
+export const NkListPane: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /**
  * NkMessageComposer (SIGN-1313): skrivefelt som vokser, med send-knapp. Props:
  * `send(text, files) => Promise<boolean>` (true tømmer feltet og filene), `labels`,
