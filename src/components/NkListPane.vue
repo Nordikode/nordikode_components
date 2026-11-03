@@ -17,12 +17,16 @@ import type { NkListPaneLabels } from '../types/NkListPaneLabels'
  *   rekker av nedtrekksfelt i selve hodet.
  * - **Verktøyraden** (`#toolbar`, valgfri): filterbrikker, teller, sortering.
  *
- * Komponenten eier rullingen i listen (`#default`), så hodet kan krympe:
- * når listen rulles, legges tittel- og verktøyraden sammen og bare
- * søkeraden står; rulles listen tilbake til toppen, kommer de igjen.
+ * Komponenten eier rullingen i listen (`#default`), så hodet kan krympe
+ * (SIGN-1852): når listen rulles, legges verktøyraden sammen og tittelraden
+ * strammes — mindre tittel, mindre luft — mens tittelen, tellerne og
+ * handlingene blir stående sammen med søkeraden. Brukeren mister aldri hvor
+ * hen er eller den viktigste handlingen. Rulles listen tilbake til toppen,
+ * åpner hodet seg igjen. Alt som endrer seg (høyde, luft, tittelstørrelse,
+ * skillelinjen under hodet) animerer med samme varighet og kurve, så det
+ * oppleves som én bevegelse; `prefers-reduced-motion` slår den av.
  * Krympingen skjer bare når listen fortsatt kan rulles etterpå — ellers
  * ville hodet hoppe opp og ned på en liste som knapt er lengre enn flaten.
- * `prefers-reduced-motion` slår av overgangen.
  *
  * `#footer` står fast under listen (sidetall). Appen eier all tekst (i18n),
  * alle filtre og alle handlinger; komponenten eier geometri og toner —
@@ -94,10 +98,15 @@ const titleRow = ref<HTMLElement | null>(null)
 const toolbarRow = ref<HTMLElement | null>(null)
 const condensed = ref(false)
 
-// Hodet kan bare krympe når det finnes en søkerad å stå igjen med — uten
-// den ville hele hodet forsvinne.
+// Hodet kan bare krympe når det finnes en søkerad å samle seg rundt — uten
+// den er det bare tittelraden igjen, og den skal stå som den er.
 const canCondense = computed(() => props.condense && hasSearchRow.value)
 
+// Hvor mye hodet kan komme til å krympe. Det nøyaktige tallet er verktøyraden
+// pluss luften som strammes i de to andre radene — vi bruker med vilje et
+// overslag (hele tittelraden i stedet for bare luften): overslaget gjør bare
+// at en liste som er marginalt lengre enn flaten lar være å krympe, mens et
+// for lavt tall ville gitt et hode som blafrer.
 const collapsibleHeight = (): number =>
   (titleRow.value?.offsetHeight ?? 0) + (toolbarRow.value?.offsetHeight ?? 0)
 
@@ -179,15 +188,13 @@ defineExpose({
     :style="props.width !== '' ? { '--nk-list-pane-width': props.width } : undefined"
   >
     <header class="nk-list-pane__head">
-      <div ref="titleRow" class="nk-list-pane__collapsible">
-        <div class="nk-list-pane__title-row">
-          <div class="nk-list-pane__heading">
-            <component :is="props.headingTag" class="nk-list-pane__title">{{ props.title }}</component>
-            <slot name="badge" />
-          </div>
-          <div v-if="$slots.actions" class="nk-list-pane__actions">
-            <slot name="actions" />
-          </div>
+      <div ref="titleRow" class="nk-list-pane__title-row">
+        <div class="nk-list-pane__heading">
+          <component :is="props.headingTag" class="nk-list-pane__title">{{ props.title }}</component>
+          <slot name="badge" />
+        </div>
+        <div v-if="$slots.actions" class="nk-list-pane__actions">
+          <slot name="actions" />
         </div>
       </div>
 
@@ -249,8 +256,10 @@ defineExpose({
       </div>
 
       <div v-if="hasToolbar" ref="toolbarRow" class="nk-list-pane__collapsible">
-        <div class="nk-list-pane__toolbar">
-          <slot name="toolbar" />
+        <div class="nk-list-pane__collapsible-inner">
+          <div class="nk-list-pane__toolbar">
+            <slot name="toolbar" />
+          </div>
         </div>
       </div>
     </header>
@@ -271,6 +280,10 @@ defineExpose({
 .nk-list-pane {
   --nk-list-pane-width: 332px;
   --nk-list-pane-pad-x: calc(var(--nk-space-unit) * 2.5);
+  /* Én bevegelse for hele hodet: alt som endrer seg ved krymping deler
+     varighet og kurve, ellers ser det ut som deler som klippes bort. */
+  --nk-list-pane-duration: 280ms;
+  --nk-list-pane-motion: var(--nk-list-pane-duration) cubic-bezier(0.2, 0, 0, 1);
 
   background: rgb(var(--v-theme-surface));
   border-right: 1px solid var(--nk-surface-border);
@@ -291,45 +304,32 @@ defineExpose({
 
 .nk-list-pane__head {
   background: rgb(var(--v-theme-surface));
+  /* Skillelinjen kommer først når listen ruller under hodet. */
+  border-bottom: 1px solid transparent;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  transition: border-color var(--nk-list-pane-motion);
 }
 
-/* Radene som krymper: et grid med én rad på 1fr → 0fr animerer høyden
-   uten å måtte kjenne den. Innholdet klippes i den indre boksen. */
-.nk-list-pane__collapsible {
-  display: grid;
-  grid-template-rows: 1fr;
-  transition:
-    grid-template-rows 200ms ease,
-    opacity 160ms ease;
+.nk-list-pane--condensed .nk-list-pane__head {
+  border-bottom-color: var(--nk-surface-border);
 }
 
-.nk-list-pane__collapsible > * {
-  min-height: 0;
-  overflow: hidden;
-}
-
-.nk-list-pane--condensed .nk-list-pane__collapsible {
-  grid-template-rows: 0fr;
-  opacity: 0;
-  visibility: hidden;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .nk-list-pane__collapsible {
-    transition: none;
-  }
-}
-
+/* Tittelraden står alltid; krympet strammes luften og tittelen går ned
+   til brødtekststørrelse, så raden er like høy som handlingen i den. */
 .nk-list-pane__title-row {
   align-items: center;
   display: flex;
-  gap: var(--nk-space-unit);
+  gap: var(--nk-gap-inline);
   justify-content: space-between;
-  min-height: calc(var(--nk-space-unit) * 4.5);
-  padding: calc(var(--nk-space-unit) * 1.75) var(--nk-list-pane-pad-x) calc(var(--nk-space-unit) * 0.75);
+  padding: calc(var(--nk-space-unit) * 2) var(--nk-list-pane-pad-x) var(--nk-space-unit);
+  transition: padding var(--nk-list-pane-motion);
+}
+
+.nk-list-pane--condensed .nk-list-pane__title-row {
+  padding-bottom: calc(var(--nk-space-unit) * 0.5);
+  padding-top: var(--nk-space-unit);
 }
 
 .nk-list-pane__heading {
@@ -347,25 +347,31 @@ defineExpose({
   letter-spacing: -0.01em;
   line-height: 1.3;
   margin: 0;
+  transition: font-size var(--nk-list-pane-motion);
+}
+
+.nk-list-pane--condensed .nk-list-pane__title {
+  font-size: var(--nk-text-body);
 }
 
 .nk-list-pane__actions {
   align-items: center;
   display: flex;
   flex-shrink: 0;
-  gap: calc(var(--nk-space-unit) * 0.75);
+  gap: var(--nk-space-unit);
 }
 
 .nk-list-pane__search-row {
   align-items: center;
   display: flex;
-  gap: calc(var(--nk-space-unit) * 0.75);
-  padding: calc(var(--nk-space-unit) * 0.75) var(--nk-list-pane-pad-x) calc(var(--nk-space-unit) * 1.25);
+  gap: var(--nk-space-unit);
+  padding: var(--nk-space-unit) var(--nk-list-pane-pad-x) calc(var(--nk-space-unit) * 1.5);
+  transition: padding var(--nk-list-pane-motion);
 }
 
-/* Krympet: søkeraden står alene og får luften tittelraden hadde. */
 .nk-list-pane--condensed .nk-list-pane__search-row {
-  padding-top: calc(var(--nk-space-unit) * 1.5);
+  padding-bottom: var(--nk-space-unit);
+  padding-top: calc(var(--nk-space-unit) * 0.5);
 }
 
 .nk-list-pane__search {
@@ -398,15 +404,52 @@ defineExpose({
   border-top: 1px solid var(--nk-surface-border);
   display: flex;
   justify-content: flex-end;
-  padding: calc(var(--nk-space-unit) * 0.75) var(--nk-space-unit);
+  padding: var(--nk-space-unit);
+}
+
+/* Verktøyraden er det som legges sammen: et grid med én rad på 1fr → 0fr
+   animerer høyden uten å måtte kjenne den, og innholdet glir opp og
+   tones ut i samme bevegelse — ikke klippes. Den indre boksen har ingen
+   egen luft, så raden blir faktisk 0 høy når den er lagt sammen. */
+.nk-list-pane__collapsible {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--nk-list-pane-motion);
+}
+
+.nk-list-pane__collapsible-inner {
+  min-height: 0;
+  overflow: hidden;
 }
 
 .nk-list-pane__toolbar {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: calc(var(--nk-space-unit) * 0.75);
-  padding: 0 var(--nk-list-pane-pad-x) calc(var(--nk-space-unit) * 1.25);
+  gap: var(--nk-space-unit);
+  padding: 0 var(--nk-list-pane-pad-x) calc(var(--nk-space-unit) * 1.5);
+  transition:
+    opacity var(--nk-list-pane-motion),
+    transform var(--nk-list-pane-motion),
+    visibility 0s linear 0s;
+}
+
+.nk-list-pane--condensed .nk-list-pane__collapsible {
+  grid-template-rows: 0fr;
+}
+
+.nk-list-pane--condensed .nk-list-pane__toolbar {
+  opacity: 0;
+  transform: translateY(calc(var(--nk-space-unit) * -1));
+  /* Skjules for tastatur og skjermleser først når bevegelsen er ferdig. */
+  transition-delay: 0s, 0s, var(--nk-list-pane-duration);
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nk-list-pane {
+    --nk-list-pane-duration: 0s;
+  }
 }
 
 .nk-list-pane__body {

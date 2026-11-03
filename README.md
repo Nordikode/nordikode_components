@@ -99,9 +99,11 @@ flatene bruker `AppHeader` med de delte menyene.
   `#search-append`, og én filterknapp med `filterCount` som åpner `#filters` i en
   nedtrekksmeny med «Nullstill» → `reset-filters`) og verktøyraden (`#toolbar`, brikker og
   teller). Filtre ligger aldri som rekker av nedtrekksfelt i hodet. Komponenten eier
-  rullingen i listen (`#default`): når listen rulles, krymper hodet til søkeraden, og det
-  kommer tilbake øverst (bare når listen fortsatt kan rulles etterpå, så ingenting hopper;
-  `prefers-reduced-motion` slår av overgangen). `#footer` står fast under listen.
+  rullingen i listen (`#default`): når listen rulles, legges verktøyraden sammen og
+  tittelraden strammes — tittel, `#badge` og `#actions` blir stående over søket
+  (SIGN-1852) — og hodet åpner seg igjen øverst (bare når listen fortsatt kan rulles
+  etterpå, så ingenting hopper; alt animerer som én bevegelse, og
+  `prefers-reduced-motion` slår den av). `#footer` står fast under listen.
   `headingTag` er `h1` der panelet er sidens overskrift, `labels` (`NkListPaneLabels`)
   og all annen tekst kommer fra appen. Eksponerer `body` (rulleelementet), `scrollToTop()`
   og `condensed`

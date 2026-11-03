@@ -7,7 +7,8 @@ import { VBadge, VBtn, VCard, VIcon, VMenu, VTextField, VTooltip } from 'vuetify
 import NkListPane from '../src/components/NkListPane.vue'
 
 // Listepanelet (SIGN-1845) er det samme i backoffice, Sign og Time. Det som
-// voktes: hodet krymper til søkeraden når listen rulles forbi terskelen, kommer
+// voktes: hodet krymper når listen rulles forbi terskelen (verktøyraden legges
+// sammen, tittelraden strammes — tittel og handlinger står, SIGN-1852), kommer
 // tilbake når listen står på toppen igjen, og krymper aldri når listen ikke
 // kan rulles nok til at det er plass til det — da ville hodet hoppe.
 
@@ -56,7 +57,7 @@ function mount(props: Record<string, unknown>, geometry: Geometry, slots: Record
   const body = host.querySelector<HTMLElement>('.nk-list-pane__body')!
   Object.defineProperty(body, 'scrollHeight', { configurable: true, value: geometry.scrollHeight })
   Object.defineProperty(body, 'clientHeight', { configurable: true, value: geometry.clientHeight })
-  const titleRow = host.querySelector<HTMLElement>('.nk-list-pane__collapsible')!
+  const titleRow = host.querySelector<HTMLElement>('.nk-list-pane__title-row')!
   Object.defineProperty(titleRow, 'offsetHeight', { configurable: true, value: geometry.titleHeight ?? 56 })
 
   return { body }
@@ -95,6 +96,28 @@ describe('NkListPane', () => {
 
     await scrollTo(body, 0)
     expect(pane().classList.contains('nk-list-pane--condensed')).toBe(false)
+  })
+
+  it('beholder tittel og handlinger når hodet er krympet — bare verktøyraden legges sammen', async () => {
+    const { body } = mount(
+      {},
+      { scrollHeight: 2000, clientHeight: 600 },
+      { actions: () => h('button', { 'data-testid': 'ny' }, 'Ny sak'), toolbar: () => h('span', 'Brikker') },
+    )
+
+    await scrollTo(body, 120)
+    expect(pane().classList.contains('nk-list-pane--condensed')).toBe(true)
+
+    // Tittelraden ligger utenfor det som legges sammen, så tittel og «Ny …» står.
+    const titleRow = host!.querySelector('.nk-list-pane__title-row')!
+    expect(titleRow.closest('.nk-list-pane__collapsible')).toBeNull()
+    expect(titleRow.querySelector('.nk-list-pane__title')?.textContent).toBe('Saker')
+    expect(titleRow.querySelector('[data-testid="ny"]')).not.toBeNull()
+
+    // Det som legges sammen er verktøyraden, og ingenting annet.
+    const collapsibles = host!.querySelectorAll('.nk-list-pane__collapsible')
+    expect(collapsibles).toHaveLength(1)
+    expect(collapsibles[0].querySelector('.nk-list-pane__toolbar')?.textContent).toBe('Brikker')
   })
 
   it('krymper ikke når listen knapt er lengre enn flaten', async () => {
