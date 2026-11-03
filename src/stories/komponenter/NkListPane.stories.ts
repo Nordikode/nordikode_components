@@ -6,9 +6,10 @@ import NkStatusChip from '../../components/NkStatusChip.vue'
 
 // Listepanelet (SIGN-1845): ett hode for alle liste/detalj-flater.
 // Tittelraden (tittel, brikke, handling), søkeraden (søk + filterknapp med
-// antall aktive filtre) og verktøyraden (brikker). Rull i listen: hodet
-// krymper til søkeraden, og kommer tilbake øverst. Filtrene ligger i
-// nedtrekksmenyen, aldri som rekker av felt i hodet.
+// antall aktive filtre) og verktøyraden (brikker). Rull i listen: verktøyraden
+// legges sammen og tittelraden strammes, mens tittel, brikke og «Ny sak» blir
+// stående over søket (SIGN-1852); øverst åpner hodet seg igjen. Filtrene
+// ligger i nedtrekksmenyen, aldri som rekker av felt i hodet.
 
 const meta: Meta<typeof NkListPane> = {
   title: 'Komponenter/NkListPane',
@@ -127,7 +128,7 @@ const Demo = defineComponent({
               h('p', { style: { color: 'var(--nk-text-secondary)', fontSize: '0.85rem', margin: 0, padding: '10px 20px' } }, `${synlige().length} av ${saker.length} saker`),
           },
         ),
-        h('div', { style: { flex: 1, padding: '24px', color: 'var(--nk-text-secondary)' } }, 'Det valgte vises her. Rull i listen til venstre for å se hodet krympe.'),
+        h('div', { style: { flex: 1, padding: '24px', color: 'var(--nk-text-secondary)' } }, 'Det valgte vises her. Rull i listen til venstre: verktøyraden legges sammen og hodet strammes, men tittel og «Ny sak» står.'),
       ])
   },
 })
