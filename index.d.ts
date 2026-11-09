@@ -1,4 +1,4 @@
-import type { DefineComponent } from 'vue'
+import type { ComputedRef, DefineComponent, MaybeRefOrGetter, Ref } from 'vue'
 
 export * from './tokens'
 
@@ -244,6 +244,225 @@ export const NkTemplateField: DefineComponent<Record<string, unknown>, Record<st
  */
 export const NkTradeSelect: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const PhoneNumberInput: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+
+// --- Widgetrammeverket (SIGN-1850, delt i SIGN-1873) -------------------------
+// En flate satt sammen av widgeter brukeren plasserer, gir størrelse og skjuler.
+// Lagringen og tekstene er appens (Sign: UI-preferansene i core + i18n).
+
+/** Tre størrelser; innholdet er ulikt per størrelse, ikke bare skalert. */
+export type WidgetSize = 'small' | 'medium' | 'large'
+export const WIDGET_SIZES: readonly WidgetSize[]
+/** En sone på flaten: et rutenett (`grid`, celler) eller en kolonne (`column`, listerekkefølge). */
+export type WidgetZoneKind = 'grid' | 'column'
+export interface WidgetDefinition {
+  /** Stabil nøkkel som lagres i brukerens oppsett — endres aldri. */
+  key: string
+  /** Navnet, ferdig oversatt av appen — eller en getter som følger språket. */
+  title: string | (() => string)
+  icon: string
+  /** Størrelsene widgeten kan ha; den første er standard. */
+  sizes: readonly WidgetSize[]
+  /** Sonen widgeten står i som standard (flatens første sone når den mangler). */
+  zone?: string
+  /** Skjult som standard — brukeren henter den fram fra redigeringslinjen. */
+  hidden?: boolean
+  /** Antall rader per størrelse i et rutenett med faste rader, der standarden (1/2/3) ikke passer. */
+  rows?: Partial<Record<WidgetSize, number>>
+}
+export interface WidgetLayoutItem {
+  key: string
+  size: WidgetSize
+  visible: boolean
+  zone: string
+}
+export interface GridPosition {
+  x: number
+  y: number
+}
+/** Brukerens plassering i ett rutenett ved ett kolonneantall. */
+export interface WidgetPositions {
+  zone: string
+  columns: number
+  tiles: Record<string, GridPosition>
+}
+/** Det som lagres per flate: widgetene i leserekkefølge, og cellene brukeren har ordnet for hånd. */
+export interface WidgetLayout {
+  widgets: WidgetLayoutItem[]
+  positions?: WidgetPositions[]
+}
+/** Tekstene rammeverket trenger fra appens i18n: redigeringslinjen og verktøyene på hver flis. */
+export interface WidgetLabels {
+  /** Overskriften i redigeringslinjen («Tilpass siden»). */
+  editTitle: string
+  hint: string
+  /** «Skjulte widgeter». */
+  hidden: string
+  /** «Ingen». */
+  none: string
+  reset: string
+  resetTitle: string
+  resetBody: string
+  done: string
+  cancel: string
+  /** Dra-håndtakets navn («Flytt {widget}»). */
+  move: (widget: string) => string
+  dragToMove: string
+  /** Størrelsesknappen («Bytt til {size}»). */
+  nextSize: (size: string) => string
+  /** Skjul-knappen («Skjul {widget}»). */
+  hide: (widget: string) => string
+  sizes: Record<WidgetSize, string>
+}
+/** Lagringen oppsettet bor i — appens (Sign: brukerens UI-preferanser i core). */
+export interface WidgetLayoutStorage {
+  /** Det lagrede under nøkkelen (hvilken form som helst — kontrolleren renser det), eller null/undefined. */
+  load(key: string): Promise<unknown>
+  save(key: string, layout: WidgetLayout): Promise<void>
+  /** Valgfri reaktiv getter: det lagrede nå, så en endring fra en annen fane tas i bruk. Kalles inni en Vue-watch. */
+  current?(key: string): unknown
+}
+export interface WidgetZoneDefinition {
+  key: string
+  kind: WidgetZoneKind
+}
+export interface UseWidgetLayoutOptions {
+  /** Nøkkelen oppsettet lagres under (Sign: `sign.<flate>.layout`). */
+  preferenceKey: string
+  /** Widgetene flaten har — en getter når tilgang avgjør hvilke som finnes. */
+  definitions: MaybeRefOrGetter<readonly WidgetDefinition[]>
+  /** Sonene på flaten; den første er standard. Uten: ett rutenett `main`. */
+  zones?: readonly WidgetZoneDefinition[]
+  storage: WidgetLayoutStorage
+  /** Tekstene fra appens i18n; en getter følger språkbyttet. */
+  labels: MaybeRefOrGetter<WidgetLabels>
+  /** Kalles når lagringen feiler; appen viser feilen slik den pleier. Oppsettet står som brukeren lot det. */
+  onSaveError?: (error: unknown) => void
+  /** Et eldre lagret oppsett å ta med over når nøkkelen mangler. */
+  migrate?: () => Partial<WidgetLayout> | null
+}
+/** En flis i et rutenett: cellen (`x`, `y`) og spennet (`w`, `h`). */
+export interface GridTile {
+  key: string
+  x: number
+  y: number
+  w: number
+  h: number
+}
+/** En synlig widget med cellene den opptar i sonens rutenett. */
+export interface PlacedWidget extends GridTile {
+  size: WidgetSize
+  zone: string
+}
+/** Det et rutenett melder om seg selv (`setGrid`), så kontrolleren kan plassere og snappe. */
+export interface GridGeometry {
+  columns: number
+  fixedRows: boolean
+  element: HTMLElement | null
+  columnGap: number
+  rowGap: number
+  rowHeight: number
+}
+/** Ett trinn i rutenettets bredde: fra `minWidth` piksler har det `columns` kolonner. */
+export interface WidgetGridBreakpoint {
+  minWidth: number
+  columns: number
+  /** Faste rader (fliser på celler) eller naturlig høyde (fliser i listerekkefølge). */
+  fixedRows?: boolean
+}
+/**
+ * Kontrolleren for én flates widgetoppsett — det `useWidgetLayout` gir.
+ * Tilstand: `layout`, `editing`, `isSaving`, `loaded`, `isDefault`, `labels`,
+ * `widgets`, `hiddenWidgets`. Oppslag: `definition(key)`, `title(key)`,
+ * `visibleIn(zone)`, `placedIn(zone)`, `columnsOf`, `hasFixedRows`, `zoneKind`,
+ * `defaultZoneOf`. Endringer (gjøres med en gang, lagres kort etter): `hide`,
+ * `show`, `setSize`, `nextSize`, `cycleSize`, `moveToCell`, `moveTo`,
+ * `moveToZone`, `moveBy`, `reset`, `startEditing`, `stopEditing`, `scheduleSave`,
+ * `flush`. Rutenett og drag: `setGrid`, `draggingKey`, `ghostX`, `ghostY`, `press`.
+ */
+export interface WidgetLayoutController {
+  preferenceKey: string
+  zones: readonly WidgetZoneDefinition[]
+  labels: ComputedRef<WidgetLabels>
+  layout: Ref<WidgetLayout>
+  editing: Ref<boolean>
+  isSaving: Ref<boolean>
+  loaded: Ref<boolean>
+  isDefault: ComputedRef<boolean>
+  definitions: ComputedRef<readonly WidgetDefinition[]>
+  definition(key: string): WidgetDefinition | undefined
+  title(key: string): string
+  widgets: ComputedRef<WidgetLayoutItem[]>
+  hiddenWidgets: ComputedRef<WidgetLayoutItem[]>
+  visibleIn(zone: string): WidgetLayoutItem[]
+  placedIn(zone: string): PlacedWidget[]
+  columnsOf(zone: string): number
+  hasFixedRows(zone: string): boolean
+  zoneKind(zone: string): WidgetZoneKind
+  defaultZoneOf(key: string): string
+  hide(key: string): void
+  show(key: string): void
+  setSize(key: string, size: WidgetSize): void
+  nextSize(key: string): WidgetSize | null
+  cycleSize(key: string): void
+  moveToCell(key: string, zone: string, x: number, y: number): boolean
+  moveTo(key: string, targetKey: string): boolean
+  moveToZone(key: string, zone: string): boolean
+  moveBy(key: string, dx: number, dy: number): void
+  reset(): void
+  startEditing(): void
+  stopEditing(): void
+  scheduleSave(): void
+  flush(): void
+  setGrid(zone: string, grid: GridGeometry): void
+  draggingKey: Ref<string | null>
+  ghostX: Ref<number>
+  ghostY: Ref<number>
+  press(event: PointerEvent, key: string, tile: HTMLElement | null): void
+}
+/**
+ * useWidgetLayout (SIGN-1850, delt i SIGN-1873): kontrolleren for én flates
+ * widgetoppsett. Leser `storage.load(preferenceKey)` én gang (ellers
+ * `migrate()`), renser det mot `definitions`, gjør hver endring med en gang og
+ * skriver med `storage.save` 500 ms etter siste; en avvist lagring går til
+ * `onSaveError`. Følger `storage.current()` når den finnes, og renser på nytt
+ * når `definitions` endrer seg.
+ */
+export declare function useWidgetLayout(options: UseWidgetLayoutOptions): WidgetLayoutController
+/** Standardoppsettet: hver widget i registerets rekkefølge, i sin sone, i sin første størrelse. */
+export declare function defaultLayout(definitions: readonly WidgetDefinition[], zones: readonly string[]): WidgetLayout
+/** Gjør et lagret oppsett (av hvilken som helst form) om til et komplett, gyldig oppsett mot registeret. */
+export declare function resolveLayout(stored: unknown, definitions: readonly WidgetDefinition[], zones: readonly string[]): WidgetLayout
+/** Typevakt for det som leses fra lagringen: alt annet renses av `resolveLayout`. */
+export declare function isStoredLayout(value: unknown): value is Partial<WidgetLayout>
+/** Hvor mange kolonner og rader en widget spenner over i et rutenett med `columns` kolonner. */
+export declare function widgetSpan(size: WidgetSize, columns: number, definition?: WidgetDefinition): { w: number; h: number }
+/**
+ * NkWidgetGrid: rutenettet på en widgetflate. Props `controller`, `zone`
+ * (standard `main`), `breakpoints` (`WidgetGridBreakpoint[]`; standard 2 kolonner
+ * uten faste rader, 4 fra 760 px og 6 fra 1360 px med faste rader), `rowHeight`
+ * (px, standard 136). Slot `#widget` med `widgetKey`, `size`, `definition` —
+ * verten tegner selve widgeten. Melder kolonneantall og radmodus til kontrolleren.
+ */
+export const NkWidgetGrid: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkWidgetColumn: en kolonne av widgeter i listerekkefølge med naturlig høyde.
+ * Props `controller`, `zone` (standard `side`). Slots `#widget` (som rutenettet)
+ * og `#empty` (slippsonen i en tom kolonne i redigeringsmodus).
+ */
+export const NkWidgetColumn: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkWidgetEditBar: linjen over flaten mens den tilpasses — hint, skjulte
+ * widgeter som brikker (trykk for å hente fram), «Tilbakestill» (med
+ * NkConfirmDialog) og «Ferdig»; spøkelsesetiketten under drag bor også her.
+ * Props `controller`, `title` (uten brukes `labels.editTitle`).
+ */
+export const NkWidgetEditBar: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkWidgetTools: verktøylinjen en flis får i redigeringsmodus — dra-håndtak
+ * (piltaster flytter), neste størrelse og skjul. Rutenettet og kolonnen
+ * tegner den selv; props `controller`, `widgetKey`.
+ */
+export const NkWidgetTools: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 
 export interface StaleChunkRouter {
   onError(handler: (error: unknown, to: { fullPath: string }) => unknown): unknown
@@ -680,3 +899,31 @@ export const NkQuoteSummary: DefineComponent<Record<string, unknown>, Record<str
 export const NkPaymentElementDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkPaymentMethodList: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkInvoiceTable: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+
+/**
+ * NkLineChart (SIGN-1873): det delte linjediagrammet — én eller noen få
+ * tidsserier som SVG med designsystemets tokens; også i `./web`. Props:
+ * `categories`, `series` (`NkLineChartSeries[]`), `labels`
+ * (`NkLineChartLabels`), `ariaLabel`, `formatValue`, `formatCategory`,
+ * `formatCategoryLong`, `plotHeight`, `loading`, `gridlines`. Slot `toolbar`.
+ * Hover og piltaster viser alle seriene ved nærmeste kategori; «Vis som
+ * tabell» er den tilgjengelige tvillingen. Første serie får
+ * `--nk-action-primary`; øvrige må ha `color`.
+ */
+export interface NkLineChartSeries {
+  key: string
+  label: string
+  values: readonly (number | null)[]
+  color?: string
+}
+export interface NkLineChartLabels {
+  table: string
+  chart: string
+  category: string
+  empty: string
+}
+export const NkLineChart: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/** Nærmeste «pene» akse-trinn (1, 2, 2,5, 5 × 10^n) over `rawStep`. */
+export declare function niceStep(rawStep: number): number
+/** Trinnene på y-aksen fra 0 til første pene verdi over `max`. */
+export declare function niceTicks(max: number, count?: number): number[]

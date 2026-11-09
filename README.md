@@ -124,6 +124,22 @@ flatene bruker `AppHeader` med de delte menyene.
   toner (`success`/`inflight`/`warning`/`error`/`info`/`neutral`) fra soft-tokenparene;
   teksten kommer alltid fra appens i18n
 - `PhoneNumberInput`
+- `useWidgetLayout` — kontrolleren for én flates widgetoppsett (SIGN-1850, delt i
+  SIGN-1873): hvilke widgeter som vises, i hvilken sone, hvilken størrelse og hvor de
+  står. Lagring og tekster er appens (`storage`, `labels`); se «Widgeter» under
+- `NkWidgetGrid` — rutenettet på en widgetflate: faste rader med celler på brede
+  skjermer, listerekkefølge på smale (`breakpoints`, `rowHeight`); verten tegner
+  widgeten i `#widget`
+- `NkWidgetColumn` — en kolonne av widgeter i listerekkefølge med naturlig høyde;
+  `#widget` og `#empty` (slippsonen når kolonnen er tom i redigeringsmodus)
+- `NkWidgetEditBar` — linjen over flaten mens den tilpasses: hint, skjulte widgeter som
+  brikker, «Tilbakestill» (bekreftes) og «Ferdig»; `title` overstyrer `labels.editTitle`
+- `NkWidgetTools` — verktøyene på hver flis i redigeringsmodus (dra-håndtak med
+  piltaster, neste størrelse, skjul); rutenettet og kolonnen tegner den selv
+- `NkLineChart` — det delte linjediagrammet (SIGN-1873), også fra `./web`: én eller noen
+  få tidsserier som SVG med tokens, trådkors og tooltip for alle seriene (peker og
+  piltaster), siste verdi merket direkte, og «Vis som tabell» som tilgjengelig tvilling;
+  tekster (`NkLineChartLabels`), tallformat og farger kommer fra appen. Se «Linjediagram»
 - `NkSubscriptionCard` — abonnementskortet (SIGN-1790): plan, apper, statuschip, varslene
   (prøveperiode, venter på betaling, feilet betaling, oppsigelse, ventende endring),
   nøkkelrutenettet (brukere, frekvens, binding, neste faktura, betalingsmåte, pris) og
@@ -356,6 +372,69 @@ CSS for these components too.
 loads the bell only for signed-in users — the website imports it from here in
 the lazily loaded notifications module, so a visitor's shared bundle never
 carries it. Same component, same styles (`style.css`).
+
+## Widgeter (SIGN-1850/1873)
+
+En widgetflate (Signs dashbord og saksoversikt) er satt sammen av widgeter brukeren
+selv plasserer, gir størrelse og skjuler. Rammeverket eier oppsettet, rutenettet,
+redigeringsmodusen og draget; appen eier widgetene, tekstene og lagringen.
+
+```ts
+const controller = useWidgetLayout({
+  preferenceKey: 'sign.dashboard.layout',   // nøkkelen oppsettet lagres under
+  definitions,                              // WidgetDefinition[] eller en getter (tilgang)
+  zones: [{ key: 'main', kind: 'grid' }, { key: 'side', kind: 'column' }], // uten: ett rutenett `main`
+  storage,                                  // WidgetLayoutStorage: load/save(/current) — Sign: UI-preferansene i core
+  labels: () => widgetLabels(t),            // WidgetLabels fra appens i18n; en getter følger språkbyttet
+  onSaveError: (error) => toast.error(…),   // appen viser feilen slik den pleier
+})
+```
+
+- **Tre størrelser**, og innholdet er ulikt per størrelse, ikke bare skalert: `small` er
+  ett nøkkeltall eller én linje (én kolonne, én rad), `medium` et panel (halve bredden, to
+  rader), `large` alt (hele bredden, tre rader). `WidgetDefinition.sizes` sier hvilke en
+  widget kan ha; den første er standard. `rows` overstyrer radantallet der det trengs.
+- **Soner**: et rutenett (`NkWidgetGrid`, `kind: 'grid'`) snapper fliser til celler når
+  radene er faste og følger listerekkefølgen ellers; en kolonne (`NkWidgetColumn`,
+  `kind: 'column'`) følger alltid listerekkefølgen. Widgeter kan dras mellom sonene på
+  samme flate. `WidgetDefinition.zone` er standardsonen.
+- **Verten tegner widgetene** i `#widget`-slotten på rutenettet og kolonnen, med
+  `widgetKey`, `size` og `definition`. Rammeverket vet ikke hva en widget viser.
+- **Lagring og tekster er data.** `storage.load(key)` leses én gang (det som kommer
+  renses med `resolveLayout` mot dagens register, så nye widgeter dukker opp og
+  fjernede forsvinner), `storage.save(key, layout)` skrives 500 ms etter siste endring,
+  og `storage.current(key)` (valgfri, reaktiv) lar en endring fra en annen fane tas i
+  bruk. `labels` er alle tekstene i redigeringslinjen og verktøyene; `title` på en
+  widget er ferdig oversatt eller en getter.
+- Stilene (`nk-widget-*`) ligger i `style.css` og bruker bare tokens.
+
+## Linjediagram (SIGN-1873)
+
+`NkLineChart` tegner utvikling over tid likt i backoffice og produktappene, etter
+dataviz-reglene: én akse (to mål med ulik enhet er to diagrammer ved siden av hverandre,
+aldri to y-akser), 2 px linje, hårtynne gridlinjer, ingen tall på hvert punkt — siste
+verdi merkes direkte, resten leses i tooltipen eller tabellen. Hover og piltaster flytter
+trådkorset til nærmeste kategori og viser alle seriene der. Tekst bærer aldri seriefargen.
+
+```vue
+<NkLineChart
+  :categories="points.map((p) => p.periodStart)"
+  :series="[{ key: 'new', label: t('…'), values: points.map((p) => p.newTenants) }]"
+  :labels="{ table: t('…showTable'), chart: t('…showChart'), category: t('…period'), empty: t('…empty') }"
+  :aria-label="t('…chartLabel')"
+  :format-value="(v) => numberFormat.format(v)"
+  :format-category="(d) => shortDate.format(new Date(d))"
+  :format-category-long="(d) => longDate.format(new Date(d))"
+  :loading="store.loading"
+/>
+```
+
+- Første serie får `--nk-action-primary`; serie to og utover må ha `color` (en token, aldri
+  hex), og da vises en forklaring under diagrammet. Status-fargene brukes aldri som
+  seriefarge.
+- Mens nye tall hentes holdes forrige tegning svakere (`loading`) — ingen skjelett.
+- `niceTicks(max, count)` gir akse-trinnene (0, 5, 10 … eller 0, 2,5, 5 …) og kan brukes
+  av andre figurer.
 
 ## Package consumption
 

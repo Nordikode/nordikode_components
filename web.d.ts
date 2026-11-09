@@ -388,3 +388,32 @@ export const NkGroupedMoveList: DefineComponent<Record<string, unknown>, Record<
  * («?»). Samme regel i IdentityAvatar, AccountIdentityMenu og TenantSwitcherMenu.
  */
 export declare function initialsOf(name: string | null | undefined, fallback?: string): string
+
+/**
+ * NkLineChart (SIGN-1873): det delte linjediagrammet — én eller noen få
+ * tidsserier som SVG med designsystemets tokens. Props: `categories`
+ * (kategoriene langs x-aksen), `series` (`NkLineChartSeries[]`), `labels`
+ * (`NkLineChartLabels`: table/chart/category/empty), `ariaLabel`,
+ * `formatValue`, `formatCategory`, `formatCategoryLong`, `plotHeight`,
+ * `loading`, `gridlines`. Slot `toolbar` (venstre for tabellknappen).
+ * Hover og piltaster viser alle seriene ved nærmeste kategori; «Vis som
+ * tabell» er den tilgjengelige tvillingen. Første serie får
+ * `--nk-action-primary`; øvrige må ha `color`.
+ */
+export interface NkLineChartSeries {
+  key: string
+  label: string
+  values: readonly (number | null)[]
+  color?: string
+}
+export interface NkLineChartLabels {
+  table: string
+  chart: string
+  category: string
+  empty: string
+}
+export const NkLineChart: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/** Nærmeste «pene» akse-trinn (1, 2, 2,5, 5 × 10^n) over `rawStep`. */
+export declare function niceStep(rawStep: number): number
+/** Trinnene på y-aksen fra 0 til første pene verdi over `max`. */
+export declare function niceTicks(max: number, count?: number): number[]
