@@ -1,0 +1,291 @@
+/* Widgetflatene (SIGN-1850, delt i SIGN-1873): rutenett, kolonne, redigeringsverktøy og
+   spøkelsesetikett. Delt av dashbordet, saksoversikten og tilbudssiden.
+   Alle verdier er tokens; radhøyde og kolonneantall settes av NkWidgetGrid. */
+
+.nk-widget-grid {
+  --nk-widgets-gap: var(--nk-gap-section);
+  /* Radene vokser aldri for å fylle en høy forelder (kolonnen ved siden av). */
+  align-content: start;
+  align-items: stretch;
+  display: grid;
+  gap: var(--nk-widgets-gap);
+  grid-auto-flow: row dense;
+  grid-auto-rows: auto;
+  grid-template-columns: repeat(var(--nk-widgets-columns, 1), minmax(0, 1fr));
+}
+
+.nk-widget-grid--fixed {
+  grid-auto-rows: var(--nk-widgets-row);
+}
+
+.nk-widget-grid__item {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+}
+
+/* Uten faste rader spenner flisen bare kolonner; raden følger innholdet,
+   og en lav flis strekkes aldri til naboens høyde. */
+.nk-widget-grid:not(.nk-widget-grid--fixed) {
+  align-items: start;
+}
+
+.nk-widget-grid__item {
+  grid-column: span var(--nk-tile-w, 1);
+}
+
+/* Liten widget viser det viktigste: synlighetsbrikkene («Synlig for
+   kunden», «Internt») er støy på den plassen og hører til medium og stor. */
+.nk-widget-grid__item--small .nk-status-chip,
+.nk-widget-column__item--small .nk-status-chip {
+  display: none;
+}
+
+/* Med faste rader står hver flis på cellen brukeren ga den. */
+.nk-widget-grid--fixed .nk-widget-grid__item {
+  grid-column: var(--nk-tile-x) / span var(--nk-tile-w);
+  grid-row: var(--nk-tile-y) / span var(--nk-tile-h);
+}
+
+.nk-widget-grid__widget,
+.nk-widget-column__widget {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.nk-widget-grid__widget > * {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Faste rader: widgeten fyller flisen og ruller inni seg når den har mer. */
+.nk-widget-grid--fixed .nk-widget-grid__widget > * {
+  height: 100%;
+  overflow: auto;
+}
+
+.nk-widget-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nk-gap-section);
+  min-width: 0;
+}
+
+.nk-widget-column__item {
+  min-width: 0;
+  position: relative;
+}
+
+/* En widget som ikke har noe å vise (ingen bilder, ingen spørsmål) tar ingen plass utenfor redigering —
+   og står som en navngitt plassholder mens flaten tilpasses, så den kan flyttes og skjules. */
+.nk-widget-column__item:not(.nk-widget-column__item--editing):has(> .nk-widget-column__widget:empty),
+.nk-widget-grid__item:not(.nk-widget-grid__item--editing):has(> .nk-widget-grid__widget:empty) {
+  display: none;
+}
+
+.nk-widget-column__item--editing:has(> .nk-widget-column__widget:empty),
+.nk-widget-grid__item--editing:has(> .nk-widget-grid__widget:empty) {
+  min-height: 64px;
+}
+
+.nk-widget-column__item--editing:has(> .nk-widget-column__widget:empty)::before,
+.nk-widget-grid__item--editing:has(> .nk-widget-grid__widget:empty)::before {
+  color: var(--nk-text-secondary);
+  content: attr(data-widget-title);
+  font-size: 0.85rem;
+  left: var(--nk-pad-card);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.nk-widget-column__empty {
+  border: 2px dashed var(--nk-surface-border);
+  border-radius: var(--nk-radius-md);
+  color: var(--nk-text-secondary);
+  font-size: 0.85rem;
+  min-height: 96px;
+  padding: var(--nk-pad-card);
+  text-align: center;
+}
+
+/* Omordningsanimasjon (TransitionGroup) */
+.nk-widget-grid-move {
+  transition: transform 180ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nk-widget-grid-move {
+    transition: none;
+  }
+}
+
+/* --- Redigeringsmodus ------------------------------------------------------
+   Flisene får en stiplet ramme og en liten flytende verktøylinje; selve
+   widgeten slutter å reagere på klikk. */
+.nk-widget-grid__item--editing,
+.nk-widget-column__item--editing {
+  cursor: grab;
+}
+
+.nk-widget-grid__item--editing > .nk-widget-grid__widget,
+.nk-widget-column__item--editing > .nk-widget-column__widget {
+  pointer-events: none;
+  user-select: none;
+}
+
+.nk-widget-grid__item--editing::after,
+.nk-widget-column__item--editing::after {
+  border: 2px dashed color-mix(in srgb, var(--nk-action-primary) 55%, transparent);
+  border-radius: var(--nk-radius-md);
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.nk-widget-grid__item--dragging,
+.nk-widget-column__item--dragging {
+  opacity: 0.4;
+}
+
+.nk-widget-grid__item--dragging::after,
+.nk-widget-column__item--dragging::after {
+  border-style: solid;
+}
+
+.nk-widgets-dragging,
+.nk-widgets-dragging * {
+  cursor: grabbing !important;
+}
+
+.nk-widget-tools {
+  background: var(--nk-surface);
+  border: 1px solid var(--nk-surface-border);
+  border-radius: var(--nk-radius-pill);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  z-index: 2;
+}
+
+/* En liten flis har ikke plass til knappene over tittelen: der står de
+   stablet i en smal renne til høyre, og widgeten trekker seg unna. */
+.nk-widget-grid__item--small > .nk-widget-tools {
+  flex-direction: column;
+}
+
+.nk-widget-grid__item--small.nk-widget-grid__item--editing > .nk-widget-grid__widget {
+  padding-right: 38px;
+}
+
+.nk-widget-tool {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: var(--nk-radius-pill);
+  color: var(--nk-text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.nk-widget-tool:hover,
+.nk-widget-tool:focus-visible {
+  background: var(--nk-surface-soft-accent);
+  color: var(--nk-action-primary);
+}
+
+.nk-widget-tool:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 1px;
+}
+
+.nk-widget-tool--handle {
+  cursor: grab;
+  touch-action: none;
+}
+
+.nk-widget-ghost {
+  align-items: center;
+  background: var(--nk-surface);
+  border: 1px solid var(--nk-surface-border);
+  border-radius: var(--nk-radius-pill);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+  color: var(--nk-text-primary);
+  display: inline-flex;
+  font-size: 0.9rem;
+  gap: var(--nk-gap-inline);
+  left: 0;
+  max-width: 240px;
+  padding: calc(var(--nk-space-unit) * 1) calc(var(--nk-space-unit) * 2);
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transform: translate(calc(var(--nk-ghost-x) + 14px), calc(var(--nk-ghost-y) + 14px));
+  z-index: 2100;
+}
+
+/* --- Redigeringslinjen ----------------------------------------------------- */
+.nk-widget-editbar {
+  align-items: center;
+  background: var(--nk-surface);
+  border: 1px solid var(--nk-surface-border);
+  border-radius: var(--nk-radius-md);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nk-gap-inline) calc(var(--nk-space-unit) * 3);
+  padding: calc(var(--nk-space-unit) * 1.5) calc(var(--nk-space-unit) * 2);
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.nk-widget-editbar__text {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.nk-widget-editbar__title {
+  color: var(--nk-text-title);
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.nk-widget-editbar__hint {
+  color: var(--nk-text-secondary);
+  font-size: 0.82rem;
+  margin: 2px 0 0;
+}
+
+.nk-widget-editbar__hidden {
+  align-items: center;
+  display: flex;
+  flex: 2 1 280px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.nk-widget-editbar__label {
+  color: var(--nk-text-secondary);
+  font-size: 0.8rem;
+}
+
+.nk-widget-editbar__actions {
+  display: flex;
+  gap: var(--nk-gap-inline);
+  margin-left: auto;
+}

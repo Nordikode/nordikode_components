@@ -63,3 +63,8 @@ export { configureLocales, formatMinorAmount, formatMoney, formatMoneyRange, sup
 export type { FormatMoneyOptions, LocaleRegistryEntry } from '../money'
 
 export { initialsOf } from '../initials'
+
+// Linjediagrammet (SIGN-1873): delt tegning av utvikling over tid, Vuetify-fri.
+export { default as NkLineChart } from './NkLineChart.vue'
+export type { NkLineChartLabels, NkLineChartSeries } from './NkLineChart.vue'
+export { niceStep, niceTicks } from './lineChartScale'

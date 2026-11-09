@@ -123,3 +123,34 @@ export {
   stripStripeParams,
 } from './licensing/checkoutReturn'
 export type { NkCheckoutReturnStatus, NkReloadPoller, NkReloadPollerOptions } from './licensing/checkoutReturn'
+
+// Linjediagrammet (SIGN-1873): delt tegning av utvikling over tid; Vuetify-fritt og
+// også eksportert fra `./web`.
+export { default as NkLineChart } from './web/NkLineChart.vue'
+export type { NkLineChartLabels, NkLineChartSeries } from './web/NkLineChart.vue'
+export { niceStep, niceTicks } from './web/lineChartScale'
+
+// Widgetrammeverket (SIGN-1850, delt i SIGN-1873): flater satt sammen av widgeter
+// brukeren plasserer, gir størrelse og skjuler. Lagring og tekster er appens.
+import './widgets/widgets.css'
+export { useWidgetLayout } from './widgets/useWidgetLayout'
+export type { GridTile } from './widgets/gridLayout'
+export type { GridGeometry, PlacedWidget, UseWidgetLayoutOptions, WidgetLayoutController, WidgetZoneDefinition } from './widgets/useWidgetLayout'
+export { default as NkWidgetGrid } from './widgets/NkWidgetGrid.vue'
+export type { WidgetGridBreakpoint } from './widgets/NkWidgetGrid.vue'
+export { default as NkWidgetColumn } from './widgets/NkWidgetColumn.vue'
+export { default as NkWidgetEditBar } from './widgets/NkWidgetEditBar.vue'
+export { default as NkWidgetTools } from './widgets/NkWidgetTools.vue'
+export { defaultLayout, isStoredLayout, resolveLayout, widgetSpan } from './widgets/layoutModel'
+export { WIDGET_SIZES } from './widgets/types'
+export type {
+  GridPosition,
+  WidgetDefinition,
+  WidgetLabels,
+  WidgetLayout,
+  WidgetLayoutItem,
+  WidgetLayoutStorage,
+  WidgetPositions,
+  WidgetSize,
+  WidgetZoneKind,
+} from './widgets/types'

@@ -24,7 +24,10 @@ describe('initialsOf', () => {
     expect(initialsOf('', 'U')).toBe('U')
   })
 
-  it('bruker samme regel i begge innganger', async () => {
+  // Hovedinngangen trekker inn hele pakka (Vuetify-komponenter, widgetene,
+  // diagrammet); under parallell last tar den importen mer enn de fem
+  // sekundene vitest gir som standard (SIGN-1873).
+  it('bruker samme regel i begge innganger', { timeout: 30_000 }, async () => {
     const main = await import('../src/index')
     const web = await import('../src/web/index')
     expect(main.initialsOf).toBe(initialsOf)
