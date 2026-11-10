@@ -180,11 +180,22 @@ const xTicks = computed(() => {
     indexes.add(index)
   }
 
-  return [...indexes].sort((a, b) => a - b).filter((index, position, all) => {
+  const picked = [...indexes].sort((a, b) => a - b).filter((index, position, all) => {
     const previous = all[position - 1]
 
     return previous === undefined || xAt(index) - xAt(previous) >= 48 || index === count - 1
   })
+
+  // Siste etikett vinner alltid: står den nest siste for nær, er det den som
+  // viker — ellers skrives de to oppå hverandre ytterst til høyre (SIGN-1881).
+  const last = picked[picked.length - 1]
+  const beforeLast = picked[picked.length - 2]
+
+  if (last !== undefined && beforeLast !== undefined && beforeLast !== 0 && xAt(last) - xAt(beforeLast) < 48) {
+    picked.splice(picked.length - 2, 1)
+  }
+
+  return picked
 })
 
 const hoveredRows = computed(() => {
