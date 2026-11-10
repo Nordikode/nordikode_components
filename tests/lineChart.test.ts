@@ -151,6 +151,28 @@ describe('NkLineChart', () => {
   })
 })
 
+describe('NkLineChart – x-etiketter', () => {
+  it('lar den siste etiketten vinne når den nest siste står for nær (SIGN-1881)', async () => {
+    // 440 px bredt: hvert punkt får ca. 46 px, så indeks 8 og 9 ville stått oppå hverandre.
+    measure(440)
+    const categories = Array.from({ length: 10 }, (_, index) => `k${index}`)
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    app = createApp({
+      render: () => h(NkLineChart, { categories, series: [{ key: 'n', label: 'Nye', values: categories.map((_, index) => index) }], labels, ariaLabel: 'Nye', formatValue: (value: number) => String(value) }),
+    })
+    app.mount(host)
+    await nextTick()
+    await nextTick()
+
+    const shown = Array.from(host.querySelectorAll('.nk-line-chart__axis text')).map((node) => node.textContent?.trim())
+
+    expect(shown).toContain('k0')
+    expect(shown).toContain('k9')
+    expect(shown).not.toContain('k8')
+  })
+})
+
 describe('NkLineChart – måling', () => {
   it('måler plottet når kategoriene kommer etter montering', async () => {
     measure(600)
