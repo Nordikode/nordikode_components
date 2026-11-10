@@ -148,3 +148,66 @@ export const UtenVerktoyrad: Story = {
 export const BareSok: Story = {
   render: () => h(Demo, { medFiltre: false, medVerktoy: false }),
 }
+
+// Liste først (SIGN-1888, slått på i Sign): listen er en egen side i full
+// bredde. Velg en rad: listen skjules og det valgte står alene med et kryss
+// oppe til høyre. Lukk: listen er tilbake med samme søk og rulleposisjon.
+const ListeForstDemo = defineComponent({
+  setup() {
+    const search = ref('')
+    const valgt = ref<string | null>(null)
+    const synlige = () =>
+      saker.filter((sak) => search.value === '' || `${sak.title} ${sak.customer}`.toLowerCase().includes(search.value.toLowerCase()))
+
+    return () =>
+      h('div', { style: { display: 'flex', height: '100vh', background: 'rgb(var(--v-theme-background))' } }, [
+        h(
+          NkListPane,
+          {
+            title: 'Saker',
+            headingTag: 'h1',
+            listFirst: true,
+            detailOpen: valgt.value !== null,
+            search: search.value,
+            'onUpdate:search': (value: string) => (search.value = value),
+            searchPlaceholder: 'Søk i saker',
+          },
+          {
+            actions: () => h(VBtn, { prependIcon: 'mdi-plus' }, () => 'Ny sak'),
+            toolbar: () =>
+              ['Alle', 'Aktive', 'Vunnet', 'Tapt'].map((navn, i) =>
+                h(VChip, { class: i === 0 ? 'panel-filter--active' : '', size: 'small', variant: 'tonal' }, () => navn),
+              ),
+            default: () =>
+              synlige().map((sak) => h('div', { key: sak.id, onClick: () => (valgt.value = sak.id) }, [rad(sak, false)])),
+          },
+        ),
+        valgt.value !== null
+          ? h('div', { style: { display: 'flex', flex: 1, flexDirection: 'column' } }, [
+              h(
+                'div',
+                {
+                  style: {
+                    alignItems: 'center',
+                    background: 'rgb(var(--v-theme-surface))',
+                    borderBottom: '1px solid var(--nk-surface-border)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: '8px 12px 8px 24px',
+                  },
+                },
+                [
+                  h('strong', saker.find((sak) => sak.id === valgt.value)?.title),
+                  h(VBtn, { 'aria-label': 'Lukk saken', icon: 'mdi-close', size: 'small', variant: 'text', onClick: () => (valgt.value = null) }),
+                ],
+              ),
+              h('p', { style: { color: 'var(--nk-text-secondary)', margin: 0, padding: '24px' } }, 'Det valgte fyller hele flaten. Krysset går tilbake til listen.'),
+            ])
+          : null,
+      ])
+  },
+})
+
+export const ListeForst: Story = {
+  render: () => h(ListeForstDemo),
+}
