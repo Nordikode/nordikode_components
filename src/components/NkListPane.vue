@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue'
 
 import type { NkListPaneLabels } from '../types/NkListPaneLabels'
 
@@ -28,6 +28,13 @@ import type { NkListPaneLabels } from '../types/NkListPaneLabels'
  * Krympingen skjer bare når listen fortsatt kan rulles etterpå — ellers
  * ville hodet hoppe opp og ned på en liste som knapt er lengre enn flaten.
  *
+ * **Liste først** (`listFirst`, SIGN-1888): listen er en egen side og det
+ * valgte åpnes på hele flaten, uten listen ved siden av. Da fyller panelet
+ * bredden, og med `detailOpen` skjules det helt — men det står montert, så
+ * søk, filtre og rulleposisjon er de samme når brukeren kommer tilbake.
+ * Rulleposisjonen tas vare på her, siden komponenten eier rullingen.
+ * Standard er som før: listen til venstre, det valgte til høyre.
+ *
  * `#footer` står fast under listen (sidetall). Appen eier all tekst (i18n),
  * alle filtre og alle handlinger; komponenten eier geometri og toner —
  * kun tokens, ingen egne px.
@@ -48,6 +55,13 @@ interface Props {
   condense?: boolean
   /** Panelets bredde på brede skjermer; under `md` fyller det alltid bredden. */
   width?: string
+  /**
+   * Liste først (SIGN-1888): listen er en egen side i full bredde, og det
+   * valgte vises alene. Standard er listen til venstre med det valgte ved siden av.
+   */
+  listFirst?: boolean
+  /** Med `listFirst`: noe er valgt, så listen skjules (og beholder rulleposisjonen). */
+  detailOpen?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -59,6 +73,8 @@ const props = withDefaults(defineProps<Props>(), {
   labels: () => ({}),
   condense: true,
   width: '',
+  listFirst: false,
+  detailOpen: false,
 })
 
 const emit = defineEmits<{
@@ -168,6 +184,29 @@ onBeforeUnmount(() => {
 
 watch(canCondense, () => evaluate())
 
+/* --- Liste først (SIGN-1888) --- */
+// Et skjult element mister rulleposisjonen i noen nettlesere. Den leses
+// derfor før panelet skjules (watch kjører før tegningen) og settes tilbake
+// når panelet vises igjen.
+const hidden = computed(() => props.listFirst && props.detailOpen)
+let scrollTopBeforeHide = 0
+
+watch(hidden, (isHidden) => {
+  if (isHidden) {
+    scrollTopBeforeHide = body.value?.scrollTop ?? 0
+
+    return
+  }
+
+  void nextTick(() => {
+    if (body.value !== null) {
+      body.value.scrollTop = scrollTopBeforeHide
+    }
+
+    evaluate()
+  })
+})
+
 const scrollToTop = (): void => {
   body.value?.scrollTo({ top: 0 })
 }
@@ -182,9 +221,10 @@ defineExpose({
 
 <template>
   <section
+    v-show="!hidden"
     :aria-label="props.title"
     class="nk-list-pane"
-    :class="{ 'nk-list-pane--condensed': condensed }"
+    :class="{ 'nk-list-pane--condensed': condensed, 'nk-list-pane--list-first': props.listFirst }"
     :style="props.width !== '' ? { '--nk-list-pane-width': props.width } : undefined"
   >
     <header class="nk-list-pane__head">
@@ -299,6 +339,33 @@ defineExpose({
   .nk-list-pane {
     border-right: 0;
     width: 100%;
+  }
+}
+
+/* Liste først (SIGN-1888): listen er siden. Den fyller flaten, har ingen
+   kant mot noe ved siden av, og får mer luft og større tittel på brede
+   skjermer. Søkefeltet holdes i lesbar bredde i stedet for å strekke seg. */
+.nk-list-pane--list-first {
+  border-right: 0;
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+@media (min-width: 960px) {
+  .nk-list-pane--list-first {
+    --nk-list-pane-pad-x: calc(var(--nk-space-unit) * 3);
+  }
+
+  .nk-list-pane--list-first .nk-list-pane__title {
+    font-size: 1.4rem;
+  }
+
+  .nk-list-pane--list-first.nk-list-pane--condensed .nk-list-pane__title {
+    font-size: var(--nk-text-body);
+  }
+
+  .nk-list-pane--list-first .nk-list-pane__search {
+    flex: 0 1 calc(var(--nk-space-unit) * 45);
   }
 }
 

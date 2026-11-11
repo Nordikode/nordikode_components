@@ -106,7 +106,10 @@ flatene bruker `AppHeader` med de delte menyene.
   `prefers-reduced-motion` slår den av). `#footer` står fast under listen.
   `headingTag` er `h1` der panelet er sidens overskrift, `labels` (`NkListPaneLabels`)
   og all annen tekst kommer fra appen. Eksponerer `body` (rulleelementet), `scrollToTop()`
-  og `condensed`
+  og `condensed`. **Liste først** (`listFirst`, SIGN-1888, slått på i Sign): listen er en
+  egen side i full bredde og det valgte åpnes alene på hele flaten; `detailOpen` skjuler
+  panelet uten å avmontere det, så rulleposisjon, søk og filtre er de samme når brukeren
+  lukker det valgte. Uten `listFirst` er alt som før (backoffice, Time)
 - `NkSheet` — det delte dialogskallet (SIGN-733): `v-dialog` + kort med hode
   (`title`, `subtitle`, `#badge`, eller hele hodet i `#head`), rullende kropp
   (`default`) og festet handlingsrad (`#actions`). Bare kroppen ruller; den har

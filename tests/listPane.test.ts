@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { afterEach, beforeAll, describe, expect, it } from 'vitest'
-import { createApp, h, nextTick, type App } from 'vue'
+import { createApp, h, nextTick, ref, type App } from 'vue'
 import { createVuetify } from 'vuetify'
 import { VBadge, VBtn, VCard, VIcon, VMenu, VTextField, VTooltip } from 'vuetify/components'
 
@@ -177,5 +177,56 @@ describe('NkListPane', () => {
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
     await nextTick()
     expect(changes.at(-1)).toBe('')
+  })
+
+  // Liste først (SIGN-1888): listen er en egen side, og det valgte åpnes
+  // alene på hele flaten. Panelet står montert mens det er skjult, så søk,
+  // filtre og rulleposisjon er de samme når brukeren kommer tilbake.
+  it('står som før uten listFirst: ingen liste først-klasse, og detailOpen skjuler ingenting', () => {
+    mount({ detailOpen: true }, { scrollHeight: 2000, clientHeight: 600 })
+
+    expect(pane().classList.contains('nk-list-pane--list-first')).toBe(false)
+    expect(pane().style.display).not.toBe('none')
+  })
+
+  it('fyller bredden med listFirst og vises når ingenting er valgt', () => {
+    mount({ listFirst: true }, { scrollHeight: 2000, clientHeight: 600 })
+
+    expect(pane().classList.contains('nk-list-pane--list-first')).toBe(true)
+    expect(pane().style.display).not.toBe('none')
+  })
+
+  it('skjuler listen når noe er valgt, og gir samme rulleposisjon tilbake etterpå', async () => {
+    const detailOpen = ref(false)
+    host = document.createElement('div')
+    document.body.appendChild(host)
+    app = createApp({
+      render: () =>
+        h(
+          NkListPane,
+          { title: 'Saker', searchPlaceholder: 'Søk', listFirst: true, detailOpen: detailOpen.value },
+          { default: () => h('ul', [h('li', 'Rad')]) },
+        ),
+    })
+    app.use(createVuetify({ components: { VBadge, VBtn, VCard, VIcon, VMenu, VTextField, VTooltip } }))
+    app.mount(host)
+
+    const body = host.querySelector<HTMLElement>('.nk-list-pane__body')!
+    Object.defineProperty(body, 'scrollHeight', { configurable: true, value: 2000 })
+    Object.defineProperty(body, 'clientHeight', { configurable: true, value: 600 })
+    await scrollTo(body, 420)
+
+    detailOpen.value = true
+    await nextTick()
+    expect(pane().style.display).toBe('none')
+
+    // Nettleseren kan nullstille rulleposisjonen på et skjult element.
+    body.scrollTop = 0
+
+    detailOpen.value = false
+    await nextTick()
+    await nextTick()
+    expect(pane().style.display).not.toBe('none')
+    expect(body.scrollTop).toBe(420)
   })
 })

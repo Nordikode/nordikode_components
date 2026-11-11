@@ -185,7 +185,9 @@ export const NkEmptyState: DefineComponent<Record<string, unknown>, Record<strin
  * `filterCount` som åpner `#filters` i en nedtrekksmeny) og verktøyraden (`#toolbar`).
  * Komponenten eier rullingen i listen (`#default`) og krymper hodet til søkeraden når
  * listen rulles (`condense`); `#footer` står fast under listen. Props ellers:
- * `headingTag` (`h1`/`h2`/`h3`), `labels` (`NkListPaneLabels`), `width`. Emits
+ * `headingTag` (`h1`/`h2`/`h3`), `labels` (`NkListPaneLabels`), `width`. Med `listFirst`
+ * (SIGN-1888) er listen en egen side i full bredde, og `detailOpen` skjuler den mens det
+ * valgte vises alene — rulleposisjon, søk og filtre står når listen vises igjen. Emits
  * `update:search` og `reset-filters`; eksponerer `body`, `scrollToTop()` og `condensed`.
  */
 export const NkListPane: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
