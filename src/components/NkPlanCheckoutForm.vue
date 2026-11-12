@@ -153,7 +153,6 @@ const onSelectPlan = (id: unknown): void => {
         <v-text-field
           ref="promoField"
           autocapitalize="characters"
-          autocomplete="off"
           density="compact"
           :error-messages="props.promo.error"
           hide-details="auto"

@@ -133,6 +133,9 @@ export declare const nkOpacity: {
 
 export declare function toVuetifyTheme(scheme: NkScheme, dark: boolean): ThemeDefinition
 export declare function buildVuetifyThemes(theme: NkProductTheme): Record<string, ThemeDefinition>
+export type NkVuetifyComponentDefaults = Record<string, unknown>
+export declare const NK_FIELD_AUTOCOMPLETE: 'off'
+export declare function nkFieldDefaults(): Record<string, NkVuetifyComponentDefaults>
 export declare function cssVariables(scheme: NkScheme): Record<string, string>
 export declare function documentCssVariables(scheme?: NkDocumentScheme): Record<string, string>
 export interface NkStaticTokens {

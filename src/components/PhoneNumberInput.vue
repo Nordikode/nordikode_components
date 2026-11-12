@@ -25,6 +25,12 @@ interface Props {
   hideDetails?: boolean | 'auto'
   density?: 'default' | 'comfortable' | 'compact'
   variant?: 'outlined' | 'filled' | 'underlined' | 'plain' | 'solo' | 'solo-filled' | 'solo-inverted'
+  /**
+   * Nettleserens autofyll (SIGN-1907). Av som standard: nummeret gjelder som
+   * regel en kunde eller en kontakt. Sett `tel` bare der brukeren skriver sitt
+   * eget nummer (innlogging, egen profil).
+   */
+  autocomplete?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -46,6 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   hideDetails: false,
   density: undefined,
   variant: undefined,
+  autocomplete: 'off',
 })
 
 const emit = defineEmits<{
@@ -107,7 +114,7 @@ function selectCountry(countryCode: CountryCode): void {
       class="phone-input-number"
       type="tel"
       inputmode="tel"
-      autocomplete="tel"
+      :autocomplete="autocomplete"
       :density="density"
       :disabled="disabled"
       :hint="hint ?? undefined"

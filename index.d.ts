@@ -245,6 +245,11 @@ export const NkTemplateField: DefineComponent<Record<string, unknown>, Record<st
  * Promise<key>`, `delivery`, `hint`, `loading`, `disabled`, `errorMessages`.
  */
 export const NkTradeSelect: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * Telefonfeltet med landvelger (Vuetify). `autocomplete` (SIGN-1907) er `off` som
+ * standard — nummeret gjelder som regel en kunde eller kontakt; sett `tel` bare
+ * der brukeren skriver sitt eget nummer.
+ */
 export const PhoneNumberInput: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 
 // --- Widgetrammeverket (SIGN-1850, delt i SIGN-1873) -------------------------
@@ -561,6 +566,14 @@ import type { IconSet } from 'vuetify'
 export type MdiRegistry = Readonly<Record<string, string>>
 /** Vuetify-ikonsett som slår opp `mdi-*`-navn i et generert @mdi/js-register (SIGN-521). */
 export declare function mdiRegistryIconSet(registry: MdiRegistry): IconSet
+
+/**
+ * Attributter for søkefelt (SIGN-838/1907): `type="search"`, et nøytralt navn og
+ * autofyll av — de tre signalene som til sammen hindrer nettleseren i å fylle
+ * inn brukerens e-post. `<v-text-field v-bind="NK_SEARCH_FIELD_ATTRS" />`;
+ * `NkListPane` setter dem selv.
+ */
+export declare const NK_SEARCH_FIELD_ATTRS: Readonly<{ type: 'search'; name: 'search'; autocomplete: 'off' }>
 
 /**
  * Reserve-initialer for avatarer uten bilde (SIGN-1668): første bokstav i hvert av

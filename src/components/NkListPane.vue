@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue'
 
+import { NK_SEARCH_FIELD_ATTRS } from '../forms/searchFieldAttrs'
 import type { NkListPaneLabels } from '../types/NkListPaneLabels'
 
 /**
@@ -46,7 +47,7 @@ interface Props {
   /** Søketeksten (`v-model:search`). Uten `searchPlaceholder` vises ikke søkefeltet. */
   search?: string | null
   searchPlaceholder?: string
-  /** Ekstra attributter til søkefeltet (autocomplete, data-testid …). */
+  /** Ekstra attributter til søkefeltet (data-testid …) — legges over `NK_SEARCH_FIELD_ATTRS`. */
   searchFieldAttrs?: Record<string, unknown>
   /** Antall aktive filtre — vises som merke på filterknappen. */
   filterCount?: number
@@ -253,7 +254,7 @@ defineExpose({
           prepend-inner-icon="mdi-magnify"
           rounded="pill"
           variant="solo"
-          v-bind="props.searchFieldAttrs"
+          v-bind="{ ...NK_SEARCH_FIELD_ATTRS, ...props.searchFieldAttrs }"
           @keydown.esc="onSearchInput('')"
           @update:model-value="onSearchInput"
         />

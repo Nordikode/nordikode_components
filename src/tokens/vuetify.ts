@@ -62,3 +62,58 @@ export function buildVuetifyThemes(theme: NkProductTheme): Record<string, ThemeD
     [`${theme.vuetifyThemeName}Dark`]: toVuetifyTheme(theme.dark, true),
   }
 }
+
+/** Standardverdiene for ett Vuetify-komponentnavn i `createVuetify({ defaults })`. */
+export type NkVuetifyComponentDefaults = Record<string, unknown>
+
+/**
+ * Nettleserens autoforslag er av på alle felt (SIGN-1907). Forslagene (tidligere
+ * verdier, egen e-post, egen adresse) stemmer nesten aldri i en fagapp — feltet
+ * gjelder som regel en kunde, en vare eller et søk — og et nytt felt skal ikke
+ * få dem før noen husker å slå dem av. Et felt som gjelder brukeren selv
+ * (egen e-post, eget telefonnummer, innlogging) setter `autocomplete` eksplisitt
+ * og vinner over standarden.
+ */
+export const NK_FIELD_AUTOCOMPLETE = 'off'
+
+const fieldLook: NkVuetifyComponentDefaults = {
+  bgColor: 'transparent',
+  color: 'primary',
+  density: 'comfortable',
+  hideDetails: 'auto',
+  variant: 'outlined',
+}
+
+/** Feltene alle appene bruker: samme utseende og autoforslag av. */
+const styledFields = ['VTextField', 'VTextarea', 'VSelect', 'VAutocomplete', 'VCombobox'] as const
+
+/**
+ * Øvrige Vuetify-felt med tekstinntasting. De har ikke noe felles utseende
+ * ennå, men skal heller ikke få autoforslag den dagen en app tar dem i bruk.
+ */
+const plainFields = ['VNumberInput', 'VDateInput', 'VMaskInput', 'VColorInput'] as const
+
+/**
+ * Felt-standardene for `createVuetify({ defaults })` — de samme i alle
+ * innloggede apper. Hver felttype har sin egen oppføring, så ingen av dem
+ * avhenger av hvordan Vuetify bygger feltet innvendig (`VTextarea` arver for
+ * eksempel ikke fra `VTextField`).
+ *
+ *   defaults: {
+ *     ...nkFieldDefaults(),
+ *     VBtn: { color: 'primary', variant: 'flat' },
+ *   }
+ */
+export function nkFieldDefaults(): Record<string, NkVuetifyComponentDefaults> {
+  const defaults: Record<string, NkVuetifyComponentDefaults> = {}
+
+  for (const name of styledFields) {
+    defaults[name] = { ...fieldLook, autocomplete: NK_FIELD_AUTOCOMPLETE }
+  }
+
+  for (const name of plainFields) {
+    defaults[name] = { autocomplete: NK_FIELD_AUTOCOMPLETE }
+  }
+
+  return defaults
+}
