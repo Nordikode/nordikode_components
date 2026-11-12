@@ -9,7 +9,7 @@ import NkWidgetTools from './NkWidgetTools.vue'
 export interface WidgetGridBreakpoint {
   minWidth: number
   columns: number
-  /** Faste rader (fliser på celler) eller naturlig høyde (fliser i listerekkefølge). */
+  /** Rader (fliser på celler, 1–3 rader høye) eller naturlig høyde (fliser i listerekkefølge). */
   fixedRows?: boolean
 }
 
@@ -19,16 +19,17 @@ export interface WidgetGridBreakpoint {
  * plassering, størrelse og redigeringsverktøyene.
  *
  * Trinnene avgjør hvor mange kolonner rutenettet har ved hver bredde, og om
- * radene er faste. Med faste rader snapper en dratt flis til cellen under
- * hjørnet sitt og dytter det som står der unna; uten (kolonner, mobil) tar
- * den plassen til flisen under pekeren.
+ * det har rader. Med rader er hver flis 1–3 rader høy, radene vokser med
+ * innholdet og fliser på samme rad er like høye (SIGN-1903); en dratt flis
+ * snapper til cellen under hjørnet sitt og dytter det som står der unna.
+ * Uten rader (mobil) tar den plassen til flisen under pekeren.
  */
 const props = withDefaults(
   defineProps<{
     controller: WidgetLayoutController
     zone?: string
     breakpoints?: readonly WidgetGridBreakpoint[]
-    /** Radhøyden i piksler ved faste rader. */
+    /** Minstehøyden på en rad i piksler; raden vokser når innholdet trenger mer. */
     rowHeight?: number
   }>(),
   {
@@ -69,7 +70,7 @@ const tiles = computed(() => {
     size: item.size,
     x: 0,
     y: 0,
-    ...widgetSpan(item.size, columns.value, props.controller.definition(item.key)),
+    ...widgetSpan(item.size, columns.value, props.controller.definition(item.key), item.rows),
   }))
 })
 

@@ -1,8 +1,9 @@
 import { computed, reactive, ref, toValue, watch, type ComputedRef, type MaybeRefOrGetter, type Ref } from 'vue'
 import type { GridTile } from './gridLayout'
 import { moveTile, placeTiles, resizeTile, sortTiles } from './gridLayout'
-import { defaultLayout, defaultZoneOf, isDefaultLayout, isStoredLayout, positionsFor, resolveLayout, widgetSpan } from './layoutModel'
+import { defaultLayout, defaultZoneOf, isDefaultLayout, isRows, isStoredLayout, positionsFor, resolveLayout, widgetSpan } from './layoutModel'
 import type { WidgetDefinition, WidgetLabels, WidgetLayout, WidgetLayoutItem, WidgetLayoutStorage, WidgetSize, WidgetZoneKind } from './types'
+import { WIDGET_ROWS } from './types'
 import { useWidgetDrag, type DragPoint } from './useWidgetDrag'
 
 /** Hvor lenge etter siste endring oppsettet skrives til lagringen. */
@@ -46,6 +47,35 @@ export interface GridGeometry {
   rowHeight: number
 }
 
+/** Høyden på hver rad rutenettet har nå — radene vokser med innholdet, så de er ikke like. */
+const rowTracks = (element: HTMLElement): number[] =>
+  getComputedStyle(element)
+    .gridTemplateRows.split(/\s+/)
+    .map((track) => parseFloat(track))
+    .filter((track) => Number.isFinite(track) && track > 0)
+
+/**
+ * Raden hvis overkant ligger nærmest `offset` piksler under rutenettets
+ * overkant. `tracks` er de radene som finnes; under dem fortsetter radene
+ * med minstehøyden.
+ */
+export const rowAt = (offset: number, tracks: readonly number[], rowHeight: number, rowGap: number): number => {
+  let top = 0
+  let row = 0
+
+  for (;;) {
+    const height = tracks[row] ?? rowHeight
+    const next = top + height + rowGap
+
+    if (offset < (top + next) / 2) {
+      return row
+    }
+
+    top = next
+    row += 1
+  }
+}
+
 const DEFAULT_ZONES: readonly WidgetZoneDefinition[] = [{ key: 'main', kind: 'grid' }]
 
 /**
@@ -61,7 +91,9 @@ const DEFAULT_ZONES: readonly WidgetZoneDefinition[] = [{ key: 'main', kind: 'gr
  * `current()` og kontrolleren følger etter.
  *
  * Rutenettene forteller kontrolleren hvor mange kolonner de har og om
- * radene er faste (`setGrid`). Med faste rader plasseres hver synlig widget
+ * de har rader (`setGrid`; `fixedRows`). Radene har en minstehøyde og vokser
+ * med innholdet (SIGN-1903), og hver widget er 1–3 rader høy: størrelsens
+ * standard, eller høyden brukeren har valgt (`setRows`). Med rader plasseres hver synlig widget
  * på en celle (`placedIn`), med posisjonene brukeren har lagret for det
  * kolonneantallet, og resten fylles inn; å flytte er da å flytte til en
  * celle. Uten faste rader (kolonner, smale skjermer) følger widgetene
@@ -109,7 +141,7 @@ export const useWidgetLayout = (options: UseWidgetLayoutOptions) => {
           key: item.key,
           size: item.size,
           zone,
-          ...widgetSpan(item.size, columns, definition(item.key)),
+          ...widgetSpan(item.size, columns, definition(item.key), item.rows),
           ...stored[item.key],
         }))
 
@@ -277,7 +309,7 @@ export const useWidgetLayout = (options: UseWidgetLayoutOptions) => {
 
     if (widget.visible && hasFixedRows(widget.zone)) {
       const columns = columnsOf(widget.zone)
-      const span = widgetSpan(size, columns, entry)
+      const span = widgetSpan(size, columns, entry, widget.rows)
       const tiles = resizeTile(placedIn(widget.zone), key, span.w, span.h, columns).map((tile) => ({
         ...tile,
         size: tile.key === key ? size : tile.size,
@@ -308,6 +340,53 @@ export const useWidgetLayout = (options: UseWidgetLayoutOptions) => {
 
     if (size !== null) {
       setSize(key, size)
+    }
+  }
+
+  /** Høyden widgeten har nå i et rutenett med rader: den valgte, ellers størrelsens standard. */
+  const rowsOf = (key: string): number => {
+    const widget = item(key)
+
+    return widget ? widgetSpan(widget.size, 1, definition(key), widget.rows).h : 1
+  }
+
+  /** Setter høyden i rader (1–3). Naboene dyttes ned om widgeten vokser inn i dem. */
+  const setRows = (key: string, rows: number): void => {
+    const widget = item(key)
+    const entry = definition(key)
+
+    if (!widget || !entry || !isRows(rows) || rowsOf(key) === rows) {
+      return
+    }
+
+    widget.rows = rows
+
+    if (widget.visible && hasFixedRows(widget.zone)) {
+      const columns = columnsOf(widget.zone)
+      const span = widgetSpan(widget.size, columns, entry, rows)
+
+      storePlacement(widget.zone, resizeTile(placedIn(widget.zone), key, span.w, span.h, columns))
+    }
+
+    scheduleSave()
+  }
+
+  /** Neste høyde (1 → 2 → 3 → 1), eller null der sonen ikke har rader (kolonner, smale skjermer). */
+  const nextRows = (key: string): number | null => {
+    const widget = item(key)
+
+    if (!widget || !definition(key) || zoneKind(widget.zone) !== 'grid' || !hasFixedRows(widget.zone)) {
+      return null
+    }
+
+    return WIDGET_ROWS[(WIDGET_ROWS.indexOf(rowsOf(key)) + 1) % WIDGET_ROWS.length]
+  }
+
+  const cycleRows = (key: string): void => {
+    const rows = nextRows(key)
+
+    if (rows !== null) {
+      setRows(key, rows)
     }
   }
 
@@ -441,7 +520,7 @@ export const useWidgetLayout = (options: UseWidgetLayoutOptions) => {
     const columns = columnsOf(zone)
     const columnWidth = (rect.width - grid.columnGap * (columns - 1)) / columns
     const x = Math.round((point.left - rect.left) / (columnWidth + grid.columnGap))
-    const y = Math.round((point.top - rect.top) / (grid.rowHeight + grid.rowGap))
+    const y = rowAt(point.top - rect.top, rowTracks(grid.element), grid.rowHeight, grid.rowGap)
 
     return moveToCell(key, zone, x, y)
   }
@@ -508,6 +587,10 @@ export const useWidgetLayout = (options: UseWidgetLayoutOptions) => {
     setSize,
     nextSize,
     cycleSize,
+    rowsOf,
+    setRows,
+    nextRows,
+    cycleRows,
     moveToCell,
     moveTo,
     moveToZone,

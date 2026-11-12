@@ -14,8 +14,12 @@
   grid-template-columns: repeat(var(--nk-widgets-columns, 1), minmax(0, 1fr));
 }
 
+/* Rader (SIGN-1903): hver rad har en minstehøyde og vokser når innholdet
+   trenger mer. En flis er 1–3 rader høy og fyller radene sine, så fliser på
+   samme rad er like høye og to 1-raders fliser stablet er like høye som én
+   2-raders ved siden av. */
 .nk-widget-grid--fixed {
-  grid-auto-rows: var(--nk-widgets-row);
+  grid-auto-rows: minmax(var(--nk-widgets-row), auto);
 }
 
 .nk-widget-grid__item {
@@ -26,12 +30,8 @@
   position: relative;
 }
 
-/* Uten faste rader spenner flisen bare kolonner; raden følger innholdet,
-   og en lav flis strekkes aldri til naboens høyde. */
-.nk-widget-grid:not(.nk-widget-grid--fixed) {
-  align-items: start;
-}
-
+/* Uten rader spenner flisen bare kolonner; raden følger det høyeste
+   innholdet, og fliser side om side er like høye. */
 .nk-widget-grid__item {
   grid-column: span var(--nk-tile-w, 1);
 }
@@ -64,9 +64,13 @@
   min-width: 0;
 }
 
-/* Faste rader: widgeten fyller flisen og ruller inni seg når den har mer. */
-.nk-widget-grid--fixed .nk-widget-grid__widget > * {
-  height: 100%;
+/* Flisen ruller aldri: raden vokser til innholdet får plass. Innhold uten
+   naturlig tak (en lang liste, et diagram) merkes `nk-widget-fill` av
+   widgeten: det teller ikke med i radhøyden, fyller plassen flisen har og
+   ruller selv. Widgetens rot må være en kolonne-flex for at det skal virke. */
+.nk-widget-grid--fixed .nk-widget-fill {
+  flex: 1 1 0;
+  min-height: 0;
   overflow: auto;
 }
 

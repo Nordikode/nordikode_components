@@ -9,10 +9,19 @@
  * - `small`:  ett nøkkeltall eller én linje. Én kolonne, én rad.
  * - `medium`: et panel. Halve bredden, to rader.
  * - `large`:  alt. Hele bredden, tre rader.
+ *
+ * Høyden er et eget system (SIGN-1903): en widget er 1, 2 eller 3 rader høy.
+ * Radene er felles for hele rutenettet og vokser med innholdet, så widgeter
+ * på samme rad er like høye, og to 1-raders widgeter oppå hverandre er
+ * nøyaktig like høye som én 2-raders ved siden av. Størrelsen gir en
+ * standardhøyde; brukeren kan velge en annen (`WidgetLayoutItem.rows`).
  */
 export type WidgetSize = 'small' | 'medium' | 'large'
 
 export const WIDGET_SIZES: readonly WidgetSize[] = ['small', 'medium', 'large']
+
+/** Høydene en widget kan ha i et rutenett med rader. */
+export const WIDGET_ROWS: readonly number[] = [1, 2, 3]
 
 /** En sone på flaten: et rutenett (`grid`) eller en kolonne (`column`). */
 export type WidgetZoneKind = 'grid' | 'column'
@@ -29,7 +38,13 @@ export interface WidgetDefinition {
   zone?: string
   /** Skjult som standard — brukeren henter den fram fra redigeringslinjen. */
   hidden?: boolean
-  /** Antall rader per størrelse i et rutenett med faste rader, der standarden ikke passer. */
+  /**
+   * Widgeten denne ble skilt ut av: hos brukere med et lagret oppsett fra
+   * før den fantes, settes den rett etter den, i samme sone og like synlig —
+   * ikke bakerst i standardsonen.
+   */
+  after?: string
+  /** Standardhøyden i rader per størrelse i et rutenett med rader, der 1/2/3 for liten/medium/stor ikke passer. */
   rows?: Partial<Record<WidgetSize, number>>
 }
 
@@ -38,6 +53,8 @@ export interface WidgetLayoutItem {
   size: WidgetSize
   visible: boolean
   zone: string
+  /** Høyden brukeren har valgt (1–3 rader); uten den gjelder størrelsens standard. */
+  rows?: number
 }
 
 export interface GridPosition {
@@ -83,6 +100,8 @@ export interface WidgetLabels {
   dragToMove: string
   /** Størrelsesknappen («Bytt til {size}»). */
   nextSize: (size: string) => string
+  /** Høydeknappen («Bytt høyde til {rows} rader»); appen bøyer etter antallet. */
+  nextRows: (rows: number) => string
   /** Skjul-knappen («Skjul {widget}»). */
   hide: (widget: string) => string
   /** Navnet på hver størrelse. */

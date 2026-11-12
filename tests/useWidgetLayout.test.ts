@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createApp, defineComponent, h, nextTick, ref, type App } from 'vue'
 import type { WidgetDefinition, WidgetLayout, WidgetLayoutStorage } from '../src/widgets/types'
-import { useWidgetLayout, type UseWidgetLayoutOptions, type WidgetLayoutController } from '../src/widgets/useWidgetLayout'
+import { rowAt, useWidgetLayout, type UseWidgetLayoutOptions, type WidgetLayoutController } from '../src/widgets/useWidgetLayout'
 import { memoryStorage, widgetLabels } from './support/widgetFixtures'
 
 // Kontrolleren for én flates widgetoppsett (SIGN-1850, delt i SIGN-1873):
@@ -238,5 +238,62 @@ describe('useWidgetLayout', () => {
     controller.stopEditing()
     expect(controller.editing.value).toBe(false)
     expect(memory.save).toHaveBeenCalledTimes(1)
+  })
+
+  it('bytter høyde i hele rader, dytter naboen ned og lagrer valget (SIGN-1903)', async () => {
+    const { controller, memory } = mountController()
+    await vi.runAllTimersAsync()
+    fixedGrid(controller)
+
+    // «a» er medium (2 kolonner, 2 rader); «b» er stor og står under.
+    expect(controller.rowsOf('a')).toBe(2)
+    expect(controller.nextRows('a')).toBe(3)
+    expect(controller.placedIn('main').find((tile) => tile.key === 'b')?.y).toBe(2)
+
+    controller.cycleRows('a')
+    expect(controller.rowsOf('a')).toBe(3)
+    expect(controller.placedIn('main').find((tile) => tile.key === 'a')?.h).toBe(3)
+    expect(controller.placedIn('main').find((tile) => tile.key === 'b')?.y).toBe(3)
+
+    controller.setRows('a', 1)
+    expect(controller.placedIn('main').find((tile) => tile.key === 'a')?.h).toBe(1)
+    expect(controller.placedIn('main').find((tile) => tile.key === 'b')?.y).toBe(1)
+
+    await vi.runAllTimersAsync()
+    const saved = memory.save.mock.calls.at(-1)?.[1] as WidgetLayout
+    expect(saved.widgets.find((item) => item.key === 'a')?.rows).toBe(1)
+
+    // Høyden følger widgeten når størrelsen byttes, og «Tilbakestill» fjerner den.
+    controller.setSize('a', 'small')
+    expect(controller.rowsOf('a')).toBe(1)
+    controller.reset()
+    expect(controller.rowsOf('a')).toBe(2)
+  })
+
+  it('har ingen høydeknapp der sonen ikke har rader', async () => {
+    const { controller } = mountController()
+    await vi.runAllTimersAsync()
+
+    // Før rutenettet har meldt seg, og i kolonnen.
+    expect(controller.nextRows('a')).toBeNull()
+    fixedGrid(controller)
+    expect(controller.nextRows('c')).toBeNull()
+
+    controller.setRows('a', 5)
+    expect(controller.rowsOf('a')).toBe(2)
+  })
+
+  it('finner raden under pekeren når radene har ulik høyde', () => {
+    // Tre rader på 100, 300 og 100 piksler med 10 i mellomrom.
+    const tracks = [100, 300, 100]
+
+    expect(rowAt(0, tracks, 100, 10)).toBe(0)
+    expect(rowAt(54, tracks, 100, 10)).toBe(0)
+    expect(rowAt(56, tracks, 100, 10)).toBe(1)
+    expect(rowAt(260, tracks, 100, 10)).toBe(1)
+    expect(rowAt(270, tracks, 100, 10)).toBe(2)
+    // Under de radene som finnes fortsetter radene med minstehøyden.
+    expect(rowAt(700, tracks, 100, 10)).toBe(5)
+    expect(rowAt(40, [], 100, 10)).toBe(0)
   })
 })

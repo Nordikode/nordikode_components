@@ -396,11 +396,25 @@ const controller = useWidgetLayout({
 - **Tre størrelser**, og innholdet er ulikt per størrelse, ikke bare skalert: `small` er
   ett nøkkeltall eller én linje (én kolonne, én rad), `medium` et panel (halve bredden, to
   rader), `large` alt (hele bredden, tre rader). `WidgetDefinition.sizes` sier hvilke en
-  widget kan ha; den første er standard. `rows` overstyrer radantallet der det trengs.
+  widget kan ha; den første er standard.
+- **Høyde i hele rader (SIGN-1903)**: i et rutenett med rader er en widget 1, 2 eller 3
+  rader høy. Radene er felles for rutenettet, har en minstehøyde (`rowHeight`) og vokser
+  når innholdet trenger mer — flisen ruller aldri. Widgeter på samme rad er derfor like
+  høye, og to 1-raders widgeter oppå hverandre er nøyaktig like høye som én 2-raders ved
+  siden av. Størrelsen gir standardhøyden (1/2/3 for liten/medium/stor, `rows` på
+  definisjonen overstyrer per størrelse); brukeren velger en annen med høydeknappen i
+  redigeringsmodus (`setRows`/`cycleRows`, lagret som `rows` på widgeten i oppsettet).
+  Innhold uten naturlig tak — en lang liste, et diagram som fyller flisen — merkes
+  `nk-widget-fill`: det teller ikke med i radhøyden, fyller plassen flisen har og ruller
+  selv. Widgetens rot må være en kolonne-flex. Et diagram som måler sin egen høyde skal
+  stå i en slik boks, ellers driver det radhøyden.
 - **Soner**: et rutenett (`NkWidgetGrid`, `kind: 'grid'`) snapper fliser til celler når
   radene er faste og følger listerekkefølgen ellers; en kolonne (`NkWidgetColumn`,
   `kind: 'column'`) følger alltid listerekkefølgen. Widgeter kan dras mellom sonene på
   samme flate. `WidgetDefinition.zone` er standardsonen.
+- **Dele en widget i flere**: gi de nye `after: '<nøkkelen de ble skilt ut av>'`. Brukere med
+  et lagret oppsett får dem da rett etter den gamle, i samme sone og like synlige — ikke
+  bakerst i standardsonen.
 - **Verten tegner widgetene** i `#widget`-slotten på rutenettet og kolonnen, med
   `widgetKey`, `size` og `definition`. Rammeverket vet ikke hva en widget viser.
 - **Lagring og tekster er data.** `storage.load(key)` leses én gang (det som kommer

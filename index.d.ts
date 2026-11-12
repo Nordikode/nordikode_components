@@ -254,6 +254,8 @@ export const PhoneNumberInput: DefineComponent<Record<string, unknown>, Record<s
 /** Tre størrelser; innholdet er ulikt per størrelse, ikke bare skalert. */
 export type WidgetSize = 'small' | 'medium' | 'large'
 export const WIDGET_SIZES: readonly WidgetSize[]
+/** Høydene en widget kan ha i et rutenett med rader (SIGN-1903): 1, 2 eller 3 rader. */
+export const WIDGET_ROWS: readonly number[]
 /** En sone på flaten: et rutenett (`grid`, celler) eller en kolonne (`column`, listerekkefølge). */
 export type WidgetZoneKind = 'grid' | 'column'
 export interface WidgetDefinition {
@@ -269,6 +271,8 @@ export interface WidgetDefinition {
   /** Skjult som standard — brukeren henter den fram fra redigeringslinjen. */
   hidden?: boolean
   /** Antall rader per størrelse i et rutenett med faste rader, der standarden (1/2/3) ikke passer. */
+  /** Widgeten denne ble skilt ut av: i et lagret oppsett fra før den fantes settes den rett etter den, i samme sone og like synlig. */
+  after?: string
   rows?: Partial<Record<WidgetSize, number>>
 }
 export interface WidgetLayoutItem {
@@ -276,6 +280,8 @@ export interface WidgetLayoutItem {
   size: WidgetSize
   visible: boolean
   zone: string
+  /** Høyden brukeren har valgt (1–3 rader); uten den gjelder størrelsens standard. */
+  rows?: number
 }
 export interface GridPosition {
   x: number
@@ -311,6 +317,8 @@ export interface WidgetLabels {
   dragToMove: string
   /** Størrelsesknappen («Bytt til {size}»). */
   nextSize: (size: string) => string
+  /** Høydeknappen («Bytt høyde til {rows} rader»); appen bøyer etter antallet. */
+  nextRows: (rows: number) => string
   /** Skjul-knappen («Skjul {widget}»). */
   hide: (widget: string) => string
   sizes: Record<WidgetSize, string>
@@ -405,6 +413,13 @@ export interface WidgetLayoutController {
   show(key: string): void
   setSize(key: string, size: WidgetSize): void
   nextSize(key: string): WidgetSize | null
+  /** Høyden widgeten har nå i et rutenett med rader: den valgte, ellers størrelsens standard. */
+  rowsOf(key: string): number
+  /** Setter høyden i rader (1–3); naboene dyttes ned om widgeten vokser inn i dem. */
+  setRows(key: string, rows: number): void
+  /** Neste høyde (1 → 2 → 3 → 1), eller null der sonen ikke har rader. */
+  nextRows(key: string): number | null
+  cycleRows(key: string): void
   cycleSize(key: string): void
   moveToCell(key: string, zone: string, x: number, y: number): boolean
   moveTo(key: string, targetKey: string): boolean
