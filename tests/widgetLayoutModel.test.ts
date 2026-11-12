@@ -83,6 +83,42 @@ describe('layoutModel', () => {
     expect(widgetSpan('large', 4, definitions[1])).toEqual({ w: 4, h: 2 })
   })
 
+  it('høyden brukeren har valgt vinner over størrelsens standard, og bare 1–3 rader gjelder (SIGN-1903)', () => {
+    expect(widgetSpan('medium', 4, undefined, 1)).toEqual({ w: 2, h: 1 })
+    expect(widgetSpan('small', 4, undefined, 3)).toEqual({ w: 1, h: 3 })
+    expect(widgetSpan('large', 4, definitions[1], 1)).toEqual({ w: 4, h: 1 })
+    expect(widgetSpan('medium', 4, undefined, 7)).toEqual({ w: 2, h: 2 })
+    expect(widgetSpan('medium', 4, undefined, 0)).toEqual({ w: 2, h: 2 })
+  })
+
+  it('beholder en gyldig lagret høyde og kaster en ugyldig', () => {
+    const layout = resolveLayout(
+      { widgets: [{ key: 'a', size: 'medium', visible: true, zone: 'main', rows: 1 }, { key: 'b', rows: 9 }] },
+      definitions,
+      zones,
+    )
+
+    expect(layout.widgets.find((item) => item.key === 'a')?.rows).toBe(1)
+    expect(layout.widgets.find((item) => item.key === 'b')).not.toHaveProperty('rows')
+  })
+
+  it('setter en widget skilt ut av en annen rett etter den i et lagret oppsett (SIGN-1903)', () => {
+    const split: WidgetDefinition[] = [...definitions, { key: 'a2', title: 'A2', icon: 'mdi-a', sizes: ['medium'], zone: zones[0], after: 'a' }]
+    const other = zones[zones.length - 1]
+
+    const moved = resolveLayout({ widgets: [{ key: 'a', size: 'medium', visible: true, zone: other }, { key: 'b' }] }, split, zones)
+    expect(moved.widgets.slice(0, 2).map((item) => [item.key, item.zone, item.visible])).toEqual([
+      ['a', other, true],
+      ['a2', other, true],
+    ])
+
+    const hidden = resolveLayout({ widgets: [{ key: 'b' }, { key: 'a', visible: false }] }, split, zones)
+    expect(hidden.widgets.find((item) => item.key === 'a2')?.visible).toBe(false)
+
+    // Uten lagret oppsett gjelder registerets rekkefølge.
+    expect(resolveLayout(null, split, zones).widgets.map((item) => item.key)).toEqual(defaultLayout(split, zones).widgets.map((item) => item.key))
+  })
+
   it('typevakten slipper bare gjennom noe med en widgetliste', () => {
     expect(isStoredLayout({ widgets: [] })).toBe(true)
     expect(isStoredLayout(['a', 'b'])).toBe(false)

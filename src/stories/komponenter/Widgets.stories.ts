@@ -40,6 +40,7 @@ const labels: WidgetLabels = {
   move: (widget) => `Flytt ${widget}`,
   dragToMove: 'Dra for å flytte',
   nextSize: (size) => `Bytt til ${size.toLowerCase()}`,
+  nextRows: (rows) => (rows === 1 ? 'Bytt høyde til 1 rad' : `Bytt høyde til ${rows} rader`),
   hide: (widget) => `Skjul ${widget}`,
   sizes: { small: 'Liten', medium: 'Medium', large: 'Stor' },
 }

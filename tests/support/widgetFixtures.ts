@@ -18,6 +18,7 @@ export const widgetLabels: WidgetLabels = {
   move: (widget) => `Move ${widget}`,
   dragToMove: 'Drag to move',
   nextSize: (size) => `Change size to ${size}`,
+  nextRows: (rows) => `Change height to ${rows} rows`,
   hide: (widget) => `Hide ${widget}`,
   sizes: { small: 'Small', medium: 'Medium', large: 'Large' },
 }

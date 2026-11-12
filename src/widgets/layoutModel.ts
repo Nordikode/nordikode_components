@@ -6,7 +6,7 @@ import type {
   WidgetPositions,
   WidgetSize,
 } from './types'
-import { WIDGET_SIZES } from './types'
+import { WIDGET_ROWS, WIDGET_SIZES } from './types'
 
 /**
  * Oppsettsmodellen: gjør det som er lagret på brukeren om til et komplett,
@@ -19,9 +19,18 @@ import { WIDGET_SIZES } from './types'
 /** Rader per størrelse i et rutenett med faste rader: ett nøkkeltall, et panel, en lang liste. */
 const DEFAULT_ROWS: Record<WidgetSize, number> = { small: 1, medium: 2, large: 3 }
 
-/** Hvor mange kolonner og rader en widget spenner over i et rutenett med `columns` kolonner. */
-export const widgetSpan = (size: WidgetSize, columns: number, definition?: WidgetDefinition): { w: number; h: number } => {
-  const h = definition?.rows?.[size] ?? DEFAULT_ROWS[size]
+export const isRows = (value: unknown): value is number => typeof value === 'number' && WIDGET_ROWS.includes(value)
+
+/** Standardhøyden i rader for en størrelse: definisjonens, ellers 1/2/3 for liten/medium/stor. */
+export const defaultRows = (size: WidgetSize, definition?: WidgetDefinition): number => definition?.rows?.[size] ?? DEFAULT_ROWS[size]
+
+/**
+ * Hvor mange kolonner og rader en widget spenner over i et rutenett med
+ * `columns` kolonner. `rows` er høyden brukeren har valgt; uten den gjelder
+ * størrelsens standard.
+ */
+export const widgetSpan = (size: WidgetSize, columns: number, definition?: WidgetDefinition, rows?: number): { w: number; h: number } => {
+  const h = isRows(rows) ? rows : defaultRows(size, definition)
 
   switch (size) {
     case 'large':
@@ -93,7 +102,8 @@ const resolvePositions = (stored: unknown, known: ReadonlySet<string>, zones: re
  * Gjør et lagret oppsett (av hvilken som helst form) om til et komplett.
  * Ukjente widgeter og dubletter kastes, en ukjent sone eller størrelse
  * faller tilbake til widgetens standard, og widgeter som mangler legges
- * bakerst i sin sone — synlige, med mindre registeret sier skjult.
+ * bakerst i sin sone — synlige, med mindre registeret sier skjult. En
+ * widget skilt ut av en annen (`after`) settes rett etter den i stedet.
  */
 export const resolveLayout = (stored: unknown, definitions: readonly WidgetDefinition[], zones: readonly string[]): WidgetLayout => {
   const byKey = new Map(definitions.map((definition) => [definition.key, definition]))
@@ -116,15 +126,34 @@ export const resolveLayout = (stored: unknown, definitions: readonly WidgetDefin
         size: isSize(record?.size) && definition.sizes.includes(record.size) ? record.size : definition.sizes[0],
         visible: record?.visible !== false,
         zone: typeof record?.zone === 'string' && zones.includes(record.zone) ? record.zone : defaultZoneOf(definition, zones),
+        ...(isRows(record?.rows) ? { rows: record.rows } : {}),
       })
     })
   }
 
+  // Har brukeren et lagret oppsett, er en widget som mangler ny for henne.
+  const hasStored = widgets.length > 0
+
   definitions.forEach((definition) => {
-    if (!seen.has(definition.key)) {
-      seen.add(definition.key)
-      widgets.push(defaultItem(definition, zones))
+    if (seen.has(definition.key)) {
+      return
     }
+
+    seen.add(definition.key)
+
+    // En widget skilt ut av en annen følger den: rett etter, i samme sone,
+    // og skjult om den den kom fra er skjult.
+    const anchor = hasStored && definition.after !== undefined ? widgets.findIndex((item) => item.key === definition.after) : -1
+
+    if (anchor >= 0) {
+      const origin = widgets[anchor]
+
+      widgets.splice(anchor + 1, 0, { ...defaultItem(definition, zones), zone: origin.zone, visible: origin.visible && definition.hidden !== true })
+
+      return
+    }
+
+    widgets.push(defaultItem(definition, zones))
   })
 
   const positions = resolvePositions((stored as Partial<WidgetLayout> | null)?.positions, seen, zones)
