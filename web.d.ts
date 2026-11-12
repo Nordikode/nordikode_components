@@ -263,7 +263,8 @@ export const NkSignedOutDialog: DefineComponent<Record<string, unknown>, Record<
  * Telefonfeltet med landvelger uten Vuetify (SIGN-1301). Props: `modelValue`
  * (E.164), `defaultCountryCode` (land fra bruker, firma eller marked — null gir
  * tom velger), `locale`, `labels`, `id`, `name`, `ariaLabel`, `placeholder`, `disabled`,
- * `required`, `invalid`, `describedBy`. Skrift og høyde: `--nk-phone-font-size`,
+ * `required`, `invalid`, `describedBy`, `autocomplete` (standard `off`; `tel` bare for
+ * brukerens eget nummer, SIGN-1907). Skrift og høyde: `--nk-phone-font-size`,
  * `--nk-phone-min-height`. Events: `update:modelValue`, `input`.
  */
 export const PhoneNumberField: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>

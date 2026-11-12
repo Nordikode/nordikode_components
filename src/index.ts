@@ -31,6 +31,7 @@ export type { NkTemplatePlaceholder } from './types/NkTemplatePlaceholder'
 export * from './tokens'
 
 export { mdiRegistryIconSet } from './icons/mdiRegistrySet'
+export { NK_SEARCH_FIELD_ATTRS } from './forms/searchFieldAttrs'
 export type { MdiRegistry } from './icons/mdiRegistrySet'
 
 export { installStaleChunkReload, isStaleChunkError } from './staleChunkReload'

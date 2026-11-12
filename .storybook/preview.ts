@@ -11,6 +11,7 @@ import { mdiRegistry } from './mdiRegistry'
 import type { ThemeDefinition } from 'vuetify'
 import {
   buildVuetifyThemes,
+  nkFieldDefaults,
   nkFontHref,
   nkProductThemes,
   productCss,
@@ -34,6 +35,8 @@ const vuetify = createVuetify({
   // genererte registeret (npm run icons:generate) — ingen ikonfont.
   icons: { defaultSet: 'mdi', aliases, sets: { mdi: mdiRegistryIconSet(mdiRegistry) } },
   theme: { defaultTheme: signTheme.vuetifyThemeName, themes },
+  // Samme felt-standarder som appene (SIGN-1907): utseendet, og autoforslag av.
+  defaults: nkFieldDefaults(),
 })
 
 setup((app) => {

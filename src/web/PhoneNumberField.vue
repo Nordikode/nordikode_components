@@ -51,6 +51,11 @@ const props = withDefaults(
     invalid?: boolean
     /** id på verts-appens feilmelding/hjelpetekst. */
     describedBy?: string
+    /**
+     * Nettleserens autofyll (SIGN-1907). Av som standard; sett `tel` bare der
+     * brukeren skriver sitt eget nummer (registrering, kundens egen henvendelse).
+     */
+    autocomplete?: string
   }>(),
   {
     modelValue: '',
@@ -64,6 +69,7 @@ const props = withDefaults(
     required: false,
     invalid: false,
     describedBy: undefined,
+    autocomplete: 'off',
   },
 )
 
@@ -234,7 +240,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
         class="nk-phone__number"
         type="tel"
         inputmode="tel"
-        autocomplete="tel"
+        :autocomplete="autocomplete"
         :name="name"
         :aria-label="ariaLabel"
         :placeholder="placeholder"

@@ -126,7 +126,8 @@ flatene bruker `AppHeader` med de delte menyene.
 - `NkStatusChip` — statuschip med to størrelser (`sm`/`md`) og seks semantiske
   toner (`success`/`inflight`/`warning`/`error`/`info`/`neutral`) fra soft-tokenparene;
   teksten kommer alltid fra appens i18n
-- `PhoneNumberInput`
+- `PhoneNumberInput` — `autocomplete` er `off` som standard (SIGN-1907); sett `tel` bare der brukeren skriver sitt eget nummer
+- `NK_SEARCH_FIELD_ATTRS` — attributtene som holder nettleserens autofyll ute av søkefelt (`v-bind` på `v-text-field`; `NkListPane` setter dem selv)
 - `useWidgetLayout` — kontrolleren for én flates widgetoppsett (SIGN-1850, delt i
   SIGN-1873): hvilke widgeter som vises, i hvilken sone, hvilken størrelse og hvor de
   står. Lagring og tekster er appens (`storage`, `labels`); se «Widgeter» under
@@ -513,15 +514,27 @@ og typografi — per produkt (Sign, Time, Backoffice), light + dark.
 
 ```ts
 // src/plugins/vuetify.ts i en app:
-import { buildVuetifyThemes, signTheme } from '@nordikode/components/tokens'
+import { buildVuetifyThemes, nkFieldDefaults, signTheme } from '@nordikode/components/tokens'
 
 createVuetify({
   theme: {
     defaultTheme: signTheme.vuetifyThemeName,
     themes: buildVuetifyThemes(signTheme),
   },
+  defaults: {
+    ...nkFieldDefaults(),
+    VBtn: { color: 'primary', variant: 'flat' },
+  },
 })
 ```
+
+`nkFieldDefaults()` (SIGN-1907) er felt-standardene alle innloggede apper deler:
+samme utseende på `VTextField`, `VTextarea`, `VSelect`, `VAutocomplete` og
+`VCombobox`, og **nettleserens autoforslag av** (`autocomplete="off"`) på alle
+felt med tekstinntasting. Appene har ingen egen kopi. Et felt som gjelder
+brukeren selv (egen e-post, eget telefonnummer, innlogging) setter
+`autocomplete` eksplisitt og vinner over standarden; `autocomplete="off"`
+skrives aldri for hånd.
 
 ```ts
 // Generere appens :root / :root.nk-dark CSS-variabler:
