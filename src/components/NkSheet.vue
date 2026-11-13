@@ -65,15 +65,16 @@ const { smAndDown } = useDisplay()
 
 const isOpen = computed(() => props.modelValue ?? props.open ?? false)
 const fullscreen = computed(() => props.fullscreenOnMobile && smAndDown.value)
-const hasHead = computed(
-  () =>
-    props.title !== '' ||
-    props.subtitle !== '' ||
-    props.closeLabel !== '' ||
-    Boolean(slots.head) ||
-    Boolean(slots.badge),
-)
-const hasActions = computed(() => Boolean(slots.actions))
+// Slottene leses ved hver tegning (ikke i `computed`): `slots` er ikke reaktiv,
+// så en `#actions` eieren legger til etter at sheetet er montert (SIGN-1913:
+// «Fjern valg» først når noe er valgt) ville ellers aldri få handlingsraden sin.
+const hasHead = () =>
+  props.title !== '' ||
+  props.subtitle !== '' ||
+  props.closeLabel !== '' ||
+  Boolean(slots.head) ||
+  Boolean(slots.badge)
+const hasActions = () => Boolean(slots.actions)
 
 const uid = useId()
 const titleId = `nk-sheet-title-${uid}`
@@ -103,7 +104,7 @@ const onUpdate = (value: boolean) => {
     @update:model-value="onUpdate"
   >
     <v-card class="nk-sheet" :class="{ 'nk-sheet--fullscreen': fullscreen }">
-      <div v-if="hasHead" class="nk-sheet__head">
+      <div v-if="hasHead()" class="nk-sheet__head">
         <slot name="head">
           <div class="nk-sheet__texts">
             <div class="nk-sheet__title-row">
@@ -128,11 +129,11 @@ const onUpdate = (value: boolean) => {
         </v-btn>
       </div>
 
-      <div class="nk-sheet__body" :class="{ 'nk-sheet__body--last': !hasActions }">
+      <div class="nk-sheet__body" :class="{ 'nk-sheet__body--last': !hasActions() }">
         <slot />
       </div>
 
-      <div v-if="hasActions" class="nk-sheet__actions">
+      <div v-if="hasActions()" class="nk-sheet__actions">
         <slot name="actions" />
       </div>
     </v-card>

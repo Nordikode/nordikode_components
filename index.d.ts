@@ -48,6 +48,52 @@ export interface NkConversationLabels {
   /** Knappen som vises når noe nytt har kommet mens leseren har rullet opp. */
   newMessages: string
 }
+/**
+ * Kontaktvelgeren (SIGN-1913): det en rad eller et kort viser om en kontakt. Samme
+ * form for kunde, leverandør, underleverandør og ansatt.
+ */
+export interface NkContactPickerItem {
+  id: string
+  name: string
+  /** Hva kontakten er, som felt fra appens data: en person får initialer, et firma får firmaikonet. */
+  kind: 'person' | 'company'
+  /** Bilde eller logo (signert lenke fra appens data). */
+  imageUrl?: string | null
+  /** Korte merker ved navnet (roller), ferdig oversatt av appen. */
+  tags?: string[]
+  /** Én linje under navnet: kontaktperson, stilling eller avdeling. */
+  secondary?: string | null
+  phone?: string | null
+  email?: string | null
+  /** Sted: poststed eller kort adresse. */
+  location?: string | null
+  /** Overskriften raden står under. Rader med samme gruppe må stå samlet. */
+  group?: string | null
+}
+export type NkContactPickerView = 'list' | 'cards'
+/** Tekstene NkContactPickerDialog trenger fra appens i18n (SIGN-1913). */
+export interface NkContactPickerLabels {
+  /** Plassholderen og navnet på søkefeltet. */
+  search: string
+  /** Navnet på gruppen med visningsknappene. */
+  view: string
+  viewList: string
+  viewCards: string
+  /** Navnet på lukkeknappen. */
+  close: string
+  /** Merket på kontakten som er valgt fra før. */
+  selected: string
+  showMore: string
+  loading: string
+  /** Tittelen når registeret er tomt. */
+  empty: string
+  /** Tittelen når søket ikke ga treff — appen setter inn søketeksten. */
+  noMatches: string
+  /** Knappen som starter «Ny kontakt». Brukes bare med `canCreate`. */
+  create?: string
+  /** Knappen som fjerner valget. Brukes bare med `clearable`. */
+  clear?: string
+}
 /** Tekstene NkListPane trenger fra appens i18n (SIGN-1845). */
 export interface NkListPaneLabels {
   /** Filterknappen og filtermenyens navn («Filtre»). Uten `#filters`-slot vises ingen knapp. */
@@ -218,6 +264,18 @@ export const NkDialog: DefineComponent<Record<string, unknown>, Record<string, u
  * `update:modelValue`.
  */
 export const NkConfirmDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
+/**
+ * NkContactPickerDialog (SIGN-1913): standarden for å velge en kontakt — kunde,
+ * leverandør, underleverandør eller ansatt. Modal på NkSheet med søk, kontaktlisten
+ * framme med en gang og en kort forhåndsvisning per kontakt, som liste eller kort.
+ * Props: `modelValue`, `title`, `subtitle`, `items` (`NkContactPickerItem[]`),
+ * `selectedId`, `search` (v-model:search), `view` (v-model:view), `loading`, `hasMore`,
+ * `canCreate`, `creating`, `clearable`, `labels` (`NkContactPickerLabels`), `maxWidth`;
+ * slot `create` (appens «Ny kontakt»-skjema, vist i stedet for listen når `creating`);
+ * emits `select(id)`, `load-more`, `create`, `clear`, `update:search`, `update:view`
+ * og `update:modelValue`. Appen eier data, søk mot serveren, tekster og lagring av visningen.
+ */
+export const NkContactPickerDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /**
  * NkSheet (SIGN-733): det delte dialogskallet — hode, rullende kropp og festet
  * handlingsrad, fullskjerm under `smAndDown`. Bygger på NkDialog (SIGN-846):
