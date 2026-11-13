@@ -1,7 +1,17 @@
 import { computed, reactive, ref, toValue, watch, type ComputedRef, type MaybeRefOrGetter, type Ref } from 'vue'
 import type { GridTile } from './gridLayout'
 import { moveTile, placeTiles, resizeTile, sortTiles } from './gridLayout'
-import { defaultLayout, defaultZoneOf, isDefaultLayout, isRows, isStoredLayout, positionsFor, resolveLayout, widgetSpan } from './layoutModel'
+import {
+  defaultLayout,
+  defaultZoneOf,
+  isDefaultLayout,
+  isRows,
+  isStoredLayout,
+  positionsFor,
+  resolveLayout,
+  settingsOf as widgetSettingsOf,
+  widgetSpan,
+} from './layoutModel'
 import type { WidgetDefinition, WidgetLabels, WidgetLayout, WidgetLayoutItem, WidgetLayoutStorage, WidgetSize, WidgetZoneKind } from './types'
 import { WIDGET_ROWS } from './types'
 import { useWidgetDrag, type DragPoint } from './useWidgetDrag'
@@ -390,6 +400,35 @@ export const useWidgetLayout = (options: UseWidgetLayoutOptions) => {
     }
   }
 
+  /** Verdien hver innstilling på widgeten har nå (SIGN-1911): brukerens valg, ellers standarden. Tom for en widget uten innstillinger. */
+  const settingsOf = (key: string): Record<string, string> => widgetSettingsOf(definition(key), item(key))
+
+  /** Velger en verdi for en innstilling på widgeten. Ukjente innstillinger og verdier ignoreres; standarden lagres ikke. */
+  const setSetting = (key: string, setting: string, value: string): void => {
+    const widget = item(key)
+    const entry = definition(key)?.settings?.find((candidate) => candidate.key === setting)
+
+    if (!widget || !entry || !entry.options.some((option) => option.value === value) || settingsOf(key)[setting] === value) {
+      return
+    }
+
+    const chosen = { ...(widget.settings ?? {}) }
+
+    if (value === entry.default) {
+      delete chosen[setting]
+    } else {
+      chosen[setting] = value
+    }
+
+    if (Object.keys(chosen).length > 0) {
+      widget.settings = chosen
+    } else {
+      delete widget.settings
+    }
+
+    scheduleSave()
+  }
+
   /** Flytter widgeten til sonen `zone`, bakerst, uten å lagre. True når noe endret seg. */
   const moveToZone = (key: string, zone: string): boolean => {
     const widget = item(key)
@@ -591,6 +630,8 @@ export const useWidgetLayout = (options: UseWidgetLayoutOptions) => {
     setRows,
     nextRows,
     cycleRows,
+    settingsOf,
+    setSetting,
     moveToCell,
     moveTo,
     moveToZone,

@@ -14,7 +14,15 @@ const KEY = 'sign.test.layout'
 const definitions: WidgetDefinition[] = [
   { key: 'a', title: 'Team overview', icon: 'mdi-a', sizes: ['medium', 'small', 'large'], zone: 'main' },
   { key: 'b', title: 'Work', icon: 'mdi-b', sizes: ['large'], zone: 'main' },
-  { key: 'c', title: 'Notes', icon: 'mdi-c', sizes: ['medium'], zone: 'side' },
+  {
+    key: 'c',
+    title: 'Notes',
+    icon: 'mdi-c',
+    sizes: ['medium'],
+    zone: 'side',
+    // En innstilling (SIGN-1911): ett valg blant noen få, lagret i oppsettet.
+    settings: [{ key: 'focus', label: 'Focus', default: 'distance', options: [{ value: 'distance', label: 'Distance' }, { value: 'cost', label: 'Cost' }] }],
+  },
 ]
 
 const zones = [
@@ -268,6 +276,49 @@ describe('useWidgetLayout', () => {
     expect(controller.rowsOf('a')).toBe(1)
     controller.reset()
     expect(controller.rowsOf('a')).toBe(2)
+  })
+
+  it('velger en innstilling på en widget, lagrer bare avviket fra standarden og tilbakestiller den (SIGN-1911)', async () => {
+    const { controller, memory } = mountController()
+    await vi.runAllTimersAsync()
+
+    expect(controller.settingsOf('c')).toEqual({ focus: 'distance' })
+    expect(controller.settingsOf('a')).toEqual({})
+
+    controller.setSetting('c', 'focus', 'cost')
+    expect(controller.settingsOf('c')).toEqual({ focus: 'cost' })
+    expect(controller.isDefault.value).toBe(false)
+
+    await vi.runAllTimersAsync()
+    const saved = memory.save.mock.calls.at(-1)?.[1] as WidgetLayout
+    expect(saved.widgets.find((item) => item.key === 'c')?.settings).toEqual({ focus: 'cost' })
+
+    // Ukjente innstillinger og verdier, og widgeter uten innstillinger, ignoreres uten å lagre.
+    const saves = memory.save.mock.calls.length
+    controller.setSetting('c', 'focus', 'time')
+    controller.setSetting('c', 'period', 'week')
+    controller.setSetting('a', 'focus', 'cost')
+    controller.setSetting('c', 'focus', 'cost')
+    await vi.runAllTimersAsync()
+    expect(memory.save.mock.calls.length).toBe(saves)
+    expect(controller.settingsOf('c')).toEqual({ focus: 'cost' })
+
+    // Tilbake til standarden: valget fjernes fra oppsettet, som igjen er standard.
+    controller.setSetting('c', 'focus', 'distance')
+    await vi.runAllTimersAsync()
+    expect((memory.save.mock.calls.at(-1)?.[1] as WidgetLayout).widgets.find((item) => item.key === 'c')?.settings).toBeUndefined()
+    expect(controller.isDefault.value).toBe(true)
+
+    controller.setSetting('c', 'focus', 'cost')
+    controller.reset()
+    expect(controller.settingsOf('c')).toEqual({ focus: 'distance' })
+  })
+
+  it('leser et lagret valg for en innstilling', async () => {
+    const { controller } = mountController({}, { [KEY]: { widgets: [{ key: 'c', settings: { focus: 'cost' } }] } })
+    await vi.runAllTimersAsync()
+
+    expect(controller.settingsOf('c')).toEqual({ focus: 'cost' })
   })
 
   it('har ingen høydeknapp der sonen ikke har rader', async () => {

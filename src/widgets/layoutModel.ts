@@ -47,6 +47,40 @@ const isSize = (value: unknown): value is WidgetSize => typeof value === 'string
 
 const isCell = (value: unknown): value is number => typeof value === 'number' && Number.isInteger(value) && value >= 0
 
+/**
+ * Det brukeren har valgt av widgetens innstillinger, renset mot registeret:
+ * bare kjente innstillinger med et gyldig valg, og aldri standardverdien —
+ * så et oppsett uten egne valg er likt standardoppsettet.
+ */
+export const resolveSettings = (stored: unknown, definition: WidgetDefinition): Record<string, string> | undefined => {
+  if (definition.settings === undefined || typeof stored !== 'object' || stored === null) {
+    return undefined
+  }
+
+  const chosen: Record<string, string> = {}
+
+  definition.settings.forEach((setting) => {
+    const value = (stored as Record<string, unknown>)[setting.key]
+
+    if (typeof value === 'string' && value !== setting.default && setting.options.some((option) => option.value === value)) {
+      chosen[setting.key] = value
+    }
+  })
+
+  return Object.keys(chosen).length > 0 ? chosen : undefined
+}
+
+/** Verdien hver innstilling på widgeten har nå: brukerens valg, ellers standarden. */
+export const settingsOf = (definition: WidgetDefinition | undefined, item: WidgetLayoutItem | undefined): Record<string, string> => {
+  const values: Record<string, string> = {}
+
+  definition?.settings?.forEach((setting) => {
+    values[setting.key] = item?.settings?.[setting.key] ?? setting.default
+  })
+
+  return values
+}
+
 export const defaultZoneOf = (definition: WidgetDefinition, zones: readonly string[]): string =>
   definition.zone !== undefined && zones.includes(definition.zone) ? definition.zone : zones[0]
 
@@ -121,12 +155,16 @@ export const resolveLayout = (stored: unknown, definitions: readonly WidgetDefin
       }
 
       seen.add(definition.key)
+
+      const settings = resolveSettings(record?.settings, definition)
+
       widgets.push({
         key: definition.key,
         size: isSize(record?.size) && definition.sizes.includes(record.size) ? record.size : definition.sizes[0],
         visible: record?.visible !== false,
         zone: typeof record?.zone === 'string' && zones.includes(record.zone) ? record.zone : defaultZoneOf(definition, zones),
         ...(isRows(record?.rows) ? { rows: record.rows } : {}),
+        ...(settings === undefined ? {} : { settings }),
       })
     })
   }

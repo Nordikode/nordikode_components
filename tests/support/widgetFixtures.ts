@@ -21,6 +21,7 @@ export const widgetLabels: WidgetLabels = {
   nextRows: (rows) => `Change height to ${rows} rows`,
   hide: (widget) => `Hide ${widget}`,
   sizes: { small: 'Small', medium: 'Medium', large: 'Large' },
+  settings: (widget) => `Settings for ${widget}`,
 }
 
 /**

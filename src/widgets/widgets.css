@@ -293,3 +293,8 @@
   gap: var(--nk-gap-inline);
   margin-left: auto;
 }
+
+/* Innstillingsmenyen fra tannhjulet på en widget (SIGN-1911). */
+.nk-widget-settings {
+  min-width: calc(var(--nk-space-unit) * 26);
+}

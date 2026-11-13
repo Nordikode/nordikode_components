@@ -20,7 +20,7 @@ const props = withDefaults(
 )
 
 defineSlots<{
-  widget(props: { widgetKey: string; size: WidgetSize; definition: WidgetDefinition }): unknown
+  widget(props: { widgetKey: string; size: WidgetSize; definition: WidgetDefinition; settings: Record<string, string> }): unknown
   empty(): unknown
 }>()
 
@@ -56,7 +56,7 @@ onMounted(() => {
       @pointerdown="pressItem($event, item.key)"
     >
       <div class="nk-widget-column__widget">
-        <slot name="widget" :definition="controller.definition(item.key)!" :size="item.size" :widget-key="item.key" />
+        <slot name="widget" :definition="controller.definition(item.key)!" :settings="controller.settingsOf(item.key)" :size="item.size" :widget-key="item.key" />
       </div>
 
       <NkWidgetTools v-if="controller.editing.value" :controller="controller" :widget-key="item.key" />

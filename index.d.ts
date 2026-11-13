@@ -263,6 +263,20 @@ export const WIDGET_SIZES: readonly WidgetSize[]
 export const WIDGET_ROWS: readonly number[]
 /** En sone på flaten: et rutenett (`grid`, celler) eller en kolonne (`column`, listerekkefølge). */
 export type WidgetZoneKind = 'grid' | 'column'
+/** Ett valg i en innstilling: verdien som lagres, og navnet — ferdig oversatt, eller en getter som følger språket. */
+export interface WidgetSettingOption {
+  value: string
+  label: string | (() => string)
+}
+/** En innstilling på en widget (SIGN-1911): ett valg blant noen få, gjort fra verktøylinjen i redigeringsmodus og lagret i brukerens oppsett. */
+export interface WidgetSettingDefinition {
+  /** Stabil nøkkel som lagres i brukerens oppsett — endres aldri. */
+  key: string
+  label: string | (() => string)
+  options: readonly WidgetSettingOption[]
+  /** Verdien som gjelder til brukeren velger noe annet; må være ett av valgene. */
+  default: string
+}
 export interface WidgetDefinition {
   /** Stabil nøkkel som lagres i brukerens oppsett — endres aldri. */
   key: string
@@ -279,6 +293,8 @@ export interface WidgetDefinition {
   /** Widgeten denne ble skilt ut av: i et lagret oppsett fra før den fantes settes den rett etter den, i samme sone og like synlig. */
   after?: string
   rows?: Partial<Record<WidgetSize, number>>
+  /** Innstillingene brukeren kan velge for widgeten (SIGN-1911); uten dem har den ingen innstillingsknapp. */
+  settings?: readonly WidgetSettingDefinition[]
 }
 export interface WidgetLayoutItem {
   key: string
@@ -287,6 +303,8 @@ export interface WidgetLayoutItem {
   zone: string
   /** Høyden brukeren har valgt (1–3 rader); uten den gjelder størrelsens standard. */
   rows?: number
+  /** Innstillingene brukeren har valgt (SIGN-1911), per innstillingsnøkkel; standardverdier lagres ikke. */
+  settings?: Record<string, string>
 }
 export interface GridPosition {
   x: number
@@ -327,6 +345,8 @@ export interface WidgetLabels {
   /** Skjul-knappen («Skjul {widget}»). */
   hide: (widget: string) => string
   sizes: Record<WidgetSize, string>
+  /** Innstillingsknappen («Innstillinger for {widget}», SIGN-1911). Bare nødvendig der en widget har innstillinger. */
+  settings?: (widget: string) => string
 }
 /** Lagringen oppsettet bor i — appens (Sign: brukerens UI-preferanser i core). */
 export interface WidgetLayoutStorage {
@@ -425,6 +445,10 @@ export interface WidgetLayoutController {
   /** Neste høyde (1 → 2 → 3 → 1), eller null der sonen ikke har rader. */
   nextRows(key: string): number | null
   cycleRows(key: string): void
+  /** Verdien hver innstilling på widgeten har nå (SIGN-1911): brukerens valg, ellers standarden. */
+  settingsOf(key: string): Record<string, string>
+  /** Velger en verdi for en innstilling på widgeten; ukjente innstillinger og verdier ignoreres. */
+  setSetting(key: string, setting: string, value: string): void
   cycleSize(key: string): void
   moveToCell(key: string, zone: string, x: number, y: number): boolean
   moveTo(key: string, targetKey: string): boolean
@@ -454,6 +478,8 @@ export declare function useWidgetLayout(options: UseWidgetLayoutOptions): Widget
 export declare function defaultLayout(definitions: readonly WidgetDefinition[], zones: readonly string[]): WidgetLayout
 /** Gjør et lagret oppsett (av hvilken som helst form) om til et komplett, gyldig oppsett mot registeret. */
 export declare function resolveLayout(stored: unknown, definitions: readonly WidgetDefinition[], zones: readonly string[]): WidgetLayout
+/** Verdien hver innstilling på en widget har (SIGN-1911): det lagrede valget, ellers standarden. */
+export declare function widgetSettingsOf(definition: WidgetDefinition | undefined, item: WidgetLayoutItem | undefined): Record<string, string>
 /** Typevakt for det som leses fra lagringen: alt annet renses av `resolveLayout`. */
 export declare function isStoredLayout(value: unknown): value is Partial<WidgetLayout>
 /** Hvor mange kolonner og rader en widget spenner over i et rutenett med `columns` kolonner. */

@@ -15,8 +15,9 @@ export interface WidgetGridBreakpoint {
 
 /**
  * Rutenettet på en widgetflate (SIGN-1850, delt i SIGN-1873). Eieren tegner selve widgeten i
- * `#widget`-slotten og får nøkkel, størrelse og definisjon; rutenettet eier
- * plassering, størrelse og redigeringsverktøyene.
+ * `#widget`-slotten og får nøkkel, størrelse, definisjon og widgetens
+ * innstillinger (SIGN-1911); rutenettet eier plassering, størrelse og
+ * redigeringsverktøyene.
  *
  * Trinnene avgjør hvor mange kolonner rutenettet har ved hver bredde, og om
  * det har rader. Med rader er hver flis 1–3 rader høy, radene vokser med
@@ -44,7 +45,7 @@ const props = withDefaults(
 )
 
 defineSlots<{
-  widget(props: { widgetKey: string; size: WidgetSize; definition: WidgetDefinition }): unknown
+  widget(props: { widgetKey: string; size: WidgetSize; definition: WidgetDefinition; settings: Record<string, string> }): unknown
 }>()
 
 // TransitionGroup gir komponentinstansen; elementet ligger på $el.
@@ -162,7 +163,7 @@ onBeforeUnmount(() => {
       @pointerdown="pressItem($event, tile.key)"
     >
       <div class="nk-widget-grid__widget">
-        <slot name="widget" :definition="controller.definition(tile.key)!" :size="tile.size" :widget-key="tile.key" />
+        <slot name="widget" :definition="controller.definition(tile.key)!" :settings="controller.settingsOf(tile.key)" :size="tile.size" :widget-key="tile.key" />
       </div>
 
       <NkWidgetTools v-if="controller.editing.value" :controller="controller" :widget-key="tile.key" />

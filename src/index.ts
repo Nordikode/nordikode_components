@@ -142,7 +142,7 @@ export type { WidgetGridBreakpoint } from './widgets/NkWidgetGrid.vue'
 export { default as NkWidgetColumn } from './widgets/NkWidgetColumn.vue'
 export { default as NkWidgetEditBar } from './widgets/NkWidgetEditBar.vue'
 export { default as NkWidgetTools } from './widgets/NkWidgetTools.vue'
-export { defaultLayout, isStoredLayout, resolveLayout, widgetSpan } from './widgets/layoutModel'
+export { defaultLayout, isStoredLayout, resolveLayout, settingsOf as widgetSettingsOf, widgetSpan } from './widgets/layoutModel'
 export { WIDGET_ROWS, WIDGET_SIZES } from './widgets/types'
 export type {
   GridPosition,
@@ -152,6 +152,8 @@ export type {
   WidgetLayoutItem,
   WidgetLayoutStorage,
   WidgetPositions,
+  WidgetSettingDefinition,
+  WidgetSettingOption,
   WidgetSize,
   WidgetZoneKind,
 } from './widgets/types'
