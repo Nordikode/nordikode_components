@@ -2,7 +2,7 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { createApp, defineComponent, h, nextTick, type App } from 'vue'
 import { createVuetify } from 'vuetify'
-import { VAlert, VBtn, VCard, VCardText, VCardTitle, VChip, VDialog, VIcon } from 'vuetify/components'
+import { VAlert, VBtn, VCard, VCardText, VCardTitle, VChip, VDialog, VIcon, VList, VListItem, VListSubheader, VMenu } from 'vuetify/components'
 import NkWidgetEditBar from '../src/widgets/NkWidgetEditBar.vue'
 import NkWidgetGrid from '../src/widgets/NkWidgetGrid.vue'
 import type { WidgetDefinition } from '../src/widgets/types'
@@ -16,7 +16,14 @@ import { memoryStorage, widgetLabels } from './support/widgetFixtures'
 
 const definitions: WidgetDefinition[] = [
   { key: 'team', title: 'Team overview', icon: 'mdi-account-group-outline', sizes: ['medium', 'small'] },
-  { key: 'work', title: () => 'Work', icon: 'mdi-format-list-checks', sizes: ['large'] },
+  {
+    key: 'work',
+    title: () => 'Work',
+    icon: 'mdi-format-list-checks',
+    sizes: ['large'],
+    // En innstilling (SIGN-1911): gir flisen et tannhjul i redigeringsmodus.
+    settings: [{ key: 'focus', label: 'Focus', default: 'open', options: [{ value: 'open', label: 'Open' }, { value: 'done', label: 'Done' }] }],
+  },
 ]
 
 beforeAll(() => {
@@ -66,8 +73,8 @@ describe('NkWidgetGrid + NkWidgetEditBar', () => {
         h('div', [
           controller.editing.value ? h(NkWidgetEditBar, { controller }) : null,
           h(NkWidgetGrid, { controller }, {
-            widget: ({ widgetKey, size }: { widgetKey: string; size: string }) =>
-              h('p', { class: 'widget-body', 'data-size': size }, widgetKey),
+            widget: ({ widgetKey, size, settings }: { widgetKey: string; size: string; settings: Record<string, string> }) =>
+              h('p', { class: 'widget-body', 'data-size': size, 'data-focus': settings.focus ?? '' }, widgetKey),
           }),
         ])
     },
@@ -77,7 +84,7 @@ describe('NkWidgetGrid + NkWidgetEditBar', () => {
     el = document.createElement('div')
     document.body.appendChild(el)
     app = createApp(Host)
-    app.use(createVuetify({ components: { VAlert, VBtn, VCard, VCardText, VCardTitle, VChip, VDialog, VIcon } }))
+    app.use(createVuetify({ components: { VAlert, VBtn, VCard, VCardText, VCardTitle, VChip, VDialog, VIcon, VList, VListItem, VListSubheader, VMenu } }))
     app.mount(el)
     await flush()
   })
@@ -109,9 +116,24 @@ describe('NkWidgetGrid + NkWidgetEditBar', () => {
     expect(handles[1].getAttribute('aria-label')).toBe('Move Work')
     // «work» har bare én størrelse — ingen størrelsesknapp.
     expect(tools[0].querySelectorAll('button')).toHaveLength(3)
-    expect(tools[1].querySelectorAll('button')).toHaveLength(2)
+    // … men den har en innstilling, og dermed et tannhjul med navn (SIGN-1911).
+    expect(tools[1].querySelectorAll('button')).toHaveLength(3)
+    expect(tools[0].querySelector('[data-widget-tool="settings"]')).toBeNull()
+    expect(tools[1].querySelector('[data-widget-tool="settings"]')?.getAttribute('aria-label')).toBe('Settings for Work')
 
     expect(el.querySelector('.nk-widget-editbar__title')?.textContent).toBe('Customise the page')
+  })
+
+  it('gir widgeten innstillingene sine: standarden først, så brukerens valg (SIGN-1911)', async () => {
+    const bodies = (): Record<string, string | null> =>
+      Object.fromEntries(Array.from(el.querySelectorAll<HTMLElement>('.widget-body')).map((body) => [body.textContent ?? '', body.getAttribute('data-focus')]))
+
+    expect(bodies()).toEqual({ team: '', work: 'open' })
+
+    controller.setSetting('work', 'focus', 'done')
+    await nextTick()
+
+    expect(bodies()).toEqual({ team: '', work: 'done' })
   })
 
   it('skjuler en widget fra verktøyet og henter den fram fra brikken i linjen', async () => {

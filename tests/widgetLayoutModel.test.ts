@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { defaultLayout, isDefaultLayout, isStoredLayout, positionsFor, resolveLayout, widgetSpan } from '../src/widgets/layoutModel'
+import { defaultLayout, isDefaultLayout, isStoredLayout, positionsFor, resolveLayout, settingsOf, widgetSpan } from '../src/widgets/layoutModel'
 import type { WidgetDefinition } from '../src/widgets/types'
 
 // Oppsettsmodellen (SIGN-1850, delt i SIGN-1873): det som er lagret på
@@ -117,6 +117,50 @@ describe('layoutModel', () => {
 
     // Uten lagret oppsett gjelder registerets rekkefølge.
     expect(resolveLayout(null, split, zones).widgets.map((item) => item.key)).toEqual(defaultLayout(split, zones).widgets.map((item) => item.key))
+  })
+
+  it('beholder et gyldig valg for en innstilling og kaster ukjente innstillinger, ukjente verdier og standarden (SIGN-1911)', () => {
+    const withSettings: WidgetDefinition[] = [
+      {
+        key: 'a',
+        title: 'A',
+        icon: 'mdi-a',
+        sizes: ['medium'],
+        zone: 'main',
+        settings: [
+          { key: 'focus', label: 'Focus', default: 'distance', options: [{ value: 'distance', label: 'Distance' }, { value: 'cost', label: () => 'Cost' }] },
+          { key: 'period', label: 'Period', default: 'week', options: [{ value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }] },
+        ],
+      },
+      { key: 'b', title: 'B', icon: 'mdi-b', sizes: ['medium'], zone: 'main' },
+    ]
+
+    const layout = resolveLayout(
+      {
+        widgets: [
+          { key: 'a', settings: { focus: 'cost', period: 'week', ukjent: 'x' } },
+          { key: 'b', settings: { focus: 'cost' } },
+        ],
+      },
+      withSettings,
+      zones,
+    )
+
+    // Standarden («week») lagres ikke, og en widget uten innstillinger får ingen.
+    expect(layout.widgets[0].settings).toEqual({ focus: 'cost' })
+    expect(layout.widgets[1].settings).toBeUndefined()
+    expect(settingsOf(withSettings[0], layout.widgets[0])).toEqual({ focus: 'cost', period: 'week' })
+    expect(settingsOf(withSettings[1], layout.widgets[1])).toEqual({})
+
+    // Et valg som ikke finnes lenger faller tilbake til standarden — og oppsettet er igjen standard.
+    const stale = resolveLayout({ widgets: [{ key: 'a', settings: { focus: 'time' } }, { key: 'b' }] }, withSettings, zones)
+    expect(stale.widgets[0].settings).toBeUndefined()
+    expect(settingsOf(withSettings[0], stale.widgets[0])).toEqual({ focus: 'distance', period: 'week' })
+    expect(isDefaultLayout(stale, withSettings, zones)).toBe(true)
+    expect(isDefaultLayout(layout, withSettings, zones)).toBe(false)
+
+    // Søppel som lagret verdi tåles.
+    expect(resolveLayout({ widgets: [{ key: 'a', settings: 'cost' }] }, withSettings, zones).widgets[0].settings).toBeUndefined()
   })
 
   it('typevakten slipper bare gjennom noe med en widgetliste', () => {

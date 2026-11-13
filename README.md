@@ -391,7 +391,7 @@ loads the bell only for signed-in users — the website imports it from here in
 the lazily loaded notifications module, so a visitor's shared bundle never
 carries it. Same component, same styles (`style.css`).
 
-## Widgeter (SIGN-1850/1873)
+## Widgeter (SIGN-1850/1873/1911)
 
 En widgetflate (Signs dashbord og saksoversikt) er satt sammen av widgeter brukeren
 selv plasserer, gir størrelse og skjuler. Rammeverket eier oppsettet, rutenettet,
@@ -431,7 +431,17 @@ const controller = useWidgetLayout({
   et lagret oppsett får dem da rett etter den gamle, i samme sone og like synlige — ikke
   bakerst i standardsonen.
 - **Verten tegner widgetene** i `#widget`-slotten på rutenettet og kolonnen, med
-  `widgetKey`, `size` og `definition`. Rammeverket vet ikke hva en widget viser.
+  `widgetKey`, `size`, `definition` og `settings`. Rammeverket vet ikke hva en widget viser.
+- **Innstillinger per widget (SIGN-1911)**: en widget som kan vises på flere måter
+  deklarerer `settings` på definisjonen — ett valg blant noen få per innstilling
+  (`{ key, label, options: [{ value, label }], default }`, «hvilket tall står i fokus»).
+  I redigeringsmodus får widgeten da et tannhjul i verktøylinjen med valgene. Verdien er
+  personlig, lagres i oppsettet ved siden av størrelse og plassering (bare når den avviker
+  fra standarden) og følger «Tilbakestill». Verten leser den fra slottens `settings`
+  (alltid komplett: valget, ellers standarden) eller `controller.settingsOf(key)`, og
+  setter den med `controller.setSetting(key, setting, value)`. Ukjente innstillinger og
+  verdier i et lagret oppsett renses bort. Etiketten på tannhjulet er `labels.settings`.
+  Større valg enn dette (skjemaer, lister) hører hjemme på en side, ikke i en widget.
 - **Lagring og tekster er data.** `storage.load(key)` leses én gang (det som kommer
   renses med `resolveLayout` mot dagens register, så nye widgeter dukker opp og
   fjernede forsvinner), `storage.save(key, layout)` skrives 500 ms etter siste endring,

@@ -26,6 +26,29 @@ export const WIDGET_ROWS: readonly number[] = [1, 2, 3]
 /** En sone på flaten: et rutenett (`grid`) eller en kolonne (`column`). */
 export type WidgetZoneKind = 'grid' | 'column'
 
+/** Ett valg i en innstilling: verdien som lagres, og navnet — ferdig oversatt, eller en getter som følger språket. */
+export interface WidgetSettingOption {
+  value: string
+  label: string | (() => string)
+}
+
+/**
+ * En innstilling på en widget (SIGN-1911): ett valg blant noen få, som
+ * brukeren gjør fra widgetens verktøylinje i redigeringsmodus — «hvilket tall
+ * står i fokus». Verdien er personlig og lagres i oppsettet sammen med
+ * størrelse og plassering.
+ */
+export interface WidgetSettingDefinition {
+  /** Stabil nøkkel som lagres i brukerens oppsett — endres aldri. */
+  key: string
+  /** Navnet på innstillingen, ferdig oversatt — eller en getter som følger språket. */
+  label: string | (() => string)
+  /** Valgene; verdiene er stabile nøkler. */
+  options: readonly WidgetSettingOption[]
+  /** Verdien som gjelder til brukeren velger noe annet; må være ett av valgene. */
+  default: string
+}
+
 export interface WidgetDefinition {
   /** Stabil nøkkel som lagres i brukerens oppsett — endres aldri. */
   key: string
@@ -46,6 +69,8 @@ export interface WidgetDefinition {
   after?: string
   /** Standardhøyden i rader per størrelse i et rutenett med rader, der 1/2/3 for liten/medium/stor ikke passer. */
   rows?: Partial<Record<WidgetSize, number>>
+  /** Innstillingene brukeren kan velge for widgeten (SIGN-1911); uten dem har den ingen innstillingsknapp. */
+  settings?: readonly WidgetSettingDefinition[]
 }
 
 export interface WidgetLayoutItem {
@@ -55,6 +80,8 @@ export interface WidgetLayoutItem {
   zone: string
   /** Høyden brukeren har valgt (1–3 rader); uten den gjelder størrelsens standard. */
   rows?: number
+  /** Innstillingene brukeren har valgt (SIGN-1911), per innstillingsnøkkel; standardverdier lagres ikke. */
+  settings?: Record<string, string>
 }
 
 export interface GridPosition {
@@ -106,6 +133,8 @@ export interface WidgetLabels {
   hide: (widget: string) => string
   /** Navnet på hver størrelse. */
   sizes: Record<WidgetSize, string>
+  /** Innstillingsknappen («Innstillinger for {widget}», SIGN-1911). Bare nødvendig der en widget har innstillinger. */
+  settings?: (widget: string) => string
 }
 
 /**

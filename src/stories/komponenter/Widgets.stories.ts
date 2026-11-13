@@ -12,7 +12,10 @@ import { useWidgetLayout } from '../../widgets/useWidgetLayout'
 // (`NkWidgetGrid`) snapper fliser til celler med faste rader på brede
 // skjermer og følger listerekkefølgen på smale; kolonnen (`NkWidgetColumn`)
 // følger alltid listerekkefølgen. Verten tegner selve widgeten i `#widget`
-// og får nøkkel, størrelse og definisjon.
+// og får nøkkel, størrelse, definisjon og widgetens innstillinger.
+//
+// En widget kan ha innstillinger (SIGN-1911): «Åpne saker» lar brukeren velge
+// hvilket tall som står i fokus. I redigeringsmodus får den et tannhjul.
 //
 // Tekstene (`labels`) kommer fra appens i18n, og lagringen (`storage`) er
 // appens: Sign lagrer oppsettet i brukerens UI-preferanser i core. Her er
@@ -43,10 +46,27 @@ const labels: WidgetLabels = {
   nextRows: (rows) => (rows === 1 ? 'Bytt høyde til 1 rad' : `Bytt høyde til ${rows} rader`),
   hide: (widget) => `Skjul ${widget}`,
   sizes: { small: 'Liten', medium: 'Medium', large: 'Stor' },
+  settings: (widget) => `Innstillinger for ${widget}`,
 }
 
 const definitions: WidgetDefinition[] = [
-  { key: 'open-cases', title: 'Åpne saker', icon: 'mdi-folder-open-outline', sizes: ['small', 'medium'] },
+  {
+    key: 'open-cases',
+    title: 'Åpne saker',
+    icon: 'mdi-folder-open-outline',
+    sizes: ['small', 'medium'],
+    settings: [
+      {
+        key: 'focus',
+        label: 'Tall i fokus',
+        default: 'open',
+        options: [
+          { value: 'open', label: 'Åpne saker' },
+          { value: 'attention', label: 'Trenger tilsyn' },
+        ],
+      },
+    ],
+  },
   { key: 'offers', title: 'Tilbud som venter', icon: 'mdi-file-document-outline', sizes: ['medium', 'large'] },
   { key: 'team', title: 'Teamet i dag', icon: 'mdi-account-group-outline', sizes: ['medium', 'small'] },
   { key: 'activity', title: 'Siste aktivitet', icon: 'mdi-history', sizes: ['large', 'medium'] },
@@ -72,10 +92,13 @@ const innhold: Record<string, Record<WidgetSize, string>> = {
   activity: { small: '3 nye', medium: 'Tilbud sendt til Hansen · Berg godtok tilbudet · Ny sak fra Solberg', large: 'Tilbud sendt til Hansen (09:12)\nBerg godtok tilbudet (10:40)\nNy sak fra Solberg (11:05)\nUE-forespørsel besvart av Rør AS (12:30)' },
 }
 
-const widget = (definition: WidgetDefinition, size: WidgetSize) =>
+/** Det lille kortet viser tallet brukeren har valgt å ha i fokus. */
+const fokus: Record<string, string> = { open: '12', attention: '3' }
+
+const widget = (definition: WidgetDefinition, size: WidgetSize, settings: Record<string, string> = {}) =>
   h(VCard, { variant: 'outlined', style: { height: '100%' } }, () => [
     h(VCardTitle, { style: { fontSize: size === 'small' ? '0.85rem' : '1rem' } }, () => (typeof definition.title === 'function' ? definition.title() : definition.title)),
-    h(VCardText, { style: { whiteSpace: 'pre-line', fontSize: size === 'small' ? '1.6rem' : '0.95rem', fontWeight: size === 'small' ? 700 : 400 } }, () => innhold[definition.key][size]),
+    h(VCardText, { style: { whiteSpace: 'pre-line', fontSize: size === 'small' ? '1.6rem' : '0.95rem', fontWeight: size === 'small' ? 700 : 400 } }, () => (definition.key === 'open-cases' && size === 'small' ? fokus[settings.focus] : innhold[definition.key][size])),
   ])
 
 const Demo = defineComponent({
@@ -92,7 +115,8 @@ const Demo = defineComponent({
     })
 
     const slots = {
-      widget: ({ definition, size }: { widgetKey: string; size: WidgetSize; definition: WidgetDefinition }) => widget(definition, size),
+      widget: ({ definition, size, settings }: { widgetKey: string; size: WidgetSize; definition: WidgetDefinition; settings: Record<string, string> }) =>
+        widget(definition, size, settings),
     }
 
     return () =>
