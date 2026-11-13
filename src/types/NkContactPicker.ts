@@ -24,6 +24,12 @@ export interface NkContactPickerItem {
 
 export type NkContactPickerView = 'list' | 'cards'
 
+/** Et filter over listen: hvilken type kontakt som vises («Alle», «Kollegaer», «Kunder» …). Appen filtrerer dataene. */
+export interface NkContactPickerFilter {
+  key: string
+  label: string
+}
+
 /** Tekstene NkContactPickerDialog trenger fra appens i18n (SIGN-1913). */
 export interface NkContactPickerLabels {
   /** Plassholderen og navnet på søkefeltet, f.eks. «Søk i kontakter». */
@@ -50,4 +56,8 @@ export interface NkContactPickerLabels {
   create?: string
   /** Knappen som fjerner valget, f.eks. «Fjern kunde». Brukes bare med `clearable`. */
   clear?: string
+  /** Knappen som lukker velgeren når flere kan velges, f.eks. «Ferdig» eller «Legg til 3». Brukes bare med `multiple`. */
+  done?: string
+  /** Navnet på gruppen med filterknappene, f.eks. «Vis». Brukes bare med `filters`. */
+  filters?: string
 }

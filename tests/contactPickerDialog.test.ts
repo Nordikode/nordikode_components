@@ -69,6 +69,12 @@ function mount(initial: Record<string, unknown> = {}, slots: Record<string, () =
           onCreate: () => events.push(['create', null]),
           onClear: () => events.push(['clear', null]),
           onLoadMore: () => events.push(['load-more', null]),
+          onToggle: (id: string) => events.push(['toggle', id]),
+          onConfirm: () => events.push(['confirm', null]),
+          'onUpdate:filter': (filter: string) => {
+            events.push(['filter', filter])
+            state.filter = filter
+          },
           'onUpdate:view': (view: string) => {
             events.push(['view', view])
             state.view = view
@@ -199,5 +205,42 @@ describe('NkContactPickerDialog', () => {
     await nextTick()
     expect(q('.nk-contact-picker__loading')?.textContent).toContain('Laster …')
     expect(q('.nk-empty-state')).toBeNull()
+  })
+
+  it('flervalg: et trykk krysser av eller på, valgte er merket, og «Ferdig» lukker', async () => {
+    mount({ multiple: true, selectedIds: ['c2'], labels: { ...labels, done: 'Ferdig' }, clearable: true })
+    await nextTick()
+
+    expect(q('[data-contact-id="c2"]')?.getAttribute('aria-pressed')).toBe('true')
+    expect(q('[data-contact-id="c1"]')?.getAttribute('aria-pressed')).toBe('false')
+    expect(q('[data-contact-id="c2"] .nk-contact-picker__check--on')).not.toBeNull()
+    // «Fjern valg» hører til enkeltvalg.
+    expect(buttonWithText('Fjern kunde')).toBeNull()
+
+    q('[data-contact-id="c1"]')!.click()
+    q('[data-contact-id="c2"]')!.click()
+    buttonWithText('Ferdig')!.click()
+
+    expect(events).toEqual([['toggle', 'c1'], ['toggle', 'c2'], ['confirm', null]])
+  })
+
+  it('typefilteret vises som brikker og sier fra når brukeren bytter', async () => {
+    mount({
+      filters: [
+        { key: 'all', label: 'Alle' },
+        { key: 'colleagues', label: 'Kollegaer' },
+      ],
+      filter: 'all',
+    })
+    await nextTick()
+
+    expect(qa('.nk-contact-picker__filter').map((chip) => chip.textContent?.trim())).toEqual(['Alle', 'Kollegaer'])
+    expect(q('[data-filter="all"]')?.getAttribute('aria-pressed')).toBe('true')
+
+    q('[data-filter="colleagues"]')!.click()
+    await nextTick()
+
+    expect(events).toEqual([['filter', 'colleagues']])
+    expect(q('[data-filter="colleagues"]')?.getAttribute('aria-pressed')).toBe('true')
   })
 })

@@ -98,7 +98,10 @@ flatene bruker `AppHeader` med de delte menyene.
   navnet, telefon, e-post, sted, og `group` for overskrifter som «Brukes ofte») og eier
   søket mot serveren (`v-model:search`, `loading`, `hasMore` → `load-more`), tekstene
   (`labels`) og «Ny kontakt»-skjemaet (`canCreate` → `create`, vist i `#create` når
-  `creating`). `clearable` gir «Fjern valg» (`clear`) når noe er valgt fra før. Ingen
+  `creating`). `clearable` gir «Fjern valg» (`clear`) når noe er valgt fra før. Med `multiple` + `selectedIds`
+  krysses kontaktene av og på (`toggle(id)`) og `labels.done` lukker (`confirm`) — mottakere i
+  en melding. `filters` + `v-model:filter` gir brikker for hvilken type som vises (alle,
+  kollegaer, kunder …); appen filtrerer dataene. Ingen
   app lager sin egen kontaktvelger eller velger kontakter i et nedtrekk
 - `NkEmptyState` — tom-tilstand (SIGN-447): sentrert ikon (valgfritt, `mdi-*`),
   `title`, `description` og `actions`-slot; `size` `default` (primær-tonet ikonsirkel,

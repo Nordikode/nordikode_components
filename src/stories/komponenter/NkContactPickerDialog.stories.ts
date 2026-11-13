@@ -194,3 +194,57 @@ export const TomtRegister: Story = {
       }),
     ),
 }
+
+// Mottakere i en melding: flere kan velges, og brikkene avgrenser listen til
+// én type kontakt. «Ferdig» lukker velgeren.
+export const Mottakere: Story = {
+  render: () =>
+    h(
+      defineComponent({
+        setup() {
+          const open = ref(true)
+          const search = ref('')
+          const filter = ref('all')
+          const selectedIds = ref<string[]>(['a2'])
+          const alle = [
+            ...ansatte.map((item) => ({ ...item, tags: ['Kollega'], group: 'Kollegaer' })),
+            ...kunder.map((item) => ({ ...item, group: 'Kontakter' })),
+          ]
+          const items = computed(() =>
+            alle
+              .filter((item) => filter.value === 'all' || (filter.value === 'colleagues') === (item.group === 'Kollegaer'))
+              .filter((item) => item.name.toLowerCase().includes(search.value.trim().toLowerCase())),
+          )
+
+          return () =>
+            h('div', [
+              h(VBtn, { onClick: () => (open.value = true) }, () => `Mottakere (${selectedIds.value.length})`),
+              h(NkContactPickerDialog, {
+                modelValue: open.value,
+                title: 'Velg mottakere',
+                multiple: true,
+                selectedIds: selectedIds.value,
+                items: items.value,
+                search: search.value,
+                filters: [
+                  { key: 'all', label: 'Alle' },
+                  { key: 'colleagues', label: 'Kollegaer' },
+                  { key: 'contacts', label: 'Kontakter' },
+                ],
+                filter: filter.value,
+                labels: { ...baseLabels, done: 'Ferdig', filters: 'Vis', noMatches: 'Ingen treff' },
+                'onUpdate:modelValue': (value: boolean) => (open.value = value),
+                'onUpdate:search': (value: string) => (search.value = value),
+                'onUpdate:filter': (value: string) => (filter.value = value),
+                onToggle: (id: string) => {
+                  selectedIds.value = selectedIds.value.includes(id)
+                    ? selectedIds.value.filter((chosen) => chosen !== id)
+                    : [...selectedIds.value, id]
+                },
+                onConfirm: () => (open.value = false),
+              }),
+            ])
+        },
+      }),
+    ),
+}

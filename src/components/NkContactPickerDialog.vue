@@ -4,13 +4,15 @@ import IdentityAvatar from './IdentityAvatar.vue'
 import NkEmptyState from './NkEmptyState.vue'
 import NkSheet from './NkSheet.vue'
 import { NK_SEARCH_FIELD_ATTRS } from '../forms/searchFieldAttrs'
-import type { NkContactPickerItem, NkContactPickerLabels, NkContactPickerView } from '../types/NkContactPicker'
+import type { NkContactPickerFilter, NkContactPickerItem, NkContactPickerLabels, NkContactPickerView } from '../types/NkContactPicker'
 
 /**
  * Kontaktvelgeren (SIGN-1913): standarden for å velge en kontakt — kunde,
  * leverandør, underleverandør eller ansatt. En modal med kontaktlisten ferdig
  * framme, søk øverst og en kort forhåndsvisning av hver kontakt, som liste
- * eller som kort. Ett trykk på en kontakt velger den.
+ * eller som kort. Ett trykk på en kontakt velger den. Med `multiple` (mottakere
+ * i en melding) krysses kontaktene av og på, og «Ferdig» lukker velgeren. Med
+ * `filters` får listen brikker for hvilken type kontakt som vises.
  *
  * Komponenten eier bare flaten. Appen eier dataene (`items`, hentet med søk og
  * side for side fra serveren), tekstene (`labels`), hvilken visning brukeren
@@ -26,6 +28,14 @@ interface Props {
   items: NkContactPickerItem[]
   /** Kontakten som er valgt fra før — merkes i listen. */
   selectedId?: string | null
+  /** Flere kan velges: et trykk krysser av eller på (`toggle`), og `labels.done` lukker (`confirm`). */
+  multiple?: boolean
+  /** Kontaktene som er valgt, når `multiple`. */
+  selectedIds?: string[]
+  /** Brikker over listen for hvilken type kontakt som vises. Appen filtrerer `items`. */
+  filters?: NkContactPickerFilter[]
+  /** v-model:filter — nøkkelen til det valgte filteret. */
+  filter?: string | null
   /** v-model:search. Appen søker på serveren når teksten endres. */
   search?: string
   /** v-model:view. */
@@ -46,6 +56,10 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   subtitle: '',
   selectedId: null,
+  multiple: false,
+  selectedIds: () => [],
+  filters: () => [],
+  filter: null,
   search: '',
   view: 'list',
   loading: false,
@@ -60,8 +74,13 @@ const emit = defineEmits<{
   'update:modelValue': [open: boolean]
   'update:search': [search: string]
   'update:view': [view: NkContactPickerView]
+  'update:filter': [filter: string]
   /** Kontakten brukeren trykket på. Eieren lukker dialogen når valget er tatt imot. */
   select: [id: string]
+  /** Med `multiple`: kontakten brukeren krysset av eller på. */
+  toggle: [id: string]
+  /** Med `multiple`: brukeren er ferdig med å velge. */
+  confirm: []
   'load-more': []
   create: []
   clear: []
@@ -89,9 +108,21 @@ watch(
   },
 )
 
-const showClear = computed(() => props.clearable && Boolean(props.selectedId) && Boolean(props.labels.clear))
+const showClear = computed(() => !props.multiple && props.clearable && Boolean(props.selectedId) && Boolean(props.labels.clear))
 const showCreate = computed(() => props.canCreate && Boolean(props.labels.create))
-const hasFooter = computed(() => !props.creating && (showClear.value || showCreate.value))
+const showDone = computed(() => props.multiple && Boolean(props.labels.done))
+const hasFooter = computed(() => !props.creating && (showClear.value || showCreate.value || showDone.value))
+
+const chosen = computed(() => new Set(props.multiple ? props.selectedIds : props.selectedId ? [props.selectedId] : []))
+const isChosen = (id: string): boolean => chosen.value.has(id)
+
+const pick = (id: string): void => {
+  if (props.multiple) {
+    emit('toggle', id)
+  } else {
+    emit('select', id)
+  }
+}
 const firstLoad = computed(() => props.loading && props.items.length === 0)
 
 interface Section {
@@ -178,6 +209,21 @@ const details = (item: NkContactPickerItem): { icon: string; text: string }[] =>
         </div>
       </div>
 
+      <div v-if="filters.length > 0" :aria-label="labels.filters" class="nk-contact-picker__filters" role="group">
+        <button
+          v-for="option in filters"
+          :key="option.key"
+          :aria-pressed="filter === option.key"
+          class="nk-contact-picker__filter"
+          :class="{ 'nk-contact-picker__filter--active': filter === option.key }"
+          :data-filter="option.key"
+          type="button"
+          @click="emit('update:filter', option.key)"
+        >
+          {{ option.label }}
+        </button>
+      </div>
+
       <div class="nk-contact-picker__results" :class="`nk-contact-picker__results--${view}`">
         <div v-if="firstLoad" aria-live="polite" class="nk-contact-picker__loading">
           <v-progress-circular color="primary" indeterminate size="22" />
@@ -197,12 +243,13 @@ const details = (item: NkContactPickerItem): { icon: string; text: string }[] =>
             <ul class="nk-contact-picker__items">
               <li v-for="item in section.items" :key="item.id" class="nk-contact-picker__item-wrap">
                 <button
-                  :aria-current="item.id === selectedId ? 'true' : undefined"
+                  :aria-current="!multiple && isChosen(item.id) ? 'true' : undefined"
+                  :aria-pressed="multiple ? isChosen(item.id) : undefined"
                   class="nk-contact-picker__item"
-                  :class="{ 'nk-contact-picker__item--selected': item.id === selectedId }"
+                  :class="{ 'nk-contact-picker__item--selected': isChosen(item.id) }"
                   :data-contact-id="item.id"
                   type="button"
-                  @click="emit('select', item.id)"
+                  @click="pick(item.id)"
                 >
                   <span class="nk-contact-picker__identity">
                     <IdentityAvatar
@@ -223,7 +270,10 @@ const details = (item: NkContactPickerItem): { icon: string; text: string }[] =>
                       <span v-if="view === 'list' && subline(item)" class="nk-contact-picker__sub">{{ subline(item) }}</span>
                       <span v-if="view === 'cards' && item.secondary" class="nk-contact-picker__sub">{{ item.secondary }}</span>
                     </span>
-                    <span v-if="item.id === selectedId" class="nk-contact-picker__selected">
+                    <span v-if="multiple" aria-hidden="true" class="nk-contact-picker__check" :class="{ 'nk-contact-picker__check--on': isChosen(item.id) }">
+                      <v-icon v-if="isChosen(item.id)" icon="mdi-check" size="16" />
+                    </span>
+                    <span v-else-if="isChosen(item.id)" class="nk-contact-picker__selected">
                       <v-icon aria-hidden="true" icon="mdi-check" size="16" />
                       {{ labels.selected }}
                     </span>
@@ -253,6 +303,7 @@ const details = (item: NkContactPickerItem): { icon: string; text: string }[] =>
         {{ labels.create }}
       </v-btn>
       <v-btn v-if="showClear" variant="text" @click="emit('clear')">{{ labels.clear }}</v-btn>
+      <v-btn v-if="showDone" data-testid="nk-contact-picker-done" @click="emit('confirm')">{{ labels.done }}</v-btn>
     </template>
   </NkSheet>
 </template>
@@ -307,6 +358,52 @@ const details = (item: NkContactPickerItem): { icon: string; text: string }[] =>
 .nk-contact-picker__item:focus-visible {
   outline: 2px solid rgb(var(--v-theme-primary));
   outline-offset: -2px;
+}
+
+.nk-contact-picker__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--nk-space-unit) * 0.75);
+}
+
+.nk-contact-picker__filter {
+  background: var(--nk-muted-soft);
+  border: 0;
+  border-radius: var(--nk-radius-pill);
+  color: var(--nk-on-muted-soft);
+  cursor: pointer;
+  font: inherit;
+  font-size: calc(var(--nk-text-body) * 0.8125);
+  font-weight: 600;
+  padding: calc(var(--nk-space-unit) / 2) calc(var(--nk-space-unit) * 1.5);
+}
+
+.nk-contact-picker__filter--active {
+  background: var(--nk-surface-soft-accent);
+  color: var(--nk-text-primary);
+}
+
+.nk-contact-picker__filter:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 2px;
+}
+
+/* Avkrysningen i flervalg: tom ring, fylt når kontakten er valgt. */
+.nk-contact-picker__check {
+  align-items: center;
+  border: 1px solid var(--nk-text-secondary);
+  border-radius: var(--nk-radius-pill);
+  display: inline-flex;
+  flex-shrink: 0;
+  height: calc(var(--nk-space-unit) * 2.75);
+  justify-content: center;
+  width: calc(var(--nk-space-unit) * 2.75);
+}
+
+.nk-contact-picker__check--on {
+  background: rgb(var(--v-theme-primary));
+  border-color: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
 }
 
 /* Fast minstehøyde, så dialogen ikke hopper mens brukeren søker. */

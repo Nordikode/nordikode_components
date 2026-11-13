@@ -71,6 +71,11 @@ export interface NkContactPickerItem {
   group?: string | null
 }
 export type NkContactPickerView = 'list' | 'cards'
+/** Et filter over listen i kontaktvelgeren: hvilken type kontakt som vises. Appen filtrerer dataene. */
+export interface NkContactPickerFilter {
+  key: string
+  label: string
+}
 /** Tekstene NkContactPickerDialog trenger fra appens i18n (SIGN-1913). */
 export interface NkContactPickerLabels {
   /** Plassholderen og navnet på søkefeltet. */
@@ -93,6 +98,10 @@ export interface NkContactPickerLabels {
   create?: string
   /** Knappen som fjerner valget. Brukes bare med `clearable`. */
   clear?: string
+  /** Knappen som lukker velgeren når flere kan velges. Brukes bare med `multiple`. */
+  done?: string
+  /** Navnet på gruppen med filterknappene. Brukes bare med `filters`. */
+  filters?: string
 }
 /** Tekstene NkListPane trenger fra appens i18n (SIGN-1845). */
 export interface NkListPaneLabels {
@@ -271,6 +280,8 @@ export const NkConfirmDialog: DefineComponent<Record<string, unknown>, Record<st
  * Props: `modelValue`, `title`, `subtitle`, `items` (`NkContactPickerItem[]`),
  * `selectedId`, `search` (v-model:search), `view` (v-model:view), `loading`, `hasMore`,
  * `canCreate`, `creating`, `clearable`, `labels` (`NkContactPickerLabels`), `maxWidth`;
+ * flervalg med `multiple` + `selectedIds` (emits `toggle(id)` og `confirm`), og
+ * typefilter med `filters` (`NkContactPickerFilter[]`) + `filter` (v-model:filter);
  * slot `create` (appens «Ny kontakt»-skjema, vist i stedet for listen når `creating`);
  * emits `select(id)`, `load-more`, `create`, `clear`, `update:search`, `update:view`
  * og `update:modelValue`. Appen eier data, søk mot serveren, tekster og lagring av visningen.
