@@ -267,6 +267,16 @@ skip-lenken i `App.vue`):
 - `outline-offset` tilpasses formen: 2px på piller, 3–4px på runde knapper,
   negativ når ringen skal ligge innenfor en fylt flate (skip-lenken).
 - Bare `:focus-visible`, aldri `:focus` — musebrukere skal ikke få ringen.
+- **Fokus satt fra kode** (`element.focus()`): nettleseren vet ikke lenger
+  hvordan brukeren kom dit, og Safari tegner da markeringen også etter et
+  museklikk. Komponenten som flytter fokus, må derfor selv vite om brukeren
+  kom fra tastaturet. `NkConfirmDialog` (SIGN-1763) gjør det slik: i det
+  dialogen åpner, spør den elementet som hadde fokus, om det treffer
+  `:focus-visible`. Gjør det ikke det, skjuler en klasse på «Avbryt» Vuetifys
+  fyll og ring, og klassen fjernes i det brukeren trykker en tast eller
+  flytter fokus. Regelen gjelder bare knappen med klassen, fjerner aldri
+  `outline`, og viser markeringen når nettleseren ikke kan svare.
+  `tests/dialog.test.ts` vokter begge veiene.
 - Menyelementene i `AppHeader`/`AccountIdentityMenu`/`TenantSwitcherMenu`/
   `AppLauncherMenu` her i biblioteket setter `outline: none` og gir
   hover-bakgrunnen (`--color-surface-alt`) på `:focus-visible` i samme
@@ -326,6 +336,8 @@ dialogen må huske det.
   det navnet. En egen ikonknapp for lukking i en dialog skal ha `aria-label`.
 - **Bekreftelser starter på Avbryt**, så Enter aldri utfører noe brukeren ikke
   har sett på, og bekreft-knappen sier handlingen («Slett avdelingen»).
+  Fokusmarkeringen på Avbryt vises når dialogen ble åpnet fra tastaturet, ikke
+  etter et museklikk (se «Fokusmarkering» over).
 - Finner `NkDialog` verken tittel, `aria-label` eller `aria-labelledby`,
   skriver den en advarsel i konsollen. `tests/dialog.test.ts` her i
   biblioteket vokter navn, beskrivelse, fokusretur og Esc; hver app har en

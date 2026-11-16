@@ -72,8 +72,9 @@ const sheetStory = (
     },
   })
 
+// «Avbryt» er en tekstknapp, som i appene; handlingen er den fylte knappen.
 const avbrytOgLagre = (close: () => void) => [
-  h(VBtn, { variant: 'outlined', color: 'default', onClick: close }, () => 'Avbryt'),
+  h(VBtn, { variant: 'text', onClick: close }, () => 'Avbryt'),
   h(VBtn, { onClick: close }, () => 'Lagre'),
 ]
 
@@ -199,8 +200,33 @@ export const Bekreftelse: Story = {
         args as SheetArgs,
         () => h('p', { class: 'text-body-2 text-medium-emphasis', style: 'margin:0;' }, 'Enheten må logge inn på nytt. Det du holdt på med der, går tapt hvis det ikke er lagret.'),
         (close) => [
-          h(VBtn, { variant: 'outlined', color: 'default', onClick: close }, () => 'Avbryt'),
+          h(VBtn, { variant: 'text', onClick: close }, () => 'Avbryt'),
           h(VBtn, { color: 'error', onClick: close }, () => 'Logg ut'),
+        ],
+      ),
+    ),
+}
+
+// Uten innhold (SIGN-1763): tittel, undertittel og knapper. Kroppen er tom,
+// så luften den ellers gir, er borte, og knappene står like langt under
+// teksten som de ellers står under innholdet. Det samme skjer når innholdet
+// er en `v-if` som ikke slår til (en feilmelding som ikke er der).
+export const UtenInnhold: Story = {
+  name: 'Uten innhold',
+  args: {
+    title: 'En ny versjon er klar',
+    subtitle: 'Last siden på nytt for å få de siste endringene. Det du har lagret, blir stående.',
+    maxWidth: 480,
+    fullscreenOnMobile: false,
+  },
+  render: (args) =>
+    h(
+      sheetStory(
+        args as SheetArgs,
+        () => null,
+        (close) => [
+          h(VBtn, { variant: 'text', onClick: close }, () => 'Senere'),
+          h(VBtn, { onClick: close }, () => 'Last på nytt'),
         ],
       ),
     ),

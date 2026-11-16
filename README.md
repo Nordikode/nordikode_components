@@ -82,13 +82,21 @@ flatene bruker `AppHeader` med de delte menyene.
   tillegg `close`. Wrapperen har ingen egen flate: innholdet er appens, eller `NkSheet`
 - `NkConfirmDialog` — felles bekreftelse (SIGN-846): `title` (spørsmålet), `message`
   (konsekvensen), `confirmLabel` (handlingen i klartekst — «Slett avdelingen», aldri
-  «OK») og `cancelLabel`, alle fra appens i18n og uten standardverdi. `tone="danger"`
-  for det som ikke kan angres. `confirm` lukker ikke dialogen: eieren utfører
-  handlingen med `loading` (dialogen kan da ikke lukkes), lukker selv når den er
-  ferdig, eller setter `error` («Kunne ikke slette avdelingen.», vises som
-  `role="alert"`). Avbryt, Esc og klikk utenfor sender `cancel`. `role="alertdialog"`
-  med spørsmålet som navn og meldingen som beskrivelse; fokus starter på Avbryt.
-  Standard-slotten er for en kort oversikt eller ett felt — ikke skjemaer
+  «OK») og `cancelLabel`, alle fra appens i18n og uten standardverdi. `confirm` lukker
+  ikke dialogen: eieren utfører handlingen med `loading` (dialogen kan da ikke lukkes),
+  lukker selv når den er ferdig, eller setter `error` («Kunne ikke slette avdelingen.»,
+  vises som `role="alert"`). Avbryt, Esc og klikk utenfor sender `cancel`.
+  `role="alertdialog"` med spørsmålet som navn og meldingen som beskrivelse; fokus
+  starter på Avbryt. Standard-slotten er for en kort oversikt eller ett felt — ikke
+  skjemaer. Knappene (siden 0.93.0 — SIGN-1763): «Avbryt» er en tekstknapp i appens
+  egen knappefarge, lik «Avbryt» i appens andre dialoger (ingen ramme, ingen egen
+  farge), og handlingen er den fylte knappen. Fokusmarkeringen på «Avbryt» vises bare
+  når dialogen ble åpnet fra tastaturet (elementet som hadde fokus, traff
+  `:focus-visible`): Safari tegner den ellers på alt som får fokus fra kode, også etter
+  et museklikk. Den kommer tilbake i det brukeren trykker en tast eller flytter fokus.
+  `tone="danger"` gir bekreft-knappen feilfargen og er appens valg: **Sign bruker den
+  ikke**, der er handlingen alltid i handlingsfargen (berry), også når den ikke kan
+  angres
 - `NkContactPickerDialog` — kontaktvelgeren (SIGN-1913): standarden for å velge en
   kontakt, uansett type (kunde, leverandør, underleverandør, ansatt). En modal på
   `NkSheet` med kontaktlisten framme med en gang, søk øverst og en kort forhåndsvisning
@@ -128,7 +136,10 @@ flatene bruker `AppHeader` med de delte menyene.
   (`title`, `subtitle`, `#badge`, eller hele hodet i `#head`), rullende kropp
   (`default`) og festet handlingsrad (`#actions`). Bare kroppen ruller; den har
   luft nok til Vuetifys flytende etiketter og fokusrammer, så ingenting klippes
-  ved rulleposisjon 0. Under `smAndDown` er sheetet fullskjerm med safe-area
+  ved rulleposisjon 0. Uten innhold (tittel, undertittel og knapper, eller en
+  `v-if` som ikke slår til) har sheetet ingen tom kropp: luften faller bort, og
+  knappene står like langt under teksten som under innhold (siden 0.93.0 —
+  SIGN-1763). Under `smAndDown` er sheetet fullskjerm med safe-area
   på handlingsraden (`fullscreenOnMobile`, standard på). Åpen/lukket via
   `v-model` eller `open` + `close`; `maxWidth` (standard 560) og `eager`
   sendes til dialogen. Sekundær handling til venstre: `class="me-auto"` på

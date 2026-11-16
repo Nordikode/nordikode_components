@@ -9,7 +9,10 @@ export type NkStatusChipTone = 'success' | 'inflight' | 'warning' | 'error' | 'i
 export type NkStatusChipSize = 'sm' | 'md'
 /** NkEmptyState (SIGN-447): `default` for hele flater, `compact` for lister etter søk/filter. */
 export type NkEmptyStateSize = 'default' | 'compact'
-/** NkConfirmDialog (SIGN-846): `danger` er handlinger som ikke kan angres — bekreft-knappen får feilfargen. */
+/**
+ * NkConfirmDialog (SIGN-846): `danger` gir bekreft-knappen feilfargen. Appens valg:
+ * Sign bruker den ikke, der er handlingen alltid i handlingsfargen (SIGN-1763).
+ */
 export type NkConfirmDialogTone = 'default' | 'danger'
 
 /**
@@ -270,7 +273,9 @@ export const NkDialog: DefineComponent<Record<string, unknown>, Record<string, u
  * klartekst), `cancelLabel`, `tone` (`NkConfirmDialogTone`), `loading`,
  * `confirmDisabled`, `error` («Kunne ikke X.»), `maxWidth`; slot `default`; emits
  * `confirm` (lukker ikke — eieren lukker når handlingen er ferdig), `cancel` og
- * `update:modelValue`.
+ * `update:modelValue`. «Avbryt» er en tekstknapp i appens egen knappefarge og har
+ * fokus når dialogen åpner; fokusmarkeringen vises bare når dialogen ble åpnet fra
+ * tastaturet (SIGN-1763).
  */
 export const NkConfirmDialog: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 /**
@@ -293,7 +298,7 @@ export const NkContactPickerDialog: DefineComponent<Record<string, unknown>, Rec
  * tittelen er dialogens navn, undertittelen beskrivelsen. Props: `modelValue`/`open`,
  * `title`, `subtitle`, `maxWidth`, `fullscreenOnMobile`, `eager`, `closeLabel`
  * (lukkeknapp med det navnet); slots `default`, `actions`, `head`, `badge`; emits
- * `update:modelValue` og `close`.
+ * `update:modelValue` og `close`. Uten innhold har sheetet ingen tom kropp (SIGN-1763).
  */
 export const NkSheet: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
 export const NkStatusChip: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>
