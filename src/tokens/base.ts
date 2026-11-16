@@ -54,11 +54,19 @@ export const nkFontMono =
  * Typografi-skala. rootSize er den globale bryteren (html font-size) — alle
  * rem-baserte størrelser (inkl. Vuetify-klassene) skalerer med den. Rollene
  * er i rem og matcher dagens de facto-bruk i appene.
+ *
+ * bodyCompact (SIGN-1942) er brødteksten i smale sidemenyer og paneler på
+ * PC: tekst, felt, avkrysningsbokser og titler (halvfet). Sidene ellers
+ * bruker body. På berøringsskjerm brukes body i felt — mindre tekst enn
+ * 16 px får nettleseren på telefonen til å zoome inn. Grå hjelpetekst i
+ * samme panel bruker label. Verdien er vedtatt av UX (Hedvig 16.11.2026,
+ * prøvd i venstremenyen i «Se tilbud» i Sign).
  */
 export const nkTypography = {
   rootSize: '16px',
   heading: '1.5rem',
   body: '1rem',
+  bodyCompact: '0.875rem',
   label: '0.78rem',
   button: '0.875rem',
 } as const
