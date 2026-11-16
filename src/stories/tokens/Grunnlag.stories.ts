@@ -73,10 +73,95 @@ export const Typografi: Story = {
         `Overskrift 750 · heading ${nkTypography.heading}`),
       h('div', { style: `font-size:${nkTypography.body};font-weight:400;max-width:60ch;` },
         `Brødtekst 400 · body ${nkTypography.body} — Sign sender tilbudet til kunden når alle linjene er klare, og varsler deg så snart det er signert.`),
+      h('div', { style: `font-size:${nkTypography.bodyCompact};font-weight:400;max-width:60ch;` },
+        `Kompakt brødtekst 400 · bodyCompact ${nkTypography.bodyCompact} — for smale sidemenyer og paneler på PC. Regelen står under «Kompakt brødtekst».`),
       h('div', { style: `font-size:${nkTypography.label};font-weight:600;text-transform:uppercase;letter-spacing:0.08em;opacity:0.7;` },
         `Etikett 600 · label ${nkTypography.label}`),
       h('div', { style: `font-size:${nkTypography.button};font-weight:600;` },
         `Knappetekst 600 · button ${nkTypography.button}`),
+    ]),
+}
+
+// Kompakt brødtekst (SIGN-1942). Panelet under er 360 px bredt, som
+// venstremenyen i «Se tilbud» i Sign, der størrelsen ble prøvd og vedtatt.
+const KOMPAKT_REGLER = [
+  'Brukes for tekst, felt, avkrysningsbokser og titler (halvfet) i smale sidemenyer og paneler på PC.',
+  'Sidene ellers bruker fortsatt brødtekst på 16 px (--nk-text-body).',
+  'På berøringsskjerm brukes 16 px i felt. Mindre tekst får nettleseren på telefonen til å zoome inn.',
+  'Grå hjelpetekst i samme panel bruker --nk-text-label.',
+]
+
+const KOMPAKT_VALG: Array<[string, boolean]> = [
+  ['Priser per linje', true],
+  ['Produktbilder', true],
+  ['Fagbeskrivelser', false],
+]
+
+const KOMPAKT_CSS = `.panel {
+  font-size: var(--nk-text-body); /* berøringsskjerm: 16 px */
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .panel {
+    font-size: var(--nk-text-body-compact); /* PC: 14 px */
+  }
+}
+
+.panel__title {
+  font-weight: 600;
+}
+
+.panel__hint {
+  font-size: var(--nk-text-label);
+  color: var(--nk-text-secondary);
+}`
+
+function eksempelPanel(overskrift: string, storrelse: string) {
+  return h('div', { style: 'display:flex;flex-direction:column;gap:8px;' }, [
+    h('div', { style: `font-size:${nkTypography.label};font-weight:600;opacity:0.7;` }, overskrift),
+    h('div', {
+      style: `width:360px;max-width:100%;box-sizing:border-box;padding:calc(2 * var(--nk-space-unit));display:flex;flex-direction:column;gap:calc(1.5 * var(--nk-space-unit));background:var(--nk-surface);border:1px solid var(--nk-surface-border);border-radius:var(--nk-radius-lg);color:var(--nk-text-primary);font-size:${storrelse};`,
+    }, [
+      h('div', { style: 'font-weight:600;color:var(--nk-text-title);' }, 'Velg hva kunden ser'),
+      h('div', 'Tilbudet sendes til Ola Hansen på e-post.'),
+      h('input', {
+        type: 'text',
+        value: 'Hei! Her er tilbudet på nytt bad.',
+        'aria-label': 'Tilbudstekst',
+        style: 'font:inherit;color:inherit;width:100%;box-sizing:border-box;padding:var(--nk-space-unit) calc(1.5 * var(--nk-space-unit));background:var(--nk-surface);border:1px solid var(--nk-surface-border);border-radius:var(--nk-radius-sm);',
+      }),
+      h('div', { style: 'font-size:var(--nk-text-label);color:var(--nk-text-secondary);' },
+        'Teksten står øverst i tilbudet, under overskriften.'),
+      ...KOMPAKT_VALG.map(([valg, avkrysset]) =>
+        h('label', { key: valg, style: 'display:flex;align-items:center;gap:var(--nk-gap-inline);' }, [
+          h('input', { type: 'checkbox', checked: avkrysset, style: 'accent-color:var(--nk-action-primary);margin:0;' }),
+          valg,
+        ]),
+      ),
+    ]),
+  ])
+}
+
+export const KompaktBrodtekst: Story = {
+  name: 'Kompakt brødtekst',
+  render: () =>
+    h('div', { style: `font-family:${nkFontFamily};display:flex;flex-direction:column;gap:24px;max-width:820px;` }, [
+      h('div', { style: 'font-size:0.75rem;opacity:0.7;max-width:70ch;' },
+        `--nk-text-body-compact: ${nkTypography.bodyCompact} (14 px) — brødteksten i smale sidemenyer og paneler på PC. Brødteksten på 16 px blir for stor der.`),
+      h('ul', { style: `margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:${nkTypography.body};max-width:70ch;` },
+        KOMPAKT_REGLER.map((regel) => h('li', { key: regel }, regel)),
+      ),
+      h('div', { style: 'display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;' }, [
+        eksempelPanel(`Kompakt brødtekst · ${nkTypography.bodyCompact} (14 px)`, 'var(--nk-text-body-compact)'),
+        eksempelPanel(`Brødtekst · ${nkTypography.body} (16 px) — for stor i et smalt panel`, 'var(--nk-text-body)'),
+      ]),
+      h('div', { style: 'display:flex;flex-direction:column;gap:8px;' }, [
+        h('div', { style: `font-size:${nkTypography.label};font-weight:600;opacity:0.7;` },
+          'Slik brukes rollen: 16 px som utgangspunkt, kompakt bare med mus eller pekeplate'),
+        h('pre', {
+          style: `margin:0;padding:calc(2 * var(--nk-space-unit));overflow:auto;background:var(--nk-surface-soft);border-radius:var(--nk-radius-md);font-family:${nkFontMono};font-size:0.8rem;`,
+        }, KOMPAKT_CSS),
+      ]),
     ]),
 }
 
