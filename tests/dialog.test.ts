@@ -1,4 +1,6 @@
 // @vitest-environment happy-dom
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { createApp, defineComponent, h, nextTick, reactive, ref, type App, type Component } from 'vue'
 import { createVuetify } from 'vuetify'
@@ -38,13 +40,16 @@ beforeAll(() => {
 let app: App | null = null
 let host: HTMLElement | null = null
 
-function mount(root: Component) {
+function mount(root: Component, defaults: Record<string, Record<string, unknown>> = {}) {
   host = document.createElement('div')
   document.body.appendChild(host)
   app = createApp(root)
-  app.use(createVuetify({ components: { VAlert, VBtn, VCard, VCardText, VCardTitle, VDialog } }))
+  app.use(createVuetify({ components: { VAlert, VBtn, VCard, VCardText, VCardTitle, VDialog }, defaults }))
   app.mount(host)
 }
+
+// Knappestandarden appene setter i `plugins/vuetify.ts`.
+const appButtonDefaults = { VBtn: { color: 'primary', variant: 'flat' } }
 
 const settle = async () => {
   for (let i = 0; i < 4; i += 1) await nextTick()
@@ -261,28 +266,121 @@ describe('NkSheet', () => {
     await settle()
     expect(document.getElementById(overlay()!.getAttribute('aria-labelledby')!)?.textContent).toBe('Eget hode')
   })
+
+  // Et sheet uten innhold skal ikke ha en tom kropp med luft mellom teksten
+  // og knappene (SIGN-1763). Luften tas bort i CSS med `:empty`, som ser bort
+  // fra kommentarer og tomme tekstnoder. Testen vokter begge halvdelene:
+  // at kroppen faktisk er tom i den forstand, og at regelen finnes.
+  const body = () => content()!.querySelector<HTMLElement>('.nk-sheet__body')!
+  const isEmptyForCss = (element: HTMLElement) =>
+    [...element.childNodes].every(
+      (node) => node.nodeType === Node.COMMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent === ''),
+    )
+  const actions = () => [h(VBtn, { variant: 'text' }, () => 'Avbryt'), h(VBtn, () => 'Forleng')]
+
+  it('leaves nothing in the body when the sheet only has a title, a subtitle and actions', async () => {
+    mount(() =>
+      h(NkSheet, { modelValue: true, title: 'Forlenge gyldigheten?', subtitle: 'Kunden får 14 nye dager.' }, { actions }),
+    )
+    await settle()
+
+    expect(isEmptyForCss(body())).toBe(true)
+    expect(content()!.querySelector('.nk-sheet__actions')).not.toBeNull()
+  })
+
+  it('leaves nothing in the body while its only content is switched off, and fills it when it comes', async () => {
+    const error = ref('')
+    mount(() =>
+      h(
+        NkSheet,
+        { modelValue: true, title: 'Forlenge gyldigheten?' },
+        { default: () => (error.value !== '' ? h('p', error.value) : null), actions },
+      ),
+    )
+    await settle()
+    expect(isEmptyForCss(body())).toBe(true)
+
+    error.value = 'Kunne ikke forlenge gyldigheten.'
+    await settle()
+    expect(isEmptyForCss(body())).toBe(false)
+    expect(body().textContent).toBe('Kunne ikke forlenge gyldigheten.')
+  })
+
+  it('takes the air out of an empty body and gives the actions the distance to the text instead', () => {
+    const source = readFileSync(join(__dirname, '..', 'src', 'components', 'NkSheet.vue'), 'utf8')
+    const css = source.slice(source.indexOf('<style'))
+    const declarationsFor = (selector: string) => {
+      const start = css.indexOf(`${selector} {`)
+      expect(start, selector).toBeGreaterThan(-1)
+      return css.slice(start, css.indexOf('}', start))
+    }
+
+    expect(declarationsFor('.nk-sheet__body:empty')).toMatch(/padding-top:\s*0;/)
+    expect(declarationsFor('.nk-sheet__body:empty:not(.nk-sheet__body--last)')).toMatch(/padding-bottom:\s*0;/)
+    expect(declarationsFor('.nk-sheet__body:empty + .nk-sheet__actions')).toMatch(/padding-top:/)
+  })
 })
 
 describe('NkConfirmDialog', () => {
-  function mountConfirm(extra: Record<string, unknown> = {}) {
+  const button = (name: string) => content()!.querySelector<HTMLButtonElement>(`.nk-confirm__${name}`)!
+
+  function mountConfirm(extra: Record<string, unknown> = {}, defaults: Record<string, Record<string, unknown>> = {}) {
     const state = reactive({ open: true, confirmed: 0, cancelled: 0, ...extra })
-    mount(() =>
-      h(NkConfirmDialog, {
-        title: 'Slette avdelingen «Montering»?',
-        message: 'De tre ansatte i avdelingen blir stående uten avdeling.',
-        confirmLabel: 'Slett avdelingen',
-        cancelLabel: 'Avbryt',
-        tone: 'danger',
-        ...extra,
-        modelValue: state.open,
-        'onUpdate:modelValue': (value: boolean) => (state.open = value),
-        onConfirm: () => (state.confirmed += 1),
-        onCancel: () => (state.cancelled += 1),
-      } as never),
+    mount(
+      () =>
+        h(NkConfirmDialog, {
+          title: 'Slette avdelingen «Montering»?',
+          message: 'De tre ansatte i avdelingen blir stående uten avdeling.',
+          confirmLabel: 'Slett avdelingen',
+          cancelLabel: 'Avbryt',
+          tone: 'danger',
+          ...extra,
+          modelValue: state.open,
+          'onUpdate:modelValue': (value: boolean) => (state.open = value),
+          onConfirm: () => (state.confirmed += 1),
+          onCancel: () => (state.cancelled += 1),
+        } as never),
+      defaults,
     )
-    const button = (name: string) => content()!.querySelector<HTMLButtonElement>(`.nk-confirm__${name}`)!
     return { state, button }
   }
+
+  /**
+   * En side med en knapp som åpner bekreftelsen, slik appene gjør det.
+   * `focusVisible` er svaret nettleseren ville gitt for knappen: `true` når
+   * brukeren kom dit med tastaturet, `false` etter et museklikk, og en feil
+   * når nettleseren ikke kjenner `:focus-visible`. `null` er Safari etter et
+   * museklikk: knappen får ikke fokus i det hele tatt.
+   */
+  function mountWithOpener(focusVisible: boolean | 'unsupported' | null) {
+    const state = reactive({ open: false })
+    mount(() =>
+      h('div', [
+        h('button', { id: 'opener', onClick: () => (state.open = true) }, 'Fjern logoen'),
+        h(NkConfirmDialog, {
+          title: 'Fjerne firmaets logo?',
+          message: 'Tilbudene vises uten logo til en ny er lastet opp.',
+          confirmLabel: 'Fjern logoen',
+          cancelLabel: 'Avbryt',
+          modelValue: state.open,
+          'onUpdate:modelValue': (value: boolean) => (state.open = value),
+        } as never),
+      ]),
+    )
+    const opener = document.getElementById('opener') as HTMLButtonElement
+    if (focusVisible !== null) {
+      opener.focus()
+      const matches = opener.matches.bind(opener)
+      vi.spyOn(opener, 'matches').mockImplementation((selector: string) => {
+        if (selector !== ':focus-visible') return matches(selector)
+        if (focusVisible === 'unsupported') throw new DOMException('Unknown pseudo-class', 'SyntaxError')
+        return focusVisible
+      })
+    }
+    return { state, opener }
+  }
+
+  const quiet = () => button('cancel').classList.contains('nk-confirm__cancel--quiet-focus')
 
   it('is an alertdialog named by the question and described by the message', async () => {
     mountConfirm()
@@ -343,5 +441,125 @@ describe('NkConfirmDialog', () => {
     const alert = content()!.querySelector('[role="alert"]')
     expect(alert?.textContent).toContain('Kunne ikke slette avdelingen.')
     expect(state.open).toBe(true)
+  })
+
+  // «Avbryt» ser ut som i appens andre dialoger (SIGN-1763): en tekstknapp i
+  // appens egen knappefarge, uten ramme og uten en farge komponenten har valgt.
+  it('makes Cancel a text button in the colour the app gives its buttons', async () => {
+    mountConfirm({ tone: 'default' }, appButtonDefaults)
+    await settle()
+
+    const cancel = button('cancel')
+    expect(cancel.classList.contains('v-btn--variant-text')).toBe(true)
+    expect(cancel.classList.contains('v-btn--variant-outlined')).toBe(false)
+    expect(cancel.classList.contains('text-primary')).toBe(true)
+
+    const confirm = button('confirm')
+    expect(confirm.classList.contains('v-btn--variant-flat')).toBe(true)
+    expect(confirm.classList.contains('bg-primary')).toBe(true)
+  })
+
+  it('gives Cancel no colour of its own when the app has no button colour', async () => {
+    mountConfirm()
+    await settle()
+
+    const cancel = button('cancel')
+    expect(cancel.classList.contains('v-btn--variant-text')).toBe(true)
+    expect([...cancel.classList].filter((name) => name.startsWith('text-') || name.startsWith('bg-'))).toEqual([])
+  })
+
+  // Fokus settes på Avbryt fra kode. Markeringen er for tastaturbrukere
+  // (WCAG 2.4.7), og musebrukere skal ikke få den (SIGN-1763): Safari tegner
+  // den ellers på alt som får fokus fra kode.
+  describe('focus mark on Cancel', () => {
+    it('is hidden when the dialog was opened with the mouse, and Cancel still has focus', async () => {
+      const { opener } = mountWithOpener(false)
+      opener.click()
+      await settle()
+
+      expect(document.activeElement).toBe(button('cancel'))
+      expect(quiet()).toBe(true)
+    })
+
+    it('is hidden when nothing had focus as the dialog opened (Safari does not focus a clicked button)', async () => {
+      const { opener } = mountWithOpener(null)
+      expect(document.activeElement).toBe(document.body)
+      opener.click()
+      await settle()
+
+      expect(document.activeElement).toBe(button('cancel'))
+      expect(quiet()).toBe(true)
+    })
+
+    it('is shown when the dialog was opened from the keyboard', async () => {
+      const { opener } = mountWithOpener(true)
+      opener.click()
+      await settle()
+
+      expect(document.activeElement).toBe(button('cancel'))
+      expect(quiet()).toBe(false)
+    })
+
+    it('is shown when the browser cannot tell how focus got there', async () => {
+      const { opener } = mountWithOpener('unsupported')
+      opener.click()
+      await settle()
+
+      expect(quiet()).toBe(false)
+    })
+
+    it('comes back when a mouse user moves focus away and returns', async () => {
+      const { opener } = mountWithOpener(false)
+      opener.click()
+      await settle()
+      expect(quiet()).toBe(true)
+
+      button('confirm').focus()
+      await settle()
+      expect(quiet()).toBe(false)
+
+      button('cancel').focus()
+      await settle()
+      expect(quiet()).toBe(false)
+    })
+
+    it('comes back when a mouse user presses a key on Cancel', async () => {
+      const { opener } = mountWithOpener(false)
+      opener.click()
+      await settle()
+      expect(quiet()).toBe(true)
+
+      button('cancel').dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }))
+      await settle()
+      expect(quiet()).toBe(false)
+    })
+
+    it('is decided again each time the dialog opens', async () => {
+      const { state, opener } = mountWithOpener(true)
+      opener.click()
+      await settle()
+      expect(quiet()).toBe(false)
+
+      state.open = false
+      await settle()
+      vi.mocked(opener.matches).mockImplementation(() => false)
+      opener.click()
+      await settle()
+      expect(quiet()).toBe(true)
+    })
+
+    it('hides only the keyboard mark, and only while the class is on', () => {
+      const source = readFileSync(join(__dirname, '..', 'src', 'components', 'NkConfirmDialog.vue'), 'utf8')
+      const css = source.slice(source.indexOf('<style')).replace(/\/\*[\s\S]*?\*\//g, '')
+
+      expect(css).toContain('.nk-confirm__cancel--quiet-focus:focus-visible::after')
+      expect(css).toContain('.nk-confirm__cancel--quiet-focus:focus-visible:not(:hover) > :deep(.v-btn__overlay)')
+      // Aldri en regel som tar markeringen fra alle: hver regel om fokus
+      // gjelder bare knappen med klassen, og ingen fjerner outline.
+      for (const selector of css.match(/[^{}]*:focus[^{}]*(?=\{)/g) ?? []) {
+        for (const part of selector.split(',')) expect(part).toContain('.nk-confirm__cancel--quiet-focus')
+      }
+      expect(css).not.toMatch(/outline:\s*(none|0)\b/)
+    })
   })
 })

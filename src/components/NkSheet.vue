@@ -15,6 +15,9 @@ import NkDialog from './NkDialog.vue'
  *   fokusrammer, så ingenting klippes ved rulleposisjon 0 (SIGN-732).
  * - Under `smAndDown` er sheetet fullskjerm (kan skrus av med
  *   `fullscreenOnMobile`), og handlingsraden respekterer safe-area.
+ * - Et sheet uten innhold (tittel, undertittel og knapper) får ingen tom
+ *   kropp: luften kroppen ellers gir, faller bort, og knappene står like
+ *   langt under teksten som under innhold (SIGN-1763).
  * - Appen eier all tekst (i18n) og alle handlinger; komponenten eier
  *   bare geometri og toner — kun tokens, ingen egne px.
  *
@@ -234,6 +237,25 @@ const onUpdate = (value: boolean) => {
 
 .nk-sheet__body--last {
   padding-bottom: calc(var(--nk-space-unit) * 3);
+}
+
+/* Uten innhold (SIGN-1763): bare tittel, undertittel og knapper, eller en
+   `v-if` som ikke slår til. Da har kroppen ingenting å gi luft til, og
+   luften ble stående som et tomt felt mellom teksten og knappene. `:empty`
+   ser bort fra kommentarer og tomme tekstnoder, som er det Vue lar stå igjen
+   etter en tom slot. Kroppen blir stående i flyten (den fyller fortsatt
+   høyden i fullskjerm, så knappene ligger nederst), og handlingsraden tar
+   over avstanden opp til teksten: den samme som mellom tekst og innhold. */
+.nk-sheet__body:empty {
+  padding-top: 0;
+}
+
+.nk-sheet__body:empty:not(.nk-sheet__body--last) {
+  padding-bottom: 0;
+}
+
+.nk-sheet__body:empty + .nk-sheet__actions {
+  padding-top: calc(var(--nk-space-unit) * 2.5);
 }
 
 .nk-sheet__actions {
