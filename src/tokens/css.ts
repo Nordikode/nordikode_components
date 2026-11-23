@@ -122,7 +122,7 @@ export interface NkStaticTokens {
   radius: { sm: string; md: string; lg: string; pill: string }
   spaceUnit: string
   spacing: { cardPadding: string; sectionGap: string; inlineGap: string; fabReserve: string }
-  typography: { rootSize: string; heading: string; body: string; label: string; button: string }
+  typography: { rootSize: string; heading: string; body: string; bodyCompact: string; label: string; button: string }
   fontFamily: string
   fontMono: string
   /** Plattformens aksentfarger (SIGN-1781) — gløder og merkevare, aldri flatefyll. */
@@ -161,6 +161,7 @@ export function cssStaticVariables(statics: NkStaticTokens = defaultStaticTokens
     '--nk-font-root': statics.typography.rootSize,
     '--nk-text-heading': statics.typography.heading,
     '--nk-text-body': statics.typography.body,
+    '--nk-text-body-compact': statics.typography.bodyCompact ?? nkTypography.bodyCompact,
     '--nk-text-label': statics.typography.label,
     '--nk-text-button': statics.typography.button,
     '--nk-font-family': statics.fontFamily,

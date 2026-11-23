@@ -614,6 +614,23 @@ størrelse, vekt og farge arves. Bruk `font-family: var(--nk-font-mono)` — ald
 en håndskrevet fontliste, og aldri en reserveverdi (`var(--nk-font-mono, …)`):
 variabelen genereres av `cssStaticVariables()`/`productCss()` og finnes alltid.
 
+Tekststørrelser: rollene i `nkTypography` blir `--nk-text-heading` (1.5rem),
+`--nk-text-body` (1rem, 16 px), `--nk-text-body-compact` (0.875rem, 14 px),
+`--nk-text-label` (0.78rem) og `--nk-text-button` (0.875rem).
+
+Kompakt brødtekst: `--nk-text-body-compact` (`nkTypography.bodyCompact`, siden
+0.92.0 — SIGN-1942) er brødteksten i smale sidemenyer og paneler på PC, der
+16 px blir for stort. Regelen:
+
+- Brukes for tekst, felt, avkrysningsbokser og titler (halvfet) i panelet.
+- Sidene ellers bruker fortsatt `--nk-text-body` (16 px).
+- På berøringsskjerm brukes 16 px i felt. Mindre tekst får nettleseren på
+  telefonen til å zoome inn. Sett derfor `--nk-text-body` som utgangspunkt og
+  bytt til `--nk-text-body-compact` i `@media (hover: hover) and (pointer: fine)`.
+- Grå hjelpetekst i samme panel bruker `--nk-text-label`.
+
+Eksempel og CSS: Storybook «Design system/Tokens/Grunnlag → Kompakt brødtekst».
+
 Layout-token for flytende handlinger: `--nk-fab-reserve` (88px) er plassen
 bunnhandlinger til høyre (send, lagre) holder unna en flytende figur/FAB nede
 til høyre (SIGN-466). Bruk `padding-right: var(--nk-fab-reserve)` på raden.
