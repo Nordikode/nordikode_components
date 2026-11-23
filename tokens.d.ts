@@ -111,7 +111,7 @@ export interface NkProductTheme {
 export declare const nkRadius: { readonly sm: string; readonly md: string; readonly lg: string; readonly pill: string }
 export declare const nkSpaceUnit: string
 export declare const nkSpacing: { cardPadding: string; sectionGap: string; inlineGap: string; fabReserve: string }
-export declare const nkTypography: { rootSize: string; heading: string; body: string; label: string; button: string }
+export declare const nkTypography: { rootSize: string; heading: string; body: string; bodyCompact: string; label: string; button: string }
 export declare const nkFontFamily: string
 export declare const nkFontMono: string
 export declare const nkFontHref: string
@@ -142,7 +142,7 @@ export interface NkStaticTokens {
   radius: { sm: string; md: string; lg: string; pill: string }
   spaceUnit: string
   spacing: { cardPadding: string; sectionGap: string; inlineGap: string; fabReserve: string }
-  typography: { rootSize: string; heading: string; body: string; label: string; button: string }
+  typography: { rootSize: string; heading: string; body: string; bodyCompact: string; label: string; button: string }
   fontFamily: string
   fontMono: string
   /** Plattformens aksentfarger (SIGN-1781) — gløder og merkevare, aldri flatefyll. */
