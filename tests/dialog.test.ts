@@ -57,6 +57,17 @@ const settle = async () => {
   await nextTick()
 }
 
+// Dialogen setter fokus på «Avbryt» når inn-animasjonen er ferdig
+// (Vuetifys after-enter). settle() alene venter ikke alltid lenge nok, og
+// testene feilet da tilfeldig i CI: vent til fokuset faktisk står der.
+const opened = async () => {
+  await settle()
+  await vi.waitFor(() => {
+    expect(document.activeElement?.classList.contains('nk-confirm__cancel')).toBe(true)
+  })
+  await settle()
+}
+
 const overlay = () => document.querySelector<HTMLElement>('.v-overlay.v-dialog')
 const content = () => document.querySelector<HTMLElement>('.v-overlay__content')
 
@@ -475,7 +486,7 @@ describe('NkConfirmDialog', () => {
     it('is hidden when the dialog was opened with the mouse, and Cancel still has focus', async () => {
       const { opener } = mountWithOpener(false)
       opener.click()
-      await settle()
+      await opened()
 
       expect(document.activeElement).toBe(button('cancel'))
       expect(quiet()).toBe(true)
@@ -485,7 +496,7 @@ describe('NkConfirmDialog', () => {
       const { opener } = mountWithOpener(null)
       expect(document.activeElement).toBe(document.body)
       opener.click()
-      await settle()
+      await opened()
 
       expect(document.activeElement).toBe(button('cancel'))
       expect(quiet()).toBe(true)
@@ -494,7 +505,7 @@ describe('NkConfirmDialog', () => {
     it('is shown when the dialog was opened from the keyboard', async () => {
       const { opener } = mountWithOpener(true)
       opener.click()
-      await settle()
+      await opened()
 
       expect(document.activeElement).toBe(button('cancel'))
       expect(quiet()).toBe(false)
@@ -503,7 +514,7 @@ describe('NkConfirmDialog', () => {
     it('is shown when the browser cannot tell how focus got there', async () => {
       const { opener } = mountWithOpener('unsupported')
       opener.click()
-      await settle()
+      await opened()
 
       expect(quiet()).toBe(false)
     })
@@ -511,7 +522,7 @@ describe('NkConfirmDialog', () => {
     it('comes back when a mouse user moves focus away and returns', async () => {
       const { opener } = mountWithOpener(false)
       opener.click()
-      await settle()
+      await opened()
       expect(quiet()).toBe(true)
 
       button('confirm').focus()
@@ -526,7 +537,7 @@ describe('NkConfirmDialog', () => {
     it('comes back when a mouse user presses a key on Cancel', async () => {
       const { opener } = mountWithOpener(false)
       opener.click()
-      await settle()
+      await opened()
       expect(quiet()).toBe(true)
 
       button('cancel').dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }))
@@ -537,14 +548,14 @@ describe('NkConfirmDialog', () => {
     it('is decided again each time the dialog opens', async () => {
       const { state, opener } = mountWithOpener(true)
       opener.click()
-      await settle()
+      await opened()
       expect(quiet()).toBe(false)
 
       state.open = false
       await settle()
       vi.mocked(opener.matches).mockImplementation(() => false)
       opener.click()
-      await settle()
+      await opened()
       expect(quiet()).toBe(true)
     })
 
