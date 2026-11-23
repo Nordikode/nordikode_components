@@ -35,8 +35,15 @@ const vuetify = createVuetify({
   // genererte registeret (npm run icons:generate) — ingen ikonfont.
   icons: { defaultSet: 'mdi', aliases, sets: { mdi: mdiRegistryIconSet(mdiRegistry) } },
   theme: { defaultTheme: signTheme.vuetifyThemeName, themes },
-  // Samme felt-standarder som appene (SIGN-1907): utseendet, og autoforslag av.
-  defaults: nkFieldDefaults(),
+  defaults: {
+    // Samme felt-standarder som appene (SIGN-1907): utseendet, og autoforslag av.
+    ...nkFieldDefaults(),
+    // Samme knappestandard som appene setter i `plugins/vuetify.ts` (SIGN-1763):
+    // fylt i handlingsfargen, og `variant="text"` gir tekst i handlingsfargen.
+    // Må stå her og ikke i en VDefaultsProvider rundt historien: en dialog
+    // starter fra de globale standardene, så en ytre provider når ikke knappene i den.
+    VBtn: { color: 'primary', variant: 'flat', class: 'text-none' },
+  },
 })
 
 setup((app) => {
