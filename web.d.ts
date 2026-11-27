@@ -56,12 +56,24 @@ export type TenantLogoPresentation = 'initials' | 'square' | 'wide' | 'wordmark'
 export const WIDE_LOGO_ASPECT_RATIO: number
 export function tenantLogoPresentation(tenant: TenantLogoFacts, logoFailed?: boolean): TenantLogoPresentation
 
+/** Et konsern i firmavelgeren (SIGN-2023): navnet og hvilke av firmaene som står under det. */
+export type TenantSwitcherGroup = {
+  id: string
+  name: string
+  /** Id-ene til firmaene i `tenants` som hører til konsernet. */
+  tenantIds: string[]
+  /** Adressen til konsernflaten; uten den er konsernraden en overskrift. */
+  href?: string | null
+}
+
 export type TenantSwitcherLabels = {
   menu: string
   current: string
   companies: string
   /** «Nytt firma»-raden (SIGN-1196) — vises bare sammen med `createHref`. */
   create?: string
+  /** Ordet «Konsern» over konsernets navn (SIGN-2023) — vises bare sammen med `groups`. */
+  group?: string
 }
 
 export type AppHeaderNavChild = {

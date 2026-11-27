@@ -39,7 +39,7 @@ export type { SupportSessionBannerTexts, SupportSessionMessageTexts, SupportSess
 
 export type { AppLauncherItem } from './AppLauncherMenu.vue'
 export type { AccountMenuService, AccountMenuLabels } from './AccountIdentityMenu.vue'
-export type { TenantSwitcherOption, TenantSwitcherLabels } from './TenantSwitcherMenu.vue'
+export type { TenantSwitcherOption, TenantSwitcherLabels, TenantSwitcherGroup } from './TenantSwitcherMenu.vue'
 export type { TenantLogoFacts, TenantLogoPresentation } from './tenantLogoPresentation'
 export type { AppHeaderNavItem, AppHeaderNavChild, AppHeaderLabels } from './AppHeader.vue'
 export type { AppHeaderSupportSession, AppHeaderSupportSessionLabels, SupportSessionMode } from './SupportSessionBanner.vue'
