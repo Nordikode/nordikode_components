@@ -32,6 +32,12 @@
  * som oppretter et firma til — nettsidens «Bli kunde» (`/kom-i-gang`). Raden
  * er en vanlig lenke; verts-appen eier adressen.
  *
+ * Konsern (SIGN-2023): sender verts-appen `groups`, står hvert konsern
+ * øverst i firmalisten med firmaene sine under, og firmaene uten konsern
+ * under den vanlige overskriften. Konsernraden er en lenke til konsernflaten
+ * når gruppen har `href`. Uten `groups` (eller med en tom liste) er panelet
+ * nøyaktig som før — et firma uten konsern merker ingenting.
+ *
  * Tema: verts-appens web-designtokens (`--color-*`, `--radius-*`) og
  * aksentkontrakten `--nk-chrome-accent` / `--nk-chrome-accent-ink`.
  */
@@ -45,6 +51,16 @@ export type TenantSwitcherOption = TenantLogoFacts & {
   name: string
 }
 
+/** Et konsern i firmavelgeren (SIGN-2023): navnet og hvilke av firmaene som står under det. */
+export type TenantSwitcherGroup = {
+  id: string
+  name: string
+  /** Id-ene til firmaene i `tenants` som hører til konsernet. */
+  tenantIds: string[]
+  /** Adressen til konsernflaten. Uten den er konsernraden en overskrift, ikke en lenke. */
+  href?: string | null
+}
+
 export type TenantSwitcherLabels = {
   /** aria-label på trigger-knappen. */
   menu: string
@@ -54,6 +70,8 @@ export type TenantSwitcherLabels = {
   companies: string
   /** Teksten på «Nytt firma»-raden — vises bare sammen med `createHref`. */
   create?: string
+  /** Ordet «Konsern» over konsernets navn — vises bare sammen med `groups`. */
+  group?: string
 }
 
 const props = defineProps<{
@@ -82,6 +100,8 @@ const props = defineProps<{
   align?: 'start' | 'end'
   /** Adressen til veiviseren som oppretter et nytt firma (SIGN-1196). Uten den vises ikke raden. */
   createHref?: string | null
+  /** Konsernene brukeren har en rolle i (SIGN-2023). Uten dem er firmalisten flat, som før. */
+  groups?: TenantSwitcherGroup[] | null
 }>()
 
 const emit = defineEmits<{ select: [tenantId: string] }>()
@@ -93,6 +113,31 @@ const personalSelected = computed(() => props.personal != null && props.personal
 const selected = computed(() => {
   if (personalSelected.value) return props.personal ?? null
   return props.tenants.find((tenant) => tenant.id === props.selectedId) ?? null
+})
+
+/**
+ * Firmalisten i bolker: ett konsern om gangen med firmaene sine, så firmaene
+ * uten konsern. Uten konsern er det én bolk med alle firmaene — panelet er
+ * da det samme som før konsern fantes.
+ */
+type TenantSection = { key: string; group: TenantSwitcherGroup | null; tenants: TenantSwitcherOption[] }
+
+const sections = computed<TenantSection[]>(() => {
+  const groups = props.groups ?? []
+  const placed = new Set<string>()
+  const result: TenantSection[] = []
+
+  for (const group of groups) {
+    // Et firma står under det første konsernet som har det.
+    const members = props.tenants.filter((tenant) => group.tenantIds.includes(tenant.id) && !placed.has(tenant.id))
+    members.forEach((tenant) => placed.add(tenant.id))
+    result.push({ key: `group:${group.id}`, group, tenants: members })
+  }
+
+  const rest = props.tenants.filter((tenant) => !placed.has(tenant.id))
+  if (rest.length > 0) result.push({ key: 'companies', group: null, tenants: rest })
+
+  return result
 })
 
 /** Logoer som feiler å laste faller tilbake til initialer. */
@@ -113,6 +158,10 @@ const selectedPresentation = computed<TenantLogoPresentation>(() =>
 const CHEVRON = 'm6 9 6 6 6-6'
 
 const PLUS = 'M12 5v14M5 12h14'
+
+/** Konsern-markøren: et overordnet punkt med to under (samme strekspråk som chevronen). */
+const GROUP_MARK = 'M12 4.5v5M6 14.5v-2.5h12v2.5M4 14.5h4v4H4zM16 14.5h4v4h-4zM10 4.5h4'
+const CHEVRON_RIGHT = 'm9 6 6 6-6 6'
 
 const showsCreate = computed(() => Boolean(props.createHref && props.labels.create))
 
@@ -299,38 +348,81 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
           </template>
         </button>
 
-        <p v-if="tenants.length > 0" class="nk-tenant__section-label">
-          {{ labels.companies }}
-        </p>
-        <button
-          v-for="tenant in tenants"
-          :key="tenant.id"
-          type="button"
-          role="menuitem"
-          class="nk-tenant__item"
-          :class="{ 'nk-tenant__item--current': tenant.id === selectedId }"
-          :disabled="switching"
-          @click="choose(tenant)"
-        >
-          <span class="nk-tenant__item-avatar" :class="`nk-tenant__item-avatar--${presentationOf(tenant)}`">
-            <img
-              v-if="presentationOf(tenant) !== 'initials' && tenant.logoUrl"
-              :src="tenant.logoUrl"
-              alt=""
-              class="nk-tenant__avatar-img"
-              referrerpolicy="no-referrer"
-              @error="markLogoFailed(tenant)"
-            />
-            <span v-else class="nk-tenant__item-initials">{{ initialsOf(tenant.name) }}</span>
-          </span>
-          <span class="nk-tenant__item-label" :class="{ 'nk-sr-only': presentationOf(tenant) === 'wordmark' }">
-            {{ tenant.name }}
-          </span>
-          <template v-if="tenant.id === selectedId">
-            <span class="nk-tenant__dot" aria-hidden="true" />
-            <span class="nk-sr-only">{{ labels.current }}</span>
-          </template>
-        </button>
+        <template v-for="section in sections" :key="section.key">
+          <!-- Konsernet (SIGN-2023): navnet over firmaene sine. Med adresse er
+               raden en lenke til konsernflaten. -->
+          <component
+            :is="section.group.href ? 'a' : 'div'"
+            v-if="section.group"
+            :href="section.group.href ?? undefined"
+            :role="section.group.href ? 'menuitem' : undefined"
+            class="nk-tenant__group"
+            :class="{ 'nk-tenant__group--link': section.group.href }"
+            @click="section.group.href ? close() : undefined"
+          >
+            <span class="nk-tenant__group-mark">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path :d="GROUP_MARK" />
+              </svg>
+            </span>
+            <span class="nk-tenant__group-texts">
+              <span v-if="labels.group" class="nk-tenant__group-kicker">{{ labels.group }}</span>
+              <span class="nk-tenant__group-name">{{ section.group.name }}</span>
+            </span>
+            <svg
+              v-if="section.group.href"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              class="nk-tenant__group-chevron"
+              aria-hidden="true"
+            >
+              <path :d="CHEVRON_RIGHT" />
+            </svg>
+          </component>
+          <p v-else class="nk-tenant__section-label">
+            {{ labels.companies }}
+          </p>
+          <button
+            v-for="tenant in section.tenants"
+            :key="tenant.id"
+            type="button"
+            role="menuitem"
+            class="nk-tenant__item"
+            :class="{ 'nk-tenant__item--current': tenant.id === selectedId, 'nk-tenant__item--grouped': section.group }"
+            :disabled="switching"
+            @click="choose(tenant)"
+          >
+            <span class="nk-tenant__item-avatar" :class="`nk-tenant__item-avatar--${presentationOf(tenant)}`">
+              <img
+                v-if="presentationOf(tenant) !== 'initials' && tenant.logoUrl"
+                :src="tenant.logoUrl"
+                alt=""
+                class="nk-tenant__avatar-img"
+                referrerpolicy="no-referrer"
+                @error="markLogoFailed(tenant)"
+              />
+              <span v-else class="nk-tenant__item-initials">{{ initialsOf(tenant.name) }}</span>
+            </span>
+            <span class="nk-tenant__item-label" :class="{ 'nk-sr-only': presentationOf(tenant) === 'wordmark' }">
+              {{ tenant.name }}
+            </span>
+            <template v-if="tenant.id === selectedId">
+              <span class="nk-tenant__dot" aria-hidden="true" />
+              <span class="nk-sr-only">{{ labels.current }}</span>
+            </template>
+          </button>
+        </template>
 
         <a
           v-if="showsCreate"
@@ -661,6 +753,79 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   color: var(--nk-chrome-accent-ink, var(--nk-chrome-accent, var(--color-ink-secondary)));
 }
 
+/* Konsernet (SIGN-2023): navnet over firmaene sine, med «Konsern» som liten
+   overskrift. Firmaene under står innrykket, så tilhørigheten synes. */
+.nk-tenant__group {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 0.25rem;
+  border-radius: var(--radius-compact);
+  padding: 0.5rem 0.75rem 0.375rem;
+  color: var(--color-ink);
+  text-decoration: none;
+  outline: none;
+  transition: background-color 0.15s;
+}
+
+.nk-tenant__group--link {
+  cursor: pointer;
+}
+
+.nk-tenant__group--link:hover,
+.nk-tenant__group--link:focus-visible {
+  background: var(--color-surface-alt);
+}
+
+.nk-tenant__group-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-ink-secondary);
+}
+
+.nk-tenant__group-mark svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.nk-tenant__group-texts {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nk-tenant__group-kicker {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  color: var(--color-ink-tertiary);
+}
+
+.nk-tenant__group-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.nk-tenant__group-chevron {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+  color: var(--color-ink-tertiary);
+}
+
+.nk-tenant__item--grouped {
+  padding-inline-start: 1.5rem;
+}
+
 /* «Nytt firma»: lenkeraden får samme uttrykk som firmaradene, med et
    pluss i en stiplet sirkel der logoen ellers står. */
 .nk-tenant__item--create {
@@ -730,6 +895,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
   .nk-tenant__trigger,
   .nk-tenant__chevron,
   .nk-tenant__item,
+  .nk-tenant__group,
   .nk-pop-enter-active,
   .nk-pop-leave-active {
     transition: none;
@@ -746,7 +912,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 }
 
 .dark .nk-tenant .nk-tenant__item:hover,
-.dark .nk-tenant .nk-tenant__item:focus-visible {
+.dark .nk-tenant .nk-tenant__item:focus-visible,
+.dark .nk-tenant .nk-tenant__group--link:hover,
+.dark .nk-tenant .nk-tenant__group--link:focus-visible {
   background: color-mix(in srgb, var(--color-surface-alt) 20%, transparent);
 }
 </style>
