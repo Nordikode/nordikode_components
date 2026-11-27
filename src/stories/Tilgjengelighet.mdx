@@ -134,6 +134,30 @@ måler bare 2,2:1 på hvit, så handlingen i lys modus er mørk periwinkle
 | Tekst på myk handlingsflate | `onPrimarySoft` / `primarySoft` | `#2f4d8f` på `#e2eafa` — **6,7:1** | `#a9c1f2` på `#1b2a45` — **7,9:1** |
 | Tittel (tar) på kort | `textTitle` / `surface` | `#0d1c26` på `#ffffff` — **17,3:1** | `#dbe5fb` på `#0e1216` — **14,9:1** |
 
+### Sketch (teal, SIGN-2039)
+
+Nordikode Sketch bruker `sketchTheme` (`src/tokens/products/sketch.ts`): samme
+nøytraler, status- og markeringsfarger som Sign, men handling, lenke og rail er
+teal i stedet for berry, og tittelen er tar. Teal (`#0e6b70`) måler 3,0:1 som
+tekst på nesten svart, så handlingen i mørk modus er light teal (`#56bfc2`) med
+tar-etikett. Railen er teal i begge moduser, som berry er i Sign. Fargene er
+avledet i SIGN-2039 og venter på UX sitt vedtak; `tests/themeContrast.test.ts`
+regner parene på nytt fra token-verdiene.
+
+| Par | Tokens | Lys | Mørk |
+| --- | --- | --- | --- |
+| Primærknapp | `onPrimary` / `primary` | `#ffffff` på `#0e6b70` — **6,3:1** | `#0d1c26` på `#56bfc2` — **8,0:1** |
+| Primærknapp hover | `onPrimary` / `primaryHover` | `#ffffff` på `#0c5b5f` — **7,8:1** | `#0d1c26` på `#78ccce` — **9,4:1** |
+| Primærknapp press | `onPrimary` / `primaryPress` | `#ffffff` på `#0a4d51` — **9,6:1** | `#0d1c26` på `#4dacaf` — **6,5:1** |
+| Lenke på kort | `link` / `surface` | `#0e6b70` på `#ffffff` — **6,3:1** | `#56bfc2` på `#0e1216` — **8,6:1** |
+| Lenke på side | `link` / `page` | `#0e6b70` på `#f3f3f5` — **5,7:1** | `#56bfc2` på `#050708` — **9,3:1** |
+| Lenke på valgt rad | `link` / `surfaceSoftAccent` | `#0e6b70` på `#e6eef6` — **5,3:1** | `#56bfc2` på `#1a222b` — **7,4:1** |
+| Tekst på myk handlingsflate | `onPrimarySoft` / `primarySoft` | `#0b5054` på `#d8e7e8` — **7,2:1** | `#a5e0e2` på `#122f31` — **9,7:1** |
+| Tittel (tar) på kort | `textTitle` / `surface` | `#0d1c26` på `#ffffff` — **17,3:1** | `#d3ecec` på `#0e1216` — **15,2:1** |
+| Lenke på panel | `onSurfacePanelLink` / `surfacePanel` | `#a5e0e2` på `#3d4951` — **6,3:1** | som lys |
+| Rail-ikon (grafikk, krav 3:1) | `railIcon` / `surfaceRail` | krem 80 % på `#0e6b70` — **4,2:1** | som lys |
+| Aktivt rail-ikon (grafikk, krav 3:1) | `onFrame` / `frame` | `#f6f2ea` på `#3e898d` — **3,6:1** | som lys |
+
 ### Time og backoffice (felles statuspalett, SIGN-1158 og SIGN-1198)
 
 Time og backoffice har ikke adoptert Sign-paletten; de bruker den felles

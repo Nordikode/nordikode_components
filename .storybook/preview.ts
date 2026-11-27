@@ -66,6 +66,7 @@ const preview: Preview = {
         items: [
           { value: 'sign', title: 'Sign' },
           { value: 'time', title: 'Time' },
+          { value: 'sketch', title: 'Sketch' },
           { value: 'backoffice', title: 'Backoffice' },
           { value: 'platform', title: 'Plattform (company/account/developer)' },
         ],

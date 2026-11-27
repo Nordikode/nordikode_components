@@ -24,6 +24,7 @@ export type AccountMenuLabels = {
 export type WebAppIconName =
   | 'sign'
   | 'time'
+  | 'sketch'
   | 'website'
   | 'account'
   | 'backoffice'
@@ -31,6 +32,7 @@ export type WebAppIconName =
   | 'developer'
   | 'admin'
   | 'review'
+  | 'expo'
 
 export const webAppIcons: Record<WebAppIconName, string[]>
 export const webAppFallbackIcon: string[]

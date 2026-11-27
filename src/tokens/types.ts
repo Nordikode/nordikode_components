@@ -111,7 +111,7 @@ export interface NkScheme {
 }
 
 export interface NkProductTheme {
-  /** Kort produkt-id: 'sign' | 'time' | 'backoffice' | … */
+  /** Kort produkt-id: 'sign' | 'time' | 'sketch' | 'backoffice' | … */
   product: string
   /** Vuetify-temanavnet appen allerede bruker, f.eks. 'NordikodeSign'. */
   vuetifyThemeName: string
