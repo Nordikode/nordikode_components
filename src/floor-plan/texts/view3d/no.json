@@ -1,0 +1,9 @@
+{
+  "reset": "Tilbakestill visning",
+  "hint": "Dra for å snu, rull for å zoome.",
+  "keyboardHint": "Piltastene snur, + og − zoomer, 0 tilbakestiller.",
+  "loading": "Laster 3D-visningen…",
+  "loadError": "Kunne ikke laste 3D-visningen.",
+  "unavailable": "3D kan ikke vises i denne nettleseren.",
+  "retry": "Prøv igjen"
+}

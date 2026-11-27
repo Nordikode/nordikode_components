@@ -1,0 +1,9 @@
+{
+  "reset": "Przywróć widok",
+  "hint": "Przeciągnij, aby obrócić, przewiń, aby powiększyć.",
+  "keyboardHint": "Strzałki obracają, + i − powiększają, 0 przywraca widok.",
+  "loading": "Wczytywanie widoku 3D…",
+  "loadError": "Nie udało się wczytać widoku 3D.",
+  "unavailable": "W tej przeglądarce nie można wyświetlić widoku 3D.",
+  "retry": "Spróbuj ponownie"
+}

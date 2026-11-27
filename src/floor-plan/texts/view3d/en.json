@@ -1,0 +1,9 @@
+{
+  "reset": "Reset view",
+  "hint": "Drag to turn, scroll to zoom.",
+  "keyboardHint": "The arrow keys turn, + and − zoom, 0 resets.",
+  "loading": "Loading the 3D view…",
+  "loadError": "Could not load the 3D view.",
+  "unavailable": "3D cannot be shown in this browser.",
+  "retry": "Try again"
+}

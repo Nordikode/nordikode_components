@@ -402,6 +402,104 @@ loads the bell only for signed-in users — the website imports it from here in
 the lazily loaded notifications module, so a visitor's shared bundle never
 carries it. Same component, same styles (`style.css`).
 
+### `@nordikode/components/floor-plan` (the floor plan, SIGN-2041)
+
+ONE implementation of the floor plan for every app that shows or edits rooms:
+floor plans live in Sign, sketches in Sketch, and both draw and edit the same
+**room document** (rooms with outline, walls, openings and objects in one
+coordinate system — metres, seen from above, x to the right and y downwards)
+with what this entry exports. The app owns its data — where a plan comes from,
+how it is saved, who may edit it — and gives the components the plan and the
+user's locale.
+
+```ts
+import { FloorPlanDrawing, FloorPlanEditorWorkspace, useFloorPlanEditor, type FloorPlanRoom } from '@nordikode/components/floor-plan'
+```
+
+- **The room document** (`FloorPlanRoom`, `FloorPlanWall`, `FloorPlanOpening`,
+  `FloorPlanObject`, `FloorPlanMeasurements`, `FloorPlanDocument` = `{ rooms }`):
+  the rooms exactly as the API answers them. An app's own plan type (with id,
+  name, timestamps) is passed as it is; everything that changes a plan gives the
+  same type back. `toFloorPlanRoomInput` is the room as it is saved (without the
+  measurements, which the server computes). The type validators
+  (`toFloorPlanOpeningKind`, `toFloorPlanObjectCategory`, …) and the lists they
+  read from are here too: what a thing is stands in its type field, never in a
+  name.
+- **`FloorPlanDrawing`** — the plan as an SVG: `plan`, `label` (the name read
+  aloud), `locale`, `compact` (the thumbnail), `maxHeight`, `marks` (what a sketch
+  has changed, from `sketchMarks`) and `interactive` (`true`: select, drag and
+  keyboard — the drawing says what the person did with `select`, `drag`,
+  `nudge`, `remove`, `undo`, `redo`, `splitPick`, `splitCancel`, and changes
+  nothing itself; `'pick'`: only select).
+- **The pure rules** — `floorPlanGeometry` (areas, distances, door swing),
+  `floorPlanCeiling` (sloped walls and ceilings), `floorPlanEditing` (every
+  change of a room or a plan as a pure function, with the limits of the
+  contract), `floorPlanFurniture` (the symbols, from `floorPlanFurniture.json`),
+  `floorPlanColors` (the ready-made tones and the ink that reads on a colour),
+  `sketchMarks` (the server's list of differences as marks for the drawings) and
+  `measurements` (`formatLength`/`formatArea`/`formatVolume`,
+  `parseMeasurement`, `parseLocaleNumber` — numbers written and read the way the
+  user's language does, units from `Intl`). The same rules are written in Swift
+  for the Sign app. `floorPlanFurniture.json` is shared byte for byte with the
+  app: `tests/floor-plan/floorPlanFurniture.test.ts` locks its SHA-256, and a
+  change must be copied to the app with the new number.
+- **The editor** — `useFloorPlanEditor<P>({ signature })` holds the plan as it
+  stands, the selection, undo/redo and `dirty`. `signature` says what the app
+  saves (the default is the rooms; Sign adds the plan's name).
+  `FloorPlanEditorWorkspace` (`editor`, `drawingLabel`, `locale`) is the work
+  surface: toolbar, drawing and `FloorPlanInspector` (the fields for what is
+  selected, with `FloorPlanColorField` and `MeasurementField`). It shows no
+  messages and saves nothing: it emits `save` (Cmd/Ctrl+S) and
+  `splitRefused(message)` — the text is ready in the user's language — and the
+  page shows it the way the app does. The layout switches to two columns when
+  its container is at least 960 px wide, so the page gives it a container
+  (`container-type: inline-size`).
+- **3D** — `FloorPlan3dView` (`plan`, `label`, `locale`, `marks`; exposes
+  `snapshot()` and `status`) draws the scene `buildFloorPlan3d` computes.
+  **three.js is an optional peer dependency** and is never part of what an app
+  starts with: the view fetches its renderer the first time it is shown. An app
+  that shows the 3D view installs `three`; an app that does not needs nothing.
+  `floorPlan3dRuntime` (`isWebGlAvailable`, `loadRenderer`) is what the view
+  asks the browser for — an app's tests replace the two with `vi.spyOn`, since a
+  test browser has no WebGL.
+- **Texts live in this package**, one file per language in
+  `src/floor-plan/texts/<set>/` (`names`, `view3d`, `editor`) — the same
+  arrangement as the support session and e-mail verification texts. The
+  components pick them from `locale`; no app keeps its own copy, the code has no
+  list of languages (a new language is a new file in each set), and a language
+  without a file gets English. `floorPlanNames(locale)` gives the apps the names
+  of the things in a plan (objects, openings, room types, variants) for their
+  own sentences; `floorPlanEditorTexts(locale)`, `floorPlan3dTexts(locale)`,
+  `fillFloorPlanText(text, values)` and `newFloorPlanRoomName(plan, locale)` are
+  exported for the same reason. `tests/floor-plan/texts.test.ts` fails when a
+  language lacks a text or a placeholder.
+- **One import, several files.** Apps import only this entry. The build keeps
+  the parts in files of their own under `dist/floor-plan/` — the room document
+  (`model.js`), showing (`view.js`), the measurement field (`fields.js`),
+  editing (`editor.js`), 3D (`view3d.js`) and the renderer that needs three.js —
+  so a page downloads only what it uses: an API layer that needs
+  `toFloorPlanRoomInput` does not get the drawing, and a page that only shows a
+  drawing (the customer's offer, a printed PDF) does not get the editor.
+  **An app that gathers `node_modules` in one vendor chunk must leave these
+  files out of it**, or every page downloads the editor and the vendor chunk
+  pulls in three.js at start-up:
+
+  ```ts
+  // vite.config.ts → build.rollupOptions.output.manualChunks
+  if (id.includes('/node_modules/three/')) return 'three'
+  if (id.includes('/@nordikode/components/dist/floor-plan')) return undefined
+  ```
+
+  Check the app's build after wiring it up: `three` must be a chunk of its own
+  that only the renderer chunk imports.
+- `floor-plan.d.ts` is written by hand like the other declaration files, but it
+  is checked: `npm run type-check` fails when a declared value differs from what
+  `src/floor-plan` exports (`src/floor-plan/declarations.check.ts`).
+
+Styles are in `style.css` with the rest and use only tokens (`--nk-*`) and the
+host's Vuetify theme (`--v-theme-*`). The colours a person has chosen for a
+floor or a wall are data, not theme.
+
 ## Widgeter (SIGN-1850/1873/1911)
 
 En widgetflate (Signs dashbord og saksoversikt) er satt sammen av widgeter brukeren
@@ -535,9 +633,12 @@ with the components it renders (see `tests/phoneNumberInput.test.ts`,
 `tests/dialog.test.ts`). Behaviour that must be the same in every app belongs
 here, not in the apps.
 
-`index.d.ts`, `web.d.ts` and `tokens.d.ts` are written by hand, and they are where
-consuming apps get their types from. The type check does not read them: a type
-changed in `src/` must be changed in the matching `.d.ts` in the same pull request.
+`index.d.ts`, `web.d.ts`, `tokens.d.ts` and `floor-plan.d.ts` are written by hand,
+and they are where consuming apps get their types from. The type check does not
+read the first three: a type changed in `src/` must be changed in the matching
+`.d.ts` in the same pull request. `floor-plan.d.ts` is compared with
+`src/floor-plan` by the type check (SIGN-2041), which names the export that
+differs.
 
 ## Design tokens
 

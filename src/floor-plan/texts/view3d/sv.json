@@ -1,0 +1,9 @@
+{
+  "reset": "Återställ vyn",
+  "hint": "Dra för att vrida, rulla för att zooma.",
+  "keyboardHint": "Piltangenterna vrider, + och − zoomar, 0 återställer.",
+  "loading": "Läser in 3D-vyn…",
+  "loadError": "Kunde inte läsa in 3D-vyn.",
+  "unavailable": "3D kan inte visas i den här webbläsaren.",
+  "retry": "Försök igen"
+}

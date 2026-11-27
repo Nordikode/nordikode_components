@@ -1,0 +1,9 @@
+{
+  "reset": "Réinitialiser la vue",
+  "hint": "Faites glisser pour tourner, faites défiler pour zoomer.",
+  "keyboardHint": "Les flèches tournent, + et − zooment, 0 réinitialise.",
+  "loading": "Chargement de la vue 3D…",
+  "loadError": "Impossible de charger la vue 3D.",
+  "unavailable": "La 3D ne peut pas être affichée dans ce navigateur.",
+  "retry": "Réessayer"
+}

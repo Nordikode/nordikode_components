@@ -1,0 +1,350 @@
+{
+  "version": 1,
+  "variants": {
+    "bed": ["single", "double"],
+    "chair": ["dining", "stool", "office"],
+    "sofa": ["straight", "armchair", "chaise"],
+    "storage": ["cabinet", "shelf"],
+    "table": ["rectangular", "round", "l_shaped"]
+  },
+  "symbols": {
+    "toilet": {
+      "plan": [
+        { "shape": "ellipse", "x": [0.04, 0.96], "y": [[0, 0.15], 1], "fill": "body", "stroke": "outline" },
+        { "shape": "ellipse", "x": [0.25, 0.75], "y": [[0.12, 0.2], [1, -0.07]], "fill": "soft", "stroke": "detail" },
+        { "shape": "rect", "x": [0, 1], "y": [0, [0, 0.19]], "radius": [0, 0.02], "fill": "body", "stroke": "outline" }
+      ],
+      "solid": [
+        { "part": "cylinder", "x": [0.04, 0.96], "y": [0, 0.55], "z": [[0, 0.15], 1], "tone": "soft" },
+        { "part": "cylinder", "x": [0.26, 0.74], "y": [0.55, [0.55, 0.006]], "z": [[0.12, 0.2], [1, -0.07]], "tone": "base" },
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, [0, 0.19]], "tone": "soft" }
+      ]
+    },
+    "sink": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.04], "fill": "body", "stroke": "outline" },
+        { "shape": "ellipse", "x": [[0, 0.06], [1, -0.06]], "y": [[0, 0.11], [1, -0.05]], "fill": "soft", "stroke": "detail" },
+        { "shape": "path", "points": [[0.5, [0, 0.055]], [0.5, [0, 0.16]]], "stroke": "detail" },
+        { "shape": "circle", "at": [0.5, [0, 0.055]], "radius": [0, 0.022], "fill": "body", "stroke": "detail" },
+        { "shape": "circle", "at": [0.5, 0.6], "radius": [0, 0.014], "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [[0, 0.03], [1, -0.03]], "y": [0, [1, -0.16]], "z": [0, [1, -0.04]], "tone": "base" },
+        { "part": "box", "x": [0, 1], "y": [[1, -0.16], 1], "z": [0, 1], "tone": "soft" },
+        { "part": "cylinder", "x": [[0, 0.06], [1, -0.06]], "y": [1, [1, 0.005]], "z": [[0, 0.11], [1, -0.05]], "tone": "base" },
+        { "part": "box", "x": [[0.5, -0.02], [0.5, 0.02]], "y": [1, [1, 0.12]], "z": [[0, 0.035], [0, 0.075]], "tone": "strong" }
+      ]
+    },
+    "bathtub": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.05], "fill": "body", "stroke": "outline" },
+        { "shape": "rect", "x": [[0, 0.07], [1, -0.07]], "y": [[0, 0.07], [1, -0.07]], "radius": [0.3, 0], "fill": "soft", "stroke": "detail" },
+        { "shape": "circle", "at": [0.5, [0, 0.24]], "radius": [0, 0.025], "stroke": "detail" },
+        { "shape": "rect", "x": [[0.5, -0.05], [0.5, 0.05]], "y": [[0, 0.015], [0, 0.05]], "fill": "body", "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, 1], "tone": "soft" },
+        { "part": "box", "x": [[0, 0.07], [1, -0.07]], "y": [1, [1, 0.005]], "z": [[0, 0.07], [1, -0.07]], "tone": "base" },
+        { "part": "box", "x": [[0.5, -0.03], [0.5, 0.03]], "y": [1, [1, 0.1]], "z": [[0, 0.01], [0, 0.06]], "tone": "strong" }
+      ]
+    },
+    "bed": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.03], "fill": "body", "stroke": "outline" },
+        { "shape": "rect", "x": [[0, 0.08], [1, -0.08]], "y": [[0, 0.07], [0, 0.42]], "radius": [0, 0.06], "fill": "body", "stroke": "detail" },
+        { "shape": "rect", "x": [[0, 0.012], [1, -0.012]], "y": [[0, 0.55], [1, -0.012]], "fill": "soft", "stroke": "detail" },
+        { "shape": "path", "points": [[[1, -0.012], [0, 0.55]], [[1, -0.012], [0, 0.85]], [[1, -0.312], [0, 0.55]]], "closed": true, "fill": "body", "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 0.5], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, [0, 0.05]], "tone": "base" },
+        { "part": "box", "x": [[0, 0.02], [1, -0.02]], "y": [0.5, 0.8], "z": [[0, 0.05], [1, -0.02]], "tone": "soft" },
+        { "part": "box", "x": [[0, 0.1], [1, -0.1]], "y": [0.8, 0.96], "z": [[0, 0.08], [0, 0.42]], "tone": "soft" },
+        { "part": "box", "x": [[0, 0.012], [1, -0.012]], "y": [0.8, 0.88], "z": [[0, 0.55], [1, -0.012]], "tone": "soft" }
+      ]
+    },
+    "bed:double": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.03], "fill": "body", "stroke": "outline" },
+        { "shape": "rect", "x": [[0, 0.08], [0.5, -0.04]], "y": [[0, 0.07], [0, 0.42]], "radius": [0, 0.06], "fill": "body", "stroke": "detail" },
+        { "shape": "rect", "x": [[0.5, 0.04], [1, -0.08]], "y": [[0, 0.07], [0, 0.42]], "radius": [0, 0.06], "fill": "body", "stroke": "detail" },
+        { "shape": "rect", "x": [[0, 0.012], [1, -0.012]], "y": [[0, 0.55], [1, -0.012]], "fill": "soft", "stroke": "detail" },
+        { "shape": "path", "points": [[[1, -0.012], [0, 0.55]], [[1, -0.012], [0, 0.85]], [[1, -0.312], [0, 0.55]]], "closed": true, "fill": "body", "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 0.5], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, [0, 0.05]], "tone": "base" },
+        { "part": "box", "x": [[0, 0.02], [1, -0.02]], "y": [0.5, 0.8], "z": [[0, 0.05], [1, -0.02]], "tone": "soft" },
+        { "part": "box", "x": [[0, 0.1], [0.5, -0.04]], "y": [0.8, 0.96], "z": [[0, 0.08], [0, 0.42]], "tone": "soft" },
+        { "part": "box", "x": [[0.5, 0.04], [1, -0.1]], "y": [0.8, 0.96], "z": [[0, 0.08], [0, 0.42]], "tone": "soft" },
+        { "part": "box", "x": [[0, 0.012], [1, -0.012]], "y": [0.8, 0.88], "z": [[0, 0.55], [1, -0.012]], "tone": "soft" }
+      ]
+    },
+    "sofa": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.06], "fill": "body", "stroke": "outline" },
+        { "shape": "divide", "x": [[0, 0.17], [1, -0.17]], "y": [[0, 0.2], [1, -0.02]], "along": "x", "every": 0.75, "min": 1, "max": 5, "stroke": "detail" },
+        { "shape": "rect", "x": [0, [0, 0.17]], "y": [[0, 0.08], 1], "radius": [0, 0.06], "fill": "soft", "stroke": "detail" },
+        { "shape": "rect", "x": [[1, -0.17], 1], "y": [[0, 0.08], 1], "radius": [0, 0.06], "fill": "soft", "stroke": "detail" },
+        { "shape": "rect", "x": [0, 1], "y": [0, [0, 0.2]], "radius": [0, 0.06], "fill": "soft", "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 0.5], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, [0, 0.2]], "tone": "base" },
+        { "part": "box", "x": [0, [0, 0.17]], "y": [0, 0.74], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [[1, -0.17], 1], "y": [0, 0.74], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [[0, 0.17], [1, -0.17]], "y": [0.5, 0.6], "z": [[0, 0.2], [1, -0.02]], "tone": "soft" },
+        { "part": "box", "x": [[0, 0.17], [1, -0.17]], "y": [0.6, 0.95], "z": [[0, 0.2], [0, 0.34]], "tone": "soft" }
+      ]
+    },
+    "sofa:armchair": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.06], "fill": "body", "stroke": "outline" },
+        { "shape": "rect", "x": [0, [0, 0.17]], "y": [[0, 0.08], 1], "radius": [0, 0.06], "fill": "soft", "stroke": "detail" },
+        { "shape": "rect", "x": [[1, -0.17], 1], "y": [[0, 0.08], 1], "radius": [0, 0.06], "fill": "soft", "stroke": "detail" },
+        { "shape": "rect", "x": [0, 1], "y": [0, [0, 0.2]], "radius": [0, 0.06], "fill": "soft", "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 0.5], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, [0, 0.2]], "tone": "base" },
+        { "part": "box", "x": [0, [0, 0.17]], "y": [0, 0.74], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [[1, -0.17], 1], "y": [0, 0.74], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [[0, 0.17], [1, -0.17]], "y": [0.5, 0.6], "z": [[0, 0.2], [1, -0.02]], "tone": "soft" },
+        { "part": "box", "x": [[0, 0.17], [1, -0.17]], "y": [0.6, 0.95], "z": [[0, 0.2], [0, 0.34]], "tone": "soft" }
+      ]
+    },
+    "sofa:chaise": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.06], "fill": "body", "stroke": "outline" },
+        { "shape": "rect", "x": [[0, 0.05], [1, -0.05]], "y": [[0, 0.05], [1, -0.05]], "radius": [0, 0.08], "fill": "soft", "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 0.8], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [[0, 0.03], [1, -0.03]], "y": [0.8, 1], "z": [[0, 0.03], [1, -0.03]], "tone": "soft" }
+      ]
+    },
+    "table": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.03], "fill": "body", "stroke": "outline" },
+        { "shape": "rect", "x": [[0, 0.04], [0, 0.1]], "y": [[0, 0.04], [0, 0.1]], "stroke": "detail" },
+        { "shape": "rect", "x": [[1, -0.1], [1, -0.04]], "y": [[0, 0.04], [0, 0.1]], "stroke": "detail" },
+        { "shape": "rect", "x": [[0, 0.04], [0, 0.1]], "y": [[1, -0.1], [1, -0.04]], "stroke": "detail" },
+        { "shape": "rect", "x": [[1, -0.1], [1, -0.04]], "y": [[1, -0.1], [1, -0.04]], "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [[1, -0.04], 1], "z": [0, 1], "tone": "soft" },
+        { "part": "box", "x": [[0, 0.04], [0, 0.1]], "y": [0, [1, -0.04]], "z": [[0, 0.04], [0, 0.1]], "tone": "base" },
+        { "part": "box", "x": [[1, -0.1], [1, -0.04]], "y": [0, [1, -0.04]], "z": [[0, 0.04], [0, 0.1]], "tone": "base" },
+        { "part": "box", "x": [[0, 0.04], [0, 0.1]], "y": [0, [1, -0.04]], "z": [[1, -0.1], [1, -0.04]], "tone": "base" },
+        { "part": "box", "x": [[1, -0.1], [1, -0.04]], "y": [0, [1, -0.04]], "z": [[1, -0.1], [1, -0.04]], "tone": "base" }
+      ]
+    },
+    "table:round": {
+      "plan": [
+        { "shape": "ellipse", "x": [0, 1], "y": [0, 1], "fill": "body", "stroke": "outline" },
+        { "shape": "circle", "at": [0.5, 0.5], "radius": [0, 0.12], "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "cylinder", "x": [0, 1], "y": [[1, -0.04], 1], "z": [0, 1], "sides": 24, "tone": "soft" },
+        { "part": "cylinder", "x": [[0.5, -0.05], [0.5, 0.05]], "y": [[0, 0.03], [1, -0.04]], "z": [[0.5, -0.05], [0.5, 0.05]], "tone": "base" },
+        { "part": "cylinder", "x": [[0.5, -0.25], [0.5, 0.25]], "y": [0, [0, 0.03]], "z": [[0.5, -0.25], [0.5, 0.25]], "tone": "base" }
+      ]
+    },
+    "table:l_shaped": {
+      "plan": [
+        { "shape": "path", "points": [[0, 0], [1, 0], [1, 0.45], [0.45, 0.45], [0.45, 1], [0, 1]], "closed": true, "fill": "body", "stroke": "outline" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [[1, -0.04], 1], "z": [0, 0.45], "tone": "soft" },
+        { "part": "box", "x": [0, 0.45], "y": [[1, -0.04], 1], "z": [0.45, 1], "tone": "soft" },
+        { "part": "box", "x": [[0, 0.04], [0, 0.1]], "y": [0, [1, -0.04]], "z": [[0, 0.04], [0, 0.1]], "tone": "base" },
+        { "part": "box", "x": [[1, -0.1], [1, -0.04]], "y": [0, [1, -0.04]], "z": [[0, 0.04], [0, 0.1]], "tone": "base" },
+        { "part": "box", "x": [[1, -0.1], [1, -0.04]], "y": [0, [1, -0.04]], "z": [[0.45, -0.1], [0.45, -0.04]], "tone": "base" },
+        { "part": "box", "x": [[0, 0.04], [0, 0.1]], "y": [0, [1, -0.04]], "z": [[1, -0.1], [1, -0.04]], "tone": "base" },
+        { "part": "box", "x": [[0.45, -0.1], [0.45, -0.04]], "y": [0, [1, -0.04]], "z": [[1, -0.1], [1, -0.04]], "tone": "base" }
+      ]
+    },
+    "chair": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [[0, 0.04], 1], "radius": [0, 0.05], "fill": "body", "stroke": "outline" },
+        { "shape": "rect", "x": [[0, 0.02], [1, -0.02]], "y": [0, [0, 0.08]], "radius": [0, 0.03], "fill": "soft", "stroke": "outline" }
+      ],
+      "solid": [
+        { "part": "box", "x": [[0, 0.02], [0, 0.06]], "y": [0, 1], "z": [[0, 0.02], [0, 0.06]], "tone": "base" },
+        { "part": "box", "x": [[1, -0.06], [1, -0.02]], "y": [0, 1], "z": [[0, 0.02], [0, 0.06]], "tone": "base" },
+        { "part": "box", "x": [[0, 0.02], [0, 0.06]], "y": [0, 0.46], "z": [[1, -0.06], [1, -0.02]], "tone": "base" },
+        { "part": "box", "x": [[1, -0.06], [1, -0.02]], "y": [0, 0.46], "z": [[1, -0.06], [1, -0.02]], "tone": "base" },
+        { "part": "box", "x": [0, 1], "y": [0.46, 0.52], "z": [[0, 0.02], 1], "tone": "soft" },
+        { "part": "box", "x": [[0, 0.06], [1, -0.06]], "y": [0.72, 1], "z": [[0, 0.025], [0, 0.055]], "tone": "soft" }
+      ]
+    },
+    "chair:stool": {
+      "plan": [
+        { "shape": "ellipse", "x": [0, 1], "y": [0, 1], "fill": "body", "stroke": "outline" },
+        { "shape": "ellipse", "x": [[0, 0.05], [1, -0.05]], "y": [[0, 0.05], [1, -0.05]], "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "cylinder", "x": [0, 1], "y": [[1, -0.05], 1], "z": [0, 1], "tone": "soft" },
+        { "part": "cylinder", "x": [[0.5, -0.03], [0.5, 0.03]], "y": [[0, 0.02], [1, -0.05]], "z": [[0.5, -0.03], [0.5, 0.03]], "tone": "base" },
+        { "part": "cylinder", "x": [0.08, 0.92], "y": [0, [0, 0.02]], "z": [0.08, 0.92], "tone": "base" }
+      ]
+    },
+    "chair:office": {
+      "plan": [
+        { "shape": "path", "points": [[0.5, 0.5], [0.5, 0.02]], "stroke": "detail" },
+        { "shape": "path", "points": [[0.5, 0.5], [0.956, 0.352]], "stroke": "detail" },
+        { "shape": "path", "points": [[0.5, 0.5], [0.782, 0.888]], "stroke": "detail" },
+        { "shape": "path", "points": [[0.5, 0.5], [0.218, 0.888]], "stroke": "detail" },
+        { "shape": "path", "points": [[0.5, 0.5], [0.044, 0.352]], "stroke": "detail" },
+        { "shape": "rect", "x": [0.1, 0.9], "y": [0.2, 0.94], "radius": [0, 0.08], "fill": "body", "stroke": "outline" },
+        { "shape": "rect", "x": [0.14, 0.86], "y": [0.04, 0.19], "radius": [0, 0.04], "fill": "soft", "stroke": "outline" }
+      ],
+      "solid": [
+        { "part": "cylinder", "x": [0.04, 0.96], "y": [0, [0, 0.05]], "z": [0.04, 0.96], "tone": "strong" },
+        { "part": "cylinder", "x": [[0.5, -0.03], [0.5, 0.03]], "y": [[0, 0.05], 0.46], "z": [[0.5, -0.03], [0.5, 0.03]], "tone": "strong" },
+        { "part": "box", "x": [0.1, 0.9], "y": [0.46, 0.54], "z": [0.2, 0.94], "tone": "soft" },
+        { "part": "box", "x": [0.14, 0.86], "y": [0.6, 1], "z": [0.06, 0.16], "tone": "soft" }
+      ]
+    },
+    "storage": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "fill": "body", "stroke": "outline" },
+        { "shape": "path", "points": [[0, 0], [1, 1]], "stroke": "detail" },
+        { "shape": "path", "points": [[1, 0], [0, 1]], "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, [0, 0.08]], "z": [0, [1, -0.04]], "tone": "strong" },
+        { "part": "box", "x": [0, 1], "y": [[0, 0.08], 1], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [[0.5, -0.004], [0.5, 0.004]], "y": [[0, 0.1], [1, -0.02]], "z": [1, [1, 0.004]], "tone": "strong" },
+        { "part": "box", "x": [[0.5, -0.05], [0.5, -0.03]], "y": [0.45, 0.55], "z": [1, [1, 0.02]], "tone": "strong" },
+        { "part": "box", "x": [[0.5, 0.03], [0.5, 0.05]], "y": [0.45, 0.55], "z": [1, [1, 0.02]], "tone": "strong" }
+      ]
+    },
+    "storage:shelf": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "fill": "body", "stroke": "outline" },
+        { "shape": "rect", "x": [[0, 0.025], [1, -0.025]], "y": [[0, 0.02], 1], "stroke": "detail" },
+        { "shape": "divide", "x": [[0, 0.025], [1, -0.025]], "y": [[0, 0.02], 1], "along": "x", "every": 0.45, "min": 2, "max": 8, "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, [0, 0.025]], "y": [0, 1], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [[1, -0.025], 1], "y": [0, 1], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, [0, 0.015]], "tone": "strong" },
+        { "part": "box", "x": [0, 1], "y": [0, [0, 0.03]], "z": [0, 1], "tone": "soft" },
+        { "part": "box", "x": [0, 1], "y": [[0.25, -0.015], [0.25, 0.015]], "z": [0, 1], "tone": "soft" },
+        { "part": "box", "x": [0, 1], "y": [[0.5, -0.015], [0.5, 0.015]], "z": [0, 1], "tone": "soft" },
+        { "part": "box", "x": [0, 1], "y": [[0.75, -0.015], [0.75, 0.015]], "z": [0, 1], "tone": "soft" },
+        { "part": "box", "x": [0, 1], "y": [[1, -0.03], 1], "z": [0, 1], "tone": "soft" }
+      ]
+    },
+    "refrigerator": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.02], "fill": "body", "stroke": "outline" },
+        { "shape": "path", "points": [[0, [1, -0.05]], [1, [1, -0.05]]], "stroke": "detail" },
+        { "shape": "path", "points": [[[0.5, -0.11], 0.45], [[0.5, 0.11], 0.45]], "stroke": "detail" },
+        { "shape": "path", "points": [[[0.5, -0.055], [0.45, -0.095]], [[0.5, 0.055], [0.45, 0.095]]], "stroke": "detail" },
+        { "shape": "path", "points": [[[0.5, 0.055], [0.45, -0.095]], [[0.5, -0.055], [0.45, 0.095]]], "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, 1], "tone": "soft" },
+        { "part": "box", "x": [0, 1], "y": [[0.62, -0.004], [0.62, 0.004]], "z": [1, [1, 0.004]], "tone": "strong" },
+        { "part": "box", "x": [[0, 0.05], [0, 0.07]], "y": [0.66, 0.84], "z": [1, [1, 0.025]], "tone": "strong" },
+        { "part": "box", "x": [[0, 0.05], [0, 0.07]], "y": [0.36, 0.58], "z": [1, [1, 0.025]], "tone": "strong" }
+      ]
+    },
+    "stove": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.02], "fill": "body", "stroke": "outline" },
+        { "shape": "circle", "at": [0.27, 0.28], "radius": [0.13, 0], "stroke": "detail" },
+        { "shape": "circle", "at": [0.73, 0.28], "radius": [0.1, 0], "stroke": "detail" },
+        { "shape": "circle", "at": [0.27, 0.68], "radius": [0.1, 0], "stroke": "detail" },
+        { "shape": "circle", "at": [0.73, 0.68], "radius": [0.13, 0], "stroke": "detail" },
+        { "shape": "path", "points": [[0, [1, -0.06]], [1, [1, -0.06]]], "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [[0, 0.02], [1, -0.02]], "y": [1, [1, 0.006]], "z": [[0, 0.02], [1, -0.06]], "tone": "strong" },
+        { "part": "cylinder", "x": [[0.27, -0.08], [0.27, 0.08]], "y": [[1, 0.006], [1, 0.014]], "z": [[0.28, -0.08], [0.28, 0.08]], "tone": "soft" },
+        { "part": "cylinder", "x": [[0.73, -0.06], [0.73, 0.06]], "y": [[1, 0.006], [1, 0.014]], "z": [[0.28, -0.06], [0.28, 0.06]], "tone": "soft" },
+        { "part": "cylinder", "x": [[0.27, -0.06], [0.27, 0.06]], "y": [[1, 0.006], [1, 0.014]], "z": [[0.68, -0.06], [0.68, 0.06]], "tone": "soft" },
+        { "part": "cylinder", "x": [[0.73, -0.08], [0.73, 0.08]], "y": [[1, 0.006], [1, 0.014]], "z": [[0.68, -0.08], [0.68, 0.08]], "tone": "soft" },
+        { "part": "box", "x": [0.1, 0.9], "y": [0.18, 0.72], "z": [1, [1, 0.005]], "tone": "strong" },
+        { "part": "box", "x": [0.12, 0.88], "y": [[0.78, -0.012], [0.78, 0.012]], "z": [1, [1, 0.03]], "tone": "soft" }
+      ]
+    },
+    "oven": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.02], "fill": "body", "stroke": "outline" },
+        { "shape": "rect", "x": [[0, 0.07], [1, -0.07]], "y": [[0, 0.07], [1, -0.12]], "radius": [0, 0.03], "fill": "soft", "stroke": "detail" },
+        { "shape": "path", "points": [[0.15, [1, -0.05]], [0.85, [1, -0.05]]], "stroke": "outline" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [0.12, 0.88], "y": [0.2, 0.68], "z": [1, [1, 0.005]], "tone": "strong" },
+        { "part": "box", "x": [0.12, 0.88], "y": [[0.76, -0.012], [0.76, 0.012]], "z": [1, [1, 0.03]], "tone": "soft" },
+        { "part": "box", "x": [0.05, 0.95], "y": [0.86, 0.96], "z": [1, [1, 0.004]], "tone": "strong" }
+      ]
+    },
+    "dishwasher": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.02], "fill": "body", "stroke": "outline" },
+        { "shape": "path", "points": [[0, [1, -0.06]], [1, [1, -0.06]]], "stroke": "detail" },
+        { "shape": "circle", "at": [0.5, 0.45], "radius": [0.3, 0], "stroke": "detail" },
+        { "shape": "path", "points": [[0.2, 0.45], [0.8, 0.45]], "stroke": "detail" },
+        { "shape": "path", "points": [[0.5, 0.15], [0.5, 0.75]], "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, 1], "tone": "soft" },
+        { "part": "box", "x": [0, 1], "y": [[1, -0.1], [1, -0.02]], "z": [1, [1, 0.004]], "tone": "strong" },
+        { "part": "box", "x": [0.2, 0.8], "y": [[1, -0.17], [1, -0.15]], "z": [1, [1, 0.025]], "tone": "strong" }
+      ]
+    },
+    "washer_dryer": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "radius": [0, 0.02], "fill": "body", "stroke": "outline" },
+        { "shape": "circle", "at": [0.5, 0.5], "radius": [0.36, 0], "stroke": "detail" },
+        { "shape": "circle", "at": [0.5, 0.5], "radius": [0.24, 0], "fill": "soft", "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, 1], "tone": "soft" },
+        { "part": "cylinder", "axis": "z", "x": [[0.5, -0.19], [0.5, 0.19]], "y": [[0.48, -0.19], [0.48, 0.19]], "z": [1, [1, 0.02]], "sides": 16, "tone": "strong" },
+        { "part": "cylinder", "axis": "z", "x": [[0.5, -0.13], [0.5, 0.13]], "y": [[0.48, -0.13], [0.48, 0.13]], "z": [[1, 0.02], [1, 0.03]], "sides": 16, "tone": "base" },
+        { "part": "box", "x": [0, 1], "y": [[1, -0.1], [1, -0.02]], "z": [1, [1, 0.004]], "tone": "strong" }
+      ]
+    },
+    "fireplace": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "fill": "body", "stroke": "outline" },
+        { "shape": "path", "points": [[0.14, 1], [0.3, 0.3], [0.7, 0.3], [0.86, 1]], "closed": true, "fill": "soft", "stroke": "detail" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [0, 1], "z": [0, 1], "tone": "base" },
+        { "part": "box", "x": [0.2, 0.8], "y": [[0, 0.05], 0.55], "z": [1, [1, 0.005]], "tone": "strong" },
+        { "part": "box", "x": [0, 1], "y": [[0.62, 0], [0.62, 0.06]], "z": [1, [1, 0.05]], "tone": "soft" }
+      ]
+    },
+    "television": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "fill": "soft", "stroke": "outline" },
+        { "shape": "path", "points": [[0.04, 1], [0.96, 1]], "stroke": "outline" }
+      ],
+      "solid": [
+        { "part": "box", "x": [0, 1], "y": [[0, 0.03], 1], "z": [[0.5, -0.02], [0.5, 0.02]], "tone": "strong" },
+        { "part": "box", "x": [[0, 0.02], [1, -0.02]], "y": [[0, 0.05], [1, -0.02]], "z": [[0.5, 0.02], [0.5, 0.024]], "tone": "base" },
+        { "part": "box", "x": [[0.2, -0.02], [0.2, 0.02]], "y": [0, [0, 0.03]], "z": [0, 1], "tone": "strong" },
+        { "part": "box", "x": [[0.8, -0.02], [0.8, 0.02]], "y": [0, [0, 0.03]], "z": [0, 1], "tone": "strong" }
+      ]
+    },
+    "stairs": {
+      "plan": [
+        { "shape": "rect", "x": [0, 1], "y": [0, 1], "fill": "body", "stroke": "outline" },
+        { "shape": "divide", "x": [0, 1], "y": [0, 1], "along": "y", "every": 0.25, "min": 3, "max": 24, "stroke": "detail" },
+        { "shape": "path", "points": [[0.5, [1, -0.12]], [0.5, [0, 0.12]]], "stroke": "outline" },
+        { "shape": "path", "points": [[[0.5, -0.1], [0, 0.26]], [0.5, [0, 0.12]], [[0.5, 0.1], [0, 0.26]]], "stroke": "outline" }
+      ],
+      "solid": [
+        { "part": "steps", "x": [0, 1], "y": [0, 1], "z": [0, 1], "every": 0.25, "min": 3, "max": 24, "tone": "base" }
+      ]
+    }
+  }
+}

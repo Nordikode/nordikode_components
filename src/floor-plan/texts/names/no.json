@@ -1,0 +1,64 @@
+{
+  "furniture": "Inventar",
+  "objects": {
+    "storage": "Skap",
+    "refrigerator": "Kjøleskap",
+    "stove": "Komfyr",
+    "bed": "Seng",
+    "sink": "Vask",
+    "washer_dryer": "Vaskemaskin",
+    "toilet": "Toalett",
+    "bathtub": "Badekar",
+    "oven": "Stekeovn",
+    "dishwasher": "Oppvaskmaskin",
+    "table": "Bord",
+    "sofa": "Sofa",
+    "chair": "Stol",
+    "fireplace": "Peis",
+    "television": "TV",
+    "stairs": "Trapp",
+    "column": "Søyle",
+    "beam": "Bjelke"
+  },
+  "openingKinds": {
+    "door": "Dør",
+    "window": "Vindu",
+    "opening": "Åpning"
+  },
+  "roomKinds": {
+    "living_room": "Stue",
+    "bedroom": "Soverom",
+    "bathroom": "Bad",
+    "kitchen": "Kjøkken",
+    "dining_room": "Spisestue"
+  },
+  "objectVariants": {
+    "column": {
+      "square": "Firkantet",
+      "round": "Rund"
+    },
+    "bed": {
+      "single": "Enkeltseng",
+      "double": "Dobbeltseng"
+    },
+    "chair": {
+      "dining": "Spisestol",
+      "stool": "Krakk",
+      "office": "Kontorstol"
+    },
+    "sofa": {
+      "straight": "Rett sofa",
+      "armchair": "Lenestol",
+      "chaise": "Sjeselong"
+    },
+    "storage": {
+      "cabinet": "Skap",
+      "shelf": "Hylle"
+    },
+    "table": {
+      "rectangular": "Rektangulært",
+      "round": "Rundt",
+      "l_shaped": "L-formet"
+    }
+  }
+}
