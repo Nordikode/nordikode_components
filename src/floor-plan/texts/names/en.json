@@ -1,0 +1,64 @@
+{
+  "furniture": "Furniture",
+  "objects": {
+    "storage": "Cabinet",
+    "refrigerator": "Refrigerator",
+    "stove": "Cooker",
+    "bed": "Bed",
+    "sink": "Sink",
+    "washer_dryer": "Washing machine",
+    "toilet": "Toilet",
+    "bathtub": "Bathtub",
+    "oven": "Oven",
+    "dishwasher": "Dishwasher",
+    "table": "Table",
+    "sofa": "Sofa",
+    "chair": "Chair",
+    "fireplace": "Fireplace",
+    "television": "TV",
+    "stairs": "Stairs",
+    "column": "Column",
+    "beam": "Beam"
+  },
+  "openingKinds": {
+    "door": "Door",
+    "window": "Window",
+    "opening": "Opening"
+  },
+  "roomKinds": {
+    "living_room": "Living room",
+    "bedroom": "Bedroom",
+    "bathroom": "Bathroom",
+    "kitchen": "Kitchen",
+    "dining_room": "Dining room"
+  },
+  "objectVariants": {
+    "column": {
+      "square": "Square",
+      "round": "Round"
+    },
+    "bed": {
+      "single": "Single bed",
+      "double": "Double bed"
+    },
+    "chair": {
+      "dining": "Dining chair",
+      "stool": "Stool",
+      "office": "Office chair"
+    },
+    "sofa": {
+      "straight": "Straight sofa",
+      "armchair": "Armchair",
+      "chaise": "Chaise"
+    },
+    "storage": {
+      "cabinet": "Cabinet",
+      "shelf": "Shelf"
+    },
+    "table": {
+      "rectangular": "Rectangular",
+      "round": "Round",
+      "l_shaped": "L-shaped"
+    }
+  }
+}

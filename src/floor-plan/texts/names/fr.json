@@ -1,0 +1,64 @@
+{
+  "furniture": "Mobilier",
+  "objects": {
+    "storage": "Rangement",
+    "refrigerator": "Réfrigérateur",
+    "stove": "Cuisinière",
+    "bed": "Lit",
+    "sink": "Lavabo",
+    "washer_dryer": "Lave-linge",
+    "toilet": "Toilettes",
+    "bathtub": "Baignoire",
+    "oven": "Four",
+    "dishwasher": "Lave-vaisselle",
+    "table": "Table",
+    "sofa": "Canapé",
+    "chair": "Chaise",
+    "fireplace": "Cheminée",
+    "television": "Télévision",
+    "stairs": "Escalier",
+    "column": "Poteau",
+    "beam": "Poutre"
+  },
+  "openingKinds": {
+    "door": "Porte",
+    "window": "Fenêtre",
+    "opening": "Ouverture"
+  },
+  "roomKinds": {
+    "living_room": "Salon",
+    "bedroom": "Chambre",
+    "bathroom": "Salle de bain",
+    "kitchen": "Cuisine",
+    "dining_room": "Salle à manger"
+  },
+  "objectVariants": {
+    "column": {
+      "square": "Carré",
+      "round": "Rond"
+    },
+    "bed": {
+      "single": "Lit simple",
+      "double": "Lit double"
+    },
+    "chair": {
+      "dining": "Chaise de salle à manger",
+      "stool": "Tabouret",
+      "office": "Chaise de bureau"
+    },
+    "sofa": {
+      "straight": "Canapé droit",
+      "armchair": "Fauteuil",
+      "chaise": "Méridienne"
+    },
+    "storage": {
+      "cabinet": "Armoire",
+      "shelf": "Étagère"
+    },
+    "table": {
+      "rectangular": "Rectangulaire",
+      "round": "Ronde",
+      "l_shaped": "En L"
+    }
+  }
+}

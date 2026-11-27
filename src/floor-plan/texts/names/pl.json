@@ -1,0 +1,64 @@
+{
+  "furniture": "Wyposażenie",
+  "objects": {
+    "storage": "Szafa",
+    "refrigerator": "Lodówka",
+    "stove": "Kuchenka",
+    "bed": "Łóżko",
+    "sink": "Umywalka",
+    "washer_dryer": "Pralka",
+    "toilet": "Toaleta",
+    "bathtub": "Wanna",
+    "oven": "Piekarnik",
+    "dishwasher": "Zmywarka",
+    "table": "Stół",
+    "sofa": "Sofa",
+    "chair": "Krzesło",
+    "fireplace": "Kominek",
+    "television": "Telewizor",
+    "stairs": "Schody",
+    "column": "Słup",
+    "beam": "Belka"
+  },
+  "openingKinds": {
+    "door": "Drzwi",
+    "window": "Okno",
+    "opening": "Otwór"
+  },
+  "roomKinds": {
+    "living_room": "Salon",
+    "bedroom": "Sypialnia",
+    "bathroom": "Łazienka",
+    "kitchen": "Kuchnia",
+    "dining_room": "Jadalnia"
+  },
+  "objectVariants": {
+    "column": {
+      "square": "Kwadratowy",
+      "round": "Okrągły"
+    },
+    "bed": {
+      "single": "Łóżko pojedyncze",
+      "double": "Łóżko podwójne"
+    },
+    "chair": {
+      "dining": "Krzesło jadalniane",
+      "stool": "Stołek",
+      "office": "Krzesło biurowe"
+    },
+    "sofa": {
+      "straight": "Sofa prosta",
+      "armchair": "Fotel",
+      "chaise": "Szezlong"
+    },
+    "storage": {
+      "cabinet": "Szafka",
+      "shelf": "Regał"
+    },
+    "table": {
+      "rectangular": "Prostokątny",
+      "round": "Okrągły",
+      "l_shaped": "W kształcie litery L"
+    }
+  }
+}
