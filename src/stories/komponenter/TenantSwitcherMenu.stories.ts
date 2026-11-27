@@ -257,3 +257,23 @@ export const MedNyttFirma: Story = {
     ],
   },
 }
+
+/**
+ * Konsern (SIGN-2023): konsernet står øverst med firmaene sine under, og
+ * firmaene uten konsern under den vanlige overskriften. Konsernraden er en
+ * lenke til konsernflaten.
+ */
+export const MedKonsern: Story = {
+  args: {
+    selectedId: 't-1',
+    variant: 'block',
+    align: 'end',
+    labels: { ...labels, group: 'Konsern' },
+    groups: [{ id: 'g-1', name: 'Nordbygg Gruppen', tenantIds: ['t-1', 't-2'], href: '#konsern' }],
+    tenants: [
+      { id: 't-1', name: 'Nordbygg Norge AS', logoUrl: null },
+      { id: 't-2', name: 'Nordbygg Sverige AB', logoUrl: null },
+      { id: 't-3', name: 'Moore Eiendom AS', logoUrl: null },
+    ],
+  },
+}
