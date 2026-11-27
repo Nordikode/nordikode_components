@@ -10,6 +10,7 @@
 export type WebAppIconName =
   | 'sign'
   | 'time'
+  | 'sketch'
   | 'website'
   | 'account'
   | 'backoffice'
@@ -22,6 +23,8 @@ export type WebAppIconName =
 export const webAppIcons: Record<WebAppIconName, string[]> = {
   sign: ['m14.5 5 4.5 4.5L8.5 20H4v-4.5L14.5 5Z', 'm12.5 7 4.5 4.5'],
   time: ['M12 3.25a8.75 8.75 0 1 1 0 17.5 8.75 8.75 0 0 1 0-17.5Z', 'M12 7.5V12l3 2'],
+  // Sketch (SIGN-2039): en planløsning — tre rom og en døråpning i veggen mellom dem.
+  sketch: ['M4.75 4.75h14.5v14.5H4.75V4.75Z', 'M12 4.75v4.5', 'M12 13v6.25', 'M12 13h7.25'],
   website: [
     'M12 3.25a8.75 8.75 0 1 1 0 17.5 8.75 8.75 0 0 1 0-17.5Z',
     'M12 3.25c2.4 2.35 3.6 5.25 3.6 8.75s-1.2 6.4-3.6 8.75c-2.4-2.35-3.6-5.25-3.6-8.75s1.2-6.4 3.6-8.75Z',

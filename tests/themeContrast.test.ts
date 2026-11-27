@@ -1,16 +1,19 @@
 import { describe, expect, it } from 'vitest'
 
 import { backofficeTheme } from '../src/tokens/products/backoffice'
+import { sketchTheme } from '../src/tokens/products/sketch'
 import { timeTheme } from '../src/tokens/products/time'
 import type { NkProductTheme, NkScheme } from '../src/tokens/types'
 
-// Fargeparene i Time og backoffice skal holde WCAG 2.1 AA for tekst (4,5:1) i
-// lys og mørk modus. Statusfargene brukes både som tekst og som fyll med
+// Fargeparene i Time, backoffice og Sketch skal holde WCAG 2.1 AA for tekst
+// (4,5:1) i lys og mørk modus. Statusfargene brukes både som tekst og som fyll med
 // etikett, og de målte under kravet til SIGN-1158 og SIGN-1198. Testen regner
 // kontrasten fra token-verdiene, så en ny verdi som ikke holder stopper i CI
 // i stedet for å bli funnet i en gjennomgang.
 
 const AA_TEXT = 4.5
+/** Ikoner og andre grafiske elementer (WCAG 1.4.11). */
+const AA_GRAPHIC = 3
 
 type Rgb = [number, number, number]
 
@@ -41,7 +44,7 @@ function tonal(color: string, surface: string): string {
   return `#${mixed.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`
 }
 
-type Pair = { name: string; foreground: string; background: string }
+type Pair = { name: string; foreground: string; background: string; minimum?: number }
 
 /** Par som gjelder i begge moduser. */
 function sharedPairs(scheme: NkScheme): Pair[] {
@@ -88,12 +91,33 @@ function timePairs(scheme: NkScheme): Pair[] {
   ]
 }
 
+/**
+ * Sketch (SIGN-2039) eier handling, lenke, rail og tittel — resten arves fra
+ * Sign. Lenken står på kort, side og valgt rad; railen bærer ikoner (3:1).
+ */
+function sketchPairs(scheme: NkScheme): Pair[] {
+  return [
+    { name: 'onPrimary på primaryHover', foreground: scheme.onPrimary, background: scheme.primaryHover },
+    { name: 'onPrimary på primaryPress', foreground: scheme.onPrimary, background: scheme.primaryPress },
+    { name: 'link på surface', foreground: scheme.link, background: scheme.surface },
+    { name: 'link på page', foreground: scheme.link, background: scheme.page },
+    { name: 'link på surfaceSoftAccent', foreground: scheme.link, background: scheme.surfaceSoftAccent },
+    { name: 'linkHover på surfaceSoftAccent', foreground: scheme.linkHover, background: scheme.surfaceSoftAccent },
+    { name: 'textTitle på surface', foreground: scheme.textTitle, background: scheme.surface },
+    { name: 'textTitle på page', foreground: scheme.textTitle, background: scheme.page },
+    { name: 'onSurfacePanelLink på surfacePanel', foreground: scheme.onSurfacePanelLink, background: scheme.surfacePanel },
+    { name: 'railIconStrong på surfaceRail', foreground: scheme.railIconStrong, background: scheme.surfaceRail },
+    { name: 'onFrame på frame (ikon)', foreground: scheme.onFrame, background: scheme.frame, minimum: AA_GRAPHIC },
+  ]
+}
+
 const themes: Array<{ theme: NkProductTheme; extra: (scheme: NkScheme) => Pair[] }> = [
   { theme: timeTheme, extra: timePairs },
   { theme: backofficeTheme, extra: () => [] },
+  { theme: sketchTheme, extra: sketchPairs },
 ]
 
-describe('kontrast i Time og backoffice (WCAG AA, 4,5:1)', () => {
+describe('kontrast i Time, backoffice og Sketch (WCAG AA, 4,5:1)', () => {
   it('regner kontrast etter WCAG 2.1', () => {
     expect(contrast('#000000', '#ffffff')).toBeCloseTo(21, 5)
     expect(contrast('#767676', '#ffffff')).toBeCloseTo(4.54, 2)
@@ -111,7 +135,7 @@ describe('kontrast i Time og backoffice (WCAG AA, 4,5:1)', () => {
           expect(
             measured,
             `${pair.foreground} på ${pair.background} måler ${measured.toFixed(2)}:1`,
-          ).toBeGreaterThanOrEqual(AA_TEXT)
+          ).toBeGreaterThanOrEqual(pair.minimum ?? AA_TEXT)
         })
       }
     }

@@ -6,12 +6,14 @@ export * from './tailwind'
 export { documentScheme } from './document'
 export { signTheme } from './products/sign'
 export { timeTheme } from './products/time'
+export { sketchTheme } from './products/sketch'
 export { backofficeTheme } from './products/backoffice'
 export { platformTheme } from './products/platform'
 
 import { backofficeTheme } from './products/backoffice'
 import { platformTheme } from './products/platform'
 import { signTheme } from './products/sign'
+import { sketchTheme } from './products/sketch'
 import { timeTheme } from './products/time'
 import type { NkProductTheme } from './types'
 
@@ -19,6 +21,7 @@ import type { NkProductTheme } from './types'
 export const nkProductThemes: Record<string, NkProductTheme> = {
   sign: signTheme,
   time: timeTheme,
+  sketch: sketchTheme,
   backoffice: backofficeTheme,
   platform: platformTheme,
 }

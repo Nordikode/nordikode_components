@@ -541,11 +541,12 @@ changed in `src/` must be changed in the matching `.d.ts` in the same pull reque
 
 ## Design tokens
 
-Produkttemaer: `signTheme` (Sign), `timeTheme`, `backofficeTheme` og `platformTheme`
+Produkttemaer: `signTheme` (Sign), `timeTheme`, `sketchTheme` (Nordikode Sketch — Signs
+nøytraler med teal som handling og rail, SIGN-2039), `backofficeTheme` og `platformTheme`
 (Nordikode-paletten for plattformappene company, account og developer — SIGN-657).
 
 `@nordikode/components/tokens` er kilden til sannhet for farger, radius, spacing
-og typografi — per produkt (Sign, Time, Backoffice), light + dark.
+og typografi — per produkt (Sign, Time, Sketch, Backoffice), light + dark.
 
 ```ts
 // src/plugins/vuetify.ts i en app:

@@ -158,6 +158,8 @@ export declare function tailwindThemeCss(theme: NkProductTheme, statics?: NkStat
 export declare const documentScheme: NkDocumentScheme
 export declare const signTheme: NkProductTheme
 export declare const timeTheme: NkProductTheme
+/** Paletten for Nordikode Sketch (SIGN-2039): Signs nøytraler med teal som handling og rail. */
+export declare const sketchTheme: NkProductTheme
 export declare const backofficeTheme: NkProductTheme
 /** Nordikode-paletten for plattformappene company, account og developer (SIGN-657). */
 export declare const platformTheme: NkProductTheme
